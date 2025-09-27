@@ -391,3 +391,73 @@ def get_fixed_income_metrics():
             "delta": "-2.0"
         }
     ]
+
+# 7. Dashboard Notes
+@register_widget({
+    "name": "Fixed Income Dashboard Notes",
+    "description": "Comprehensive overview and documentation for the Fixed Income Markets dashboard",
+    "category": "Documentation",
+    "type": "markdown",
+    "endpoint": "fixed_income/notes",
+    "gridData": {"w": 40, "h": 30}
+})
+@router.get("/notes")
+def get_notes():
+    """Get Fixed Income dashboard documentation."""
+    markdown_content = """# DTCC Fixed Income Markets Dashboard
+
+## Overview
+The DTCC Fixed Income Markets Dashboard provides comprehensive treasury and repo market monitoring capabilities, tracking trade volumes by tenor, repo rate spreads, settlement failures, dealer activity, and liquidity conditions across fixed income securities. This dashboard serves as the central hub for monitoring the health and efficiency of fixed income markets.
+
+## Purpose
+• **Treasury Market Analysis**: Monitor trading volumes, price trends, and liquidity conditions across bills, notes, bonds, TIPS, and FRNs
+• **Repo Market Surveillance**: Track repo rates, spreads vs benchmarks, and monitor GCF repo activity and pricing dynamics
+• **Settlement Monitoring**: Identify and track fails-to-deliver events, aging analysis, and settlement efficiency metrics
+• **Dealer Activity Analysis**: Monitor primary dealer participation, market share analysis, and competitive dynamics in fixed income markets
+
+---
+
+## Tab 1: Treasury Market
+**Purpose**: Comprehensive monitoring of U.S. Treasury market activity and performance
+
+### Widgets:
+• **Fixed Income Metrics**: Key market indicators including treasury volume ($892B), GCF repo rate (2.48%), fails rate (1.2%), top dealer share (14.7%), and liquidity score (82/100)
+• **Treasury Trade Volumes**: Time series visualization of trading volumes by tenor (Bills 1-12M, Notes 2-10Y, Bonds 20-30Y, TIPS, FRNs) with selectable time periods
+• **Repo Rate Spread Tracker**: Dual-panel chart showing repo rates vs SOFR/ON RRP with spread analysis and real-time updates every 5 minutes
+
+---
+
+## Tab 2: Repo Market
+**Purpose**: In-depth analysis of repo market dynamics and participant activity
+
+### Widgets:
+• **Dealer Activity Leaderboard**: Ranking of primary dealers by lending/borrowing volume, net positions, and market share with chart visualization capabilities
+• **Liquidity Curve Heatmap**: Matrix showing repo availability by collateral type (Treasury, Agency, MBS, Corp IG/HY) across term structure
+• **Fails-to-Deliver Monitor**: Detailed table of settlement fails by CUSIP and tenor with fail rates, aging analysis, and severity indicators
+
+---
+
+## Data Sources
+• **DTCC Trade Repositories**: Real-time feeds from DTCC's Fixed Income Clearing Corporation (FICC) for comprehensive trade capture
+• **Federal Reserve Systems**: Integration with SOFR, ON RRP, and other Federal Reserve benchmark rates and operations data
+• **Primary Dealer Reports**: Direct feeds from primary dealer reporting systems for accurate market share and activity analysis
+• **Settlement Systems**: Real-time connection to DTCC settlement infrastructure for immediate fail detection and tracking
+• **Market Data Vendors**: Bloomberg, Refinitiv, and other providers for benchmark rates, yield curves, and market reference data
+
+## Key Metrics Tracked
+• **Volume Analytics**: Daily, weekly, and monthly trading volumes across all treasury tenors with historical trend analysis
+• **Rate Monitoring**: GCF repo rates, general collateral rates, SOFR spreads, and ON RRP facility usage
+• **Settlement Performance**: Fail-to-deliver rates, aging analysis, resolution times, and counterparty-specific settlement statistics
+• **Liquidity Indicators**: Bid-ask spreads, market depth, dealer inventory levels, and collateral availability metrics
+• **Market Structure**: Dealer market share, client flow analysis, electronic vs voice trading ratios, and trading venue analysis
+• **Risk Metrics**: Duration risk, yield curve positioning, basis risks, and interest rate exposure across the fixed income complex
+• **Operational Efficiency**: Settlement rates, exception handling, STP rates, and processing time analytics
+
+## Use Cases
+• **Fixed Income Traders**: Monitor market conditions, identify trading opportunities, and track competitor activity and market share
+• **Risk Managers**: Assess interest rate risk, monitor settlement exposure, and track counterparty concentration in repo markets
+• **Compliance Teams**: Ensure adherence to repo market regulations and monitor for suspicious trading patterns or market manipulation
+• **Treasury Operations**: Optimize repo funding strategies, monitor collateral availability, and manage settlement risk exposure
+• **Market Regulators**: Oversee market integrity, monitor systemic risk in repo markets, and assess market structure evolution"""
+
+    return markdown_content

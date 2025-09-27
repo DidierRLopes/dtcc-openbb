@@ -430,3 +430,73 @@ def get_derivatives_metrics():
             "delta": "8.5"
         }
     ]
+
+# 7. Dashboard Notes
+@register_widget({
+    "name": "Derivatives Dashboard Notes",
+    "description": "Comprehensive overview and documentation for the Derivatives Analytics dashboard",
+    "category": "Documentation",
+    "type": "markdown",
+    "endpoint": "derivatives/notes",
+    "gridData": {"w": 40, "h": 30}
+})
+@router.get("/notes")
+def get_notes():
+    """Get Derivatives dashboard documentation."""
+    markdown_content = """# DTCC Derivatives Analytics Dashboard
+
+## Overview
+The DTCC Derivatives Analytics Dashboard provides advanced derivatives market analysis featuring insights into swap notionals, CDS spreads, volatility surfaces, net positions, and counterparty networks across OTC derivatives markets. This platform serves as the primary tool for monitoring derivatives market activity, risk exposure, and systemic connections.
+
+## Purpose
+• **Swap Market Analysis**: Monitor interest rate, credit, and cross-currency swap activity with notional tracking and tenor analysis
+• **Credit Risk Monitoring**: Track CDS spreads across indices and single names with historical analysis and trend identification
+• **Options Market Intelligence**: Analyze implied volatility surfaces and options activity for risk management and trading insights
+• **Position Risk Assessment**: Monitor net open positions across asset classes and analyze concentration risks and exposure networks
+
+---
+
+## Tab 1: Swaps & Credit
+**Purpose**: Comprehensive analysis of swap markets and credit derivatives activity
+
+### Widgets:
+• **Derivatives Metrics**: Key market indicators including total notional ($487T), daily volume ($2.3T), compression rate (42%), CDS spread IG (68bps), and active contracts (1.2M)
+• **Swap Notional by Tenor**: Interactive table showing notional amounts by currency and tenor with heatmap visualization and trade count analysis
+• **CDS Spread Monitor**: Multi-series chart tracking CDS spreads for major indices and single names with configurable views (indices, single names, both)
+
+---
+
+## Tab 2: Risk & Positions
+**Purpose**: Risk analysis and position monitoring across derivatives portfolios
+
+### Widgets:
+• **Volatility Surface**: 3D visualization of implied volatility surface from OTC options activity showing strike/maturity relationships
+• **Net Open Positions**: Comprehensive breakdown of long/short positions by asset class (Interest Rate, FX, Equity, Credit, Commodity) with delta analysis
+• **Derivatives Counterparty Network**: Sankey diagram showing exposure flows between major dealers with derivatives-specific risk metrics
+
+---
+
+## Data Sources
+• **DTCC Trade Repositories**: Complete OTC derivatives transaction reporting including swaps, forwards, and options across all asset classes
+• **CDS Market Data**: Real-time and historical CDS spread data from major index providers and single-name credit markets
+• **Options Clearing Corporations**: Cleared options data for volatility surface construction and options flow analysis
+• **Counterparty Master Data**: Global Legal Entity Identifier (LEI) database and counterparty relationship mapping
+• **Market Data Vendors**: Bloomberg, Refinitiv, and MarkitSERV for pricing, valuation, and reference data integration
+
+## Key Metrics Tracked
+• **Notional Exposures**: Gross and net notional amounts by asset class, currency, tenor, and counterparty with trend analysis
+• **CDS Analytics**: Spread levels, basis relationships, curve analysis, and credit event monitoring across sovereign and corporate names
+• **Volatility Metrics**: Implied volatility levels, volatility smile dynamics, term structure analysis, and volatility risk premiums
+• **Position Analytics**: Net open interest, position concentration, delta exposure, and gamma risk across derivatives portfolios
+• **Network Analysis**: Counterparty interconnectedness, systemic risk indicators, and exposure concentration metrics
+• **Compression Efficiency**: Portfolio compression rates, notional reduction achieved, and operational risk mitigation
+• **Regulatory Compliance**: Trade reporting completeness, regulatory capital metrics, and margin requirement tracking
+
+## Use Cases
+• **Derivatives Traders**: Monitor market conditions, identify trading opportunities, and analyze competitive positioning in OTC markets
+• **Risk Managers**: Assess portfolio risk, monitor counterparty exposures, and manage derivatives-specific risks including CVA and DVA
+• **Quantitative Analysts**: Analyze volatility surfaces, model validation, and derivatives pricing model calibration and validation
+• **Compliance Officers**: Ensure derivatives trade reporting compliance and monitor for market abuse in OTC derivatives markets
+• **Central Banks**: Monitor systemic risk in derivatives markets and assess the effectiveness of central clearing mandates"""
+
+    return markdown_content

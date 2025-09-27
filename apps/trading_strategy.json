@@ -4,6 +4,19 @@
   "img": "https://openbb-assets.s3.amazonaws.com/dtcc/trading-strategy.png",
   "allowCustomization": true,
   "tabs": {
+    "notes": {
+      "id": "notes",
+      "name": "Notes",
+      "layout": [
+        {
+          "i": "trading_strategy/notes",
+          "x": 0,
+          "y": 0,
+          "w": 40,
+          "h": 30
+        }
+      ]
+    },
     "market_opportunities": {
       "id": "market_opportunities",
       "name": "Market Opportunities",

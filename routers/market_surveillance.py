@@ -401,3 +401,72 @@ def get_activity_metrics():
             "delta": "0.2"
         }
     ]
+
+# 7. Dashboard Notes
+@register_widget({
+    "name": "Market Surveillance Dashboard Notes",
+    "description": "Comprehensive overview and documentation for the Market Surveillance dashboard",
+    "category": "Documentation",
+    "type": "markdown",
+    "endpoint": "market_surveillance/notes",
+    "gridData": {"w": 40, "h": 30}
+})
+@router.get("/notes")
+def get_notes():
+    """Get Market Surveillance dashboard documentation."""
+    markdown_content = """# DTCC Market Surveillance Dashboard
+
+## Overview
+The DTCC Market Surveillance Dashboard provides comprehensive market transparency and surveillance capabilities, offering real-time monitoring of trade volumes, anomaly detection, counterparty exposure analysis, and regulatory compliance tracking across all asset classes. This dashboard serves as the primary tool for identifying market irregularities and ensuring market integrity.
+
+## Purpose
+• **Real-time Market Monitoring**: Track trading activity, volumes, and patterns across all major asset classes with sub-second latency
+• **Anomaly Detection**: Identify unusual settlement fails, trade cancellation spikes, and suspicious trading patterns using advanced algorithms
+• **Counterparty Risk Assessment**: Analyze exposure relationships and systemic risk through network visualization and concentration metrics
+• **Regulatory Compliance Oversight**: Monitor compliance with market regulations and generate alerts for potential violations
+
+---
+
+## Tab 1: Market Overview
+**Purpose**: Provide a high-level view of current market activity and key surveillance metrics
+
+### Widgets:
+• **Market Activity Metrics**: Key performance indicators including total trade volume ($4.7T), active anomalies (23), settlement fails ($892M), compliance alerts (47), and system health (98.7%)
+• **Trade Volume Heatmap**: Interactive visualization showing trade volumes by asset class across different hours, filterable by date range (24 hours, 7 days, 30 days)
+• **Counterparty Exposure Network**: Network graph displaying counterparty relationships with exposure amounts, risk scores, and minimum exposure filtering
+
+---
+
+## Tab 2: Anomaly Detection
+**Purpose**: Focus on identifying and investigating unusual market behavior and potential risks
+
+### Widgets:
+• **Anomaly Detector**: Comprehensive table of detected anomalies with severity levels, asset classes, counterparties, and status tracking
+• **Regulatory Compliance Ticker**: Real-time feed of compliance alerts across regulations (Dodd-Frank, MiFID II, EMIR, Basel III) with severity indicators and entity details
+
+---
+
+## Data Sources
+• **Real-time Trade Feeds**: Direct connections to major exchanges and trading venues for immediate trade capture
+• **Settlement Systems**: Integration with DTCC settlement infrastructure for fails and obligation tracking
+• **Regulatory Repositories**: Links to trade repositories for compliance monitoring and reporting validation
+• **Counterparty Databases**: Master data for entity identification, LEI validation, and relationship mapping
+• **Historical Archives**: Multi-year trading history for trend analysis and anomaly baseline establishment
+
+## Key Metrics Tracked
+• **Trade Volume Metrics**: Daily, weekly, and monthly volumes across equities, fixed income, derivatives, and repo markets
+• **Settlement Performance**: Fail rates, settlement times, and obligation tracking by asset class and counterparty
+• **Anomaly Indicators**: Statistical deviations, unusual volume spikes, and pattern recognition alerts
+• **Compliance Scores**: Adherence rates to regulatory requirements with drill-down capabilities
+• **Network Risk Metrics**: Counterparty concentration, systemic risk indicators, and exposure clustering
+• **System Health**: Platform uptime, data latency, and processing performance metrics
+• **Alert Response Times**: Time to detection, investigation duration, and resolution tracking
+
+## Use Cases
+• **Market Supervisors**: Monitor overall market health, identify emerging risks, and coordinate regulatory responses
+• **Risk Managers**: Track counterparty exposures, assess concentration risks, and monitor settlement obligations
+• **Compliance Officers**: Ensure adherence to regulatory requirements and investigate potential violations
+• **Operations Teams**: Monitor system performance, track settlement processes, and manage operational risks
+• **Regulatory Bodies**: Access aggregated market data for policy development and oversight activities"""
+
+    return markdown_content

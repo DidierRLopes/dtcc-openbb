@@ -542,3 +542,73 @@ def get_stress_test_results():
         })
     
     return results
+
+# 7. Dashboard Notes
+@register_widget({
+    "name": "Risk Management Dashboard Notes",
+    "description": "Comprehensive overview and documentation for the Risk Management dashboard",
+    "category": "Documentation",
+    "type": "markdown",
+    "endpoint": "risk_management/notes",
+    "gridData": {"w": 40, "h": 30}
+})
+@router.get("/notes")
+def get_notes():
+    """Get Risk Management dashboard documentation."""
+    markdown_content = """# DTCC Risk Management Dashboard
+
+## Overview
+The DTCC Risk Management Dashboard provides advanced risk management and stress testing capabilities featuring counterparty exposure analysis, collateral requirement forecasting, settlement risk monitoring, and comprehensive stress scenario modeling. This dashboard enables proactive risk assessment and mitigation across all trading activities.
+
+## Purpose
+• **Counterparty Risk Monitoring**: Track and analyze exposures across all counterparties with real-time risk scoring and concentration analysis
+• **Collateral Management**: Forecast collateral requirements under various scenarios including baseline, stressed, and extreme market conditions
+• **Settlement Risk Assessment**: Monitor settlement failures, track obligations, and identify potential disruptions across asset classes
+• **Stress Testing**: Run comprehensive stress tests using historical and hypothetical scenarios to assess portfolio resilience
+
+---
+
+## Tab 1: Exposure Analysis
+**Purpose**: Comprehensive view of counterparty exposures and concentration risks
+
+### Widgets:
+• **Risk Metrics Summary**: Key risk indicators including total exposure ($28.4B), collateral coverage (87.3%), settlement fail rate (0.42%), liquidity score (78/100), and VaR 99% ($142M)
+• **Counterparty Exposure Treemap**: Hierarchical visualization of exposures by firm and sector, switchable between gross exposure, net exposure, and collateralized views
+• **Liquidity Heatmap**: Repo availability matrix across collateral types (Treasury, Agency, MBS, Corporate IG/HY, Equity) and maturity buckets
+
+---
+
+## Tab 2: Stress Testing
+**Purpose**: Scenario analysis and stress testing for risk assessment and planning
+
+### Widgets:
+• **Collateral Requirement Forecast**: 90-day projection of collateral needs under baseline, stressed (2008-like), and extreme stress scenarios
+• **Settlement Fails Tracker**: Stacked area chart showing fails by asset class (Treasury, Equity, MBS, Corporate) with trend analysis
+• **Stress Test Results**: Comprehensive scenario analysis table showing probability, P&L impact, collateral calls, liquidity needs, and risk scores for various stress events
+
+---
+
+## Data Sources
+• **Exposure Management Systems**: Real-time feeds from counterparty exposure databases and netting systems
+• **Collateral Management Platforms**: Integration with collateral optimization and forecasting systems
+• **Settlement Infrastructure**: Direct connections to DTCC settlement platforms for real-time fail tracking
+• **Market Data Providers**: Historical and real-time market data for stress testing and scenario modeling
+• **Risk Management Systems**: Portfolio risk metrics, VaR calculations, and concentration monitoring tools
+
+## Key Metrics Tracked
+• **Exposure Metrics**: Gross exposure, net exposure, collateral coverage ratios, and concentration indices by counterparty and sector
+• **Liquidity Indicators**: Available collateral, funding costs, repo availability, and liquidity transformation ratios
+• **Settlement Performance**: Fail rates, settlement times, obligation aging, and counterparty-specific settlement statistics
+• **Stress Test Results**: Scenario-based P&L impacts, capital adequacy, liquidity survival periods, and recovery metrics
+• **Risk Appetite Metrics**: Limit utilization, risk budget consumption, and early warning indicator thresholds
+• **Collateral Optimization**: Cheapest-to-deliver analysis, substitution costs, and inventory management metrics
+• **Operational Risk**: Processing errors, system availability, and exception rates across risk management processes
+
+## Use Cases
+• **Chief Risk Officers**: Oversee enterprise-wide risk management, set risk appetite, and ensure regulatory compliance
+• **Portfolio Managers**: Monitor position-level risks, optimize collateral usage, and assess concentration limits
+• **Collateral Managers**: Forecast funding needs, optimize collateral allocation, and manage margin requirements
+• **Stress Testing Teams**: Design and execute stress scenarios, validate model assumptions, and report regulatory stress tests
+• **Treasury Teams**: Manage liquidity risks, optimize funding strategies, and coordinate with collateral management"""
+
+    return markdown_content

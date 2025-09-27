@@ -4,6 +4,19 @@
   "img": "https://openbb-assets.s3.amazonaws.com/dtcc/derivatives.png",
   "allowCustomization": true,
   "tabs": {
+    "notes": {
+      "id": "notes",
+      "name": "Notes",
+      "layout": [
+        {
+          "i": "derivatives/notes",
+          "x": 0,
+          "y": 0,
+          "w": 40,
+          "h": 30
+        }
+      ]
+    },
     "swaps_credit": {
       "id": "swaps_credit",
       "name": "Swaps & Credit",

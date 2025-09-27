@@ -4,6 +4,19 @@
   "img": "https://openbb-assets.s3.amazonaws.com/dtcc/equities-etf.png",
   "allowCustomization": true,
   "tabs": {
+    "notes": {
+      "id": "notes",
+      "name": "Notes",
+      "layout": [
+        {
+          "i": "equities_etf/notes",
+          "x": 0,
+          "y": 0,
+          "w": 40,
+          "h": 30
+        }
+      ]
+    },
     "settlement": {
       "id": "settlement",
       "name": "Settlement & Flows",

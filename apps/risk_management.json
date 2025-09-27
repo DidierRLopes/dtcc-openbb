@@ -4,6 +4,19 @@
   "img": "https://openbb-assets.s3.amazonaws.com/dtcc/risk-management.png",
   "allowCustomization": true,
   "tabs": {
+    "notes": {
+      "id": "notes",
+      "name": "Notes",
+      "layout": [
+        {
+          "i": "risk_management/notes",
+          "x": 0,
+          "y": 0,
+          "w": 40,
+          "h": 30
+        }
+      ]
+    },
     "exposures": {
       "id": "exposures",
       "name": "Exposure Analysis",

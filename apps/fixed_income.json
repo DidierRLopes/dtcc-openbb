@@ -4,6 +4,19 @@
   "img": "https://openbb-assets.s3.amazonaws.com/dtcc/fixed-income.png",
   "allowCustomization": true,
   "tabs": {
+    "notes": {
+      "id": "notes",
+      "name": "Notes",
+      "layout": [
+        {
+          "i": "fixed_income/notes",
+          "x": 0,
+          "y": 0,
+          "w": 40,
+          "h": 30
+        }
+      ]
+    },
     "treasury_market": {
       "id": "treasury_market",
       "name": "Treasury Market",

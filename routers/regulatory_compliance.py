@@ -551,3 +551,73 @@ def get_compliance_metrics():
             "delta": "0.0"
         }
     ]
+
+# 7. Dashboard Notes
+@register_widget({
+    "name": "Regulatory Compliance Dashboard Notes",
+    "description": "Comprehensive overview and documentation for the Regulatory & Compliance dashboard",
+    "category": "Documentation",
+    "type": "markdown",
+    "endpoint": "regulatory_compliance/notes",
+    "gridData": {"w": 40, "h": 30}
+})
+@router.get("/notes")
+def get_notes():
+    """Get Regulatory Compliance dashboard documentation."""
+    markdown_content = """# DTCC Regulatory & Compliance Dashboard
+
+## Overview
+The DTCC Regulatory & Compliance Dashboard provides comprehensive regulatory compliance monitoring capabilities, featuring audit trails, exception reporting, KYC/AML risk flagging, and real-time compliance alerting across all regulatory frameworks. This dashboard ensures adherence to global financial regulations and facilitates regulatory reporting and oversight.
+
+## Purpose
+• **Regulatory Oversight**: Monitor compliance with global regulations including Dodd-Frank, MiFID II, EMIR, and Basel III across all business lines
+• **Audit Trail Management**: Provide complete trade lifecycle visibility from execution to settlement with full regulatory audit capabilities
+• **Exception Management**: Identify, track, and resolve regulatory exceptions including missing data, validation failures, and reporting gaps
+• **Risk Flag Monitoring**: Track KYC/AML risk indicators, sanctions screening results, and suspicious activity detection across counterparties
+
+---
+
+## Tab 1: Compliance Overview
+**Purpose**: High-level regulatory compliance status and real-time monitoring
+
+### Widgets:
+• **Compliance Metrics**: Key compliance indicators including overall compliance (94.2%), open exceptions (127), KYC flags (8), SLA compliance (96.8%), and audit score (A-)
+• **Regulation Compliance Heatmap**: Matrix showing compliance rates by regulation type (Dodd-Frank, MiFID II, EMIR, Basel III) and obligation categories
+• **Compliance Alerts Ticker**: Real-time feed of compliance issues requiring immediate attention with severity levels and assigned actions
+
+---
+
+## Tab 2: Audit & Exceptions
+**Purpose**: Detailed audit trail analysis and exception management
+
+### Widgets:
+• **Trade Lifecycle Audit Trail**: Complete transaction tracking from execution through settlement with status monitoring and SLA compliance
+• **Exception Reports**: Comprehensive table of regulatory exceptions with severity assessment, assignment tracking, and resolution status
+• **KYC/AML Risk Flags**: High-risk entity monitoring with risk scores, jurisdiction analysis, and review requirements
+
+---
+
+## Data Sources
+• **Trade Repositories**: Global trade repository feeds for comprehensive transaction capture and regulatory reporting validation
+• **Regulatory Databases**: Direct connections to LEI databases, sanctions lists, PEP databases, and other regulatory reference data
+• **Surveillance Systems**: Integration with market surveillance and transaction monitoring systems for suspicious activity detection
+• **Counterparty Management**: Master data management systems for entity information, risk ratings, and relationship mapping
+• **Audit Systems**: Complete audit trail capture from trade execution through final settlement and regulatory reporting
+
+## Key Metrics Tracked
+• **Compliance Rates**: Regulation-specific compliance percentages with trending and benchmark analysis across all regulatory frameworks
+• **Exception Analytics**: Exception volumes, resolution times, aging analysis, and recurring exception pattern identification
+• **Audit Trail Completeness**: Trade lifecycle coverage, data quality metrics, and regulatory field population rates
+• **KYC/AML Indicators**: Risk score distributions, high-risk entity counts, review completion rates, and escalation metrics
+• **Regulatory Reporting**: Report submission timeliness, data quality scores, regulatory feedback, and correction rates
+• **SLA Performance**: Processing time compliance, exception resolution SLAs, and regulatory response time metrics
+• **Risk Assessment**: Entity risk profiles, geographic risk exposure, and sanctions screening effectiveness metrics
+
+## Use Cases
+• **Chief Compliance Officers**: Oversee enterprise-wide regulatory compliance, manage regulatory relationships, and ensure policy adherence
+• **Regulatory Reporting Teams**: Manage regulatory submissions, ensure data quality, and coordinate with global regulatory authorities
+• **AML/KYC Analysts**: Investigate suspicious activities, manage high-risk relationships, and conduct enhanced due diligence procedures
+• **Audit Teams**: Conduct regulatory audits, validate control effectiveness, and support regulatory examinations
+• **Legal Counsel**: Assess regulatory exposure, manage regulatory inquiries, and coordinate enforcement response activities"""
+
+    return markdown_content
