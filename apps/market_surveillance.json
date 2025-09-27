@@ -1,0 +1,73 @@
+{
+  "name": "DTCC Market Surveillance",
+  "description": "Comprehensive market transparency and surveillance dashboard providing real-time monitoring of trade volumes, anomaly detection, counterparty exposure analysis, and regulatory compliance tracking across all asset classes.",
+  "img": "https://openbb-assets.s3.amazonaws.com/dtcc/market-surveillance.png",
+  "allowCustomization": true,
+  "tabs": {
+    "overview": {
+      "id": "overview",
+      "name": "Market Overview",
+      "layout": [
+        {
+          "i": "market_surveillance/activity_metrics",
+          "x": 0,
+          "y": 0,
+          "w": 40,
+          "h": 4
+        },
+        {
+          "i": "market_surveillance/trade_volume_heatmap",
+          "x": 0,
+          "y": 4,
+          "w": 20,
+          "h": 12
+        },
+        {
+          "i": "market_surveillance/counterparty_network",
+          "x": 20,
+          "y": 4,
+          "w": 20,
+          "h": 15
+        }
+      ]
+    },
+    "anomalies": {
+      "id": "anomalies",
+      "name": "Anomaly Detection",
+      "layout": [
+        {
+          "i": "market_surveillance/anomaly_detector",
+          "x": 0,
+          "y": 0,
+          "w": 40,
+          "h": 12
+        },
+        {
+          "i": "market_surveillance/compliance_ticker",
+          "x": 0,
+          "y": 12,
+          "w": 40,
+          "h": 8
+        }
+      ]
+    }
+  },
+  "groups": [
+    {
+      "name": "Time Period Sync",
+      "type": "param",
+      "paramName": "date_range",
+      "defaultValue": "7d",
+      "widgetIds": [
+        "market_surveillance/trade_volume_heatmap"
+      ]
+    }
+  ],
+  "prompts": [
+    "What anomalies have been detected in the last 24 hours?",
+    "Show me the largest counterparty exposures by sector",
+    "Which asset classes have the highest trade volumes today?",
+    "Are there any critical compliance alerts that need attention?",
+    "Analyze the network relationships between major dealers"
+  ]
+}

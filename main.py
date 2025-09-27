@@ -53,10 +53,21 @@ def get_widgets():
     """
     return WIDGETS
 
-# # Apps endpoint that returns the apps/templates configuration
-# @app.get("/apps.json")
-# def get_apps():
-#     """Apps configuration file for the OpenBB Custom Backend"""
-#     return JSONResponse(
-#         content=json.load((ROOT_PATH / "apps.json").open())
-#     )
+# Apps endpoint that returns the apps/templates configuration
+@app.get("/apps.json")
+def get_apps():
+    """Apps configuration dynamically aggregated from individual app files"""
+    apps = []
+    apps_dir = ROOT_PATH / "apps"
+
+    if apps_dir.exists():
+        for app_file in apps_dir.glob("*.json"):
+            try:
+                with open(app_file, 'r', encoding='utf-8') as f:
+                    app_config = json.load(f)
+                apps.append(app_config)
+            except (json.JSONDecodeError, FileNotFoundError, IOError) as e:
+                # Log error but continue loading other apps
+                print(f"Warning: Could not load app config {app_file}: {e}")
+
+    return JSONResponse(content=apps)

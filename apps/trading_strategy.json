@@ -1,0 +1,80 @@
+{
+  "name": "DTCC Trading Strategy",
+  "description": "Advanced trading insights and investment strategy dashboard featuring repo squeeze detection, sentiment analysis, liquidity fragmentation monitoring, arbitrage opportunities, and flow momentum tracking.",
+  "img": "https://openbb-assets.s3.amazonaws.com/dtcc/trading-strategy.png",
+  "allowCustomization": true,
+  "tabs": {
+    "market_opportunities": {
+      "id": "market_opportunities",
+      "name": "Market Opportunities",
+      "layout": [
+        {
+          "i": "trading_strategy/metrics",
+          "x": 0,
+          "y": 0,
+          "w": 40,
+          "h": 4
+        },
+        {
+          "i": "trading_strategy/repo_squeeze",
+          "x": 0,
+          "y": 4,
+          "w": 20,
+          "h": 12
+        },
+        {
+          "i": "trading_strategy/arbitrage_monitor",
+          "x": 20,
+          "y": 4,
+          "w": 20,
+          "h": 10
+        }
+      ]
+    },
+    "sentiment_flows": {
+      "id": "sentiment_flows",
+      "name": "Sentiment & Flows",
+      "layout": [
+        {
+          "i": "trading_strategy/sentiment_gauge",
+          "x": 0,
+          "y": 0,
+          "w": 20,
+          "h": 10
+        },
+        {
+          "i": "trading_strategy/liquidity_fragmentation",
+          "x": 20,
+          "y": 0,
+          "w": 20,
+          "h": 10
+        },
+        {
+          "i": "trading_strategy/flow_momentum",
+          "x": 0,
+          "y": 10,
+          "w": 40,
+          "h": 12
+        }
+      ]
+    }
+  },
+  "groups": [
+    {
+      "name": "Security Filter Sync",
+      "type": "param",
+      "paramName": "security_filter",
+      "defaultValue": "All",
+      "widgetIds": [
+        "trading_strategy/repo_squeeze"
+      ]
+    }
+  ],
+  "prompts": [
+    "Are there any repo squeeze events happening right now?",
+    "Show me the best cross-asset arbitrage opportunities",
+    "What does short interest sentiment tell us about market direction?",
+    "Analyze flow momentum for the top 10 most traded securities",
+    "Which securities show signs of liquidity fragmentation?"
+  ]
+}

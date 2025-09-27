@@ -1,0 +1,70 @@
+{
+  "name": "DTCC Equities & ETF",
+  "description": "Comprehensive equities and ETF market monitoring dashboard tracking settlement obligations, ETF creation/redemption flows, short interest dynamics, concentration risks, and crowded trade alerts.",
+  "img": "https://openbb-assets.s3.amazonaws.com/dtcc/equities-etf.png",
+  "allowCustomization": true,
+  "tabs": {
+    "settlement": {
+      "id": "settlement",
+      "name": "Settlement & Flows",
+      "layout": [
+        {
+          "i": "equities_etf/metrics",
+          "x": 0,
+          "y": 0,
+          "w": 40,
+          "h": 4
+        },
+        {
+          "i": "equities_etf/settlement_timeline",
+          "x": 0,
+          "y": 4,
+          "w": 20,
+          "h": 10
+        },
+        {
+          "i": "equities_etf/etf_flows",
+          "x": 20,
+          "y": 4,
+          "w": 20,
+          "h": 10
+        }
+      ]
+    },
+    "risk_monitoring": {
+      "id": "risk_monitoring",
+      "name": "Risk Monitoring",
+      "layout": [
+        {
+          "i": "equities_etf/short_interest",
+          "x": 0,
+          "y": 0,
+          "w": 20,
+          "h": 10
+        },
+        {
+          "i": "equities_etf/concentration_risk",
+          "x": 20,
+          "y": 0,
+          "w": 20,
+          "h": 10
+        },
+        {
+          "i": "equities_etf/crowded_trades",
+          "x": 0,
+          "y": 10,
+          "w": 40,
+          "h": 8
+        }
+      ]
+    }
+  },
+  "groups": [],
+  "prompts": [
+    "What are the T+1 vs T+2 settlement obligations for the next week?",
+    "Show me the largest ETF creation and redemption flows today",
+    "Which stocks have the highest short interest ratios?",
+    "Are there any concentration risk alerts for major securities?",
+    "Identify crowded trades with high borrow rates"
+  ]
+}

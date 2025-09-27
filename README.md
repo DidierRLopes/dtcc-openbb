@@ -143,10 +143,28 @@ uvicorn main:app --reload --port 8000
 
 ## 🔧 Configuration
 
+### Apps Configuration Structure
+Each dashboard has its own app configuration file in the `apps/` directory:
+- `apps/market_surveillance.json` - Market surveillance app
+- `apps/risk_management.json` - Risk management app  
+- `apps/fixed_income.json` - Fixed income app
+- `apps/derivatives.json` - Derivatives app
+- `apps/equities_etf.json` - Equities & ETF app
+- `apps/regulatory_compliance.json` - Compliance app
+- `apps/trading_strategy.json` - Trading strategy app
+
+The `/apps.json` endpoint dynamically loads and aggregates these individual files.
+
+### Updating Apps Configuration
+1. Edit individual app files in `apps/` directory
+2. Changes are automatically available via the `/apps.json` endpoint
+3. No manual regeneration needed (dynamic loading)
+
 ### Adding New Widgets
 1. Create endpoint function in appropriate router
 2. Use `@register_widget()` decorator with configuration
 3. Widget will be automatically registered
+4. Add widget to appropriate app configuration in `apps/` directory
 
 ### Widget Configuration Example
 ```python
@@ -167,8 +185,8 @@ def my_widget():
 
 ### Core Endpoints
 - `GET /` - API root information
-- `GET /widgets.json` - Widget configurations for OpenBB
-- `GET /apps.json` - Dashboard app configurations
+- `GET /widgets.json` - Widget configurations for OpenBB (41 widgets)
+- `GET /apps.json` - Dashboard app configurations (7 apps with 14 tabs)
 
 ### Dashboard Endpoints
 - `/market_surveillance/*` - Market surveillance widgets

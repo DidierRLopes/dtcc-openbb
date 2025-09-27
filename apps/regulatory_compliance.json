@@ -1,0 +1,80 @@
+{
+  "name": "DTCC Regulatory & Compliance",
+  "description": "Comprehensive regulatory compliance monitoring dashboard providing audit trails, exception reporting, KYC/AML risk flagging, and real-time compliance alerting across all regulatory frameworks.",
+  "img": "https://openbb-assets.s3.amazonaws.com/dtcc/regulatory-compliance.png",
+  "allowCustomization": true,
+  "tabs": {
+    "compliance_overview": {
+      "id": "compliance_overview",
+      "name": "Compliance Overview",
+      "layout": [
+        {
+          "i": "regulatory_compliance/metrics",
+          "x": 0,
+          "y": 0,
+          "w": 40,
+          "h": 4
+        },
+        {
+          "i": "regulatory_compliance/regulation_heatmap",
+          "x": 0,
+          "y": 4,
+          "w": 20,
+          "h": 10
+        },
+        {
+          "i": "regulatory_compliance/alerts_ticker",
+          "x": 20,
+          "y": 4,
+          "w": 20,
+          "h": 8
+        }
+      ]
+    },
+    "audit_exceptions": {
+      "id": "audit_exceptions",
+      "name": "Audit & Exceptions",
+      "layout": [
+        {
+          "i": "regulatory_compliance/audit_trail",
+          "x": 0,
+          "y": 0,
+          "w": 40,
+          "h": 12
+        },
+        {
+          "i": "regulatory_compliance/exceptions",
+          "x": 0,
+          "y": 12,
+          "w": 20,
+          "h": 10
+        },
+        {
+          "i": "regulatory_compliance/kyc_aml_flags",
+          "x": 20,
+          "y": 12,
+          "w": 20,
+          "h": 10
+        }
+      ]
+    }
+  },
+  "groups": [
+    {
+      "name": "Trade Filter Sync",
+      "type": "param",
+      "paramName": "trade_filter",
+      "defaultValue": "All",
+      "widgetIds": [
+        "regulatory_compliance/audit_trail"
+      ]
+    }
+  ],
+  "prompts": [
+    "What is our overall regulatory compliance status?",
+    "Show me all critical compliance exceptions from the last 24 hours",
+    "Which entities have active KYC/AML risk flags?",
+    "Trace the lifecycle of trade TRD-123456 from execution to settlement",
+    "Are there any Dodd-Frank or MiFID II violations that need attention?"
+  ]
+}
