@@ -1,0 +1,565 @@
+from fastapi import APIRouter
+from fastapi.responses import JSONResponse
+import json
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import pandas as pd
+import numpy as np
+import random
+from datetime import datetime, timedelta
+import sys
+sys.path.append('..')
+
+from shared.decorators import register_widget
+from mockup_data.data_generator import generate_time_series
+from plotly_config import get_theme_colors, base_layout, get_toolbar_config
+
+router = APIRouter(prefix="/trading_strategy", tags=["Trading & Investment Strategy"])
+
+def generate_repo_squeeze_data():
+    """Generate repo squeeze detector data."""
+    securities = ["UST 2Y", "UST 5Y", "UST 10Y", "UST 30Y", "TIPS 5Y", "TIPS 10Y"]
+    
+    data = []
+    dates, _ = generate_time_series(30)
+    
+    for security in securities:
+        for date in dates:
+            base_rate = random.uniform(2.0, 3.0)
+            squeeze_premium = random.uniform(0, 50) if random.random() > 0.8 else 0
+            
+            data.append({
+                "date": date,
+                "security": security,
+                "repo_rate": round(base_rate + squeeze_premium, 2),
+                "general_rate": round(base_rate, 2),
+                "squeeze_premium": round(squeeze_premium, 2),
+                "availability": round(random.uniform(50, 100), 1),
+                "demand_score": round(random.uniform(0, 100), 1)
+            })
+    
+    return data
+
+def generate_sentiment_gauge():
+    """Generate short-interest sentiment data."""
+    sectors = ["Technology", "Healthcare", "Financial", "Energy", "Consumer", "Industrial"]
+    
+    data = []
+    for sector in sectors:
+        short_interest = random.uniform(5, 25)
+        sentiment_score = 100 - (short_interest * 2)  # Inverse relationship
+        
+        data.append({
+            "sector": sector,
+            "short_interest_pct": round(short_interest, 1),
+            "sentiment_score": round(sentiment_score, 1),
+            "trend_7d": round(random.uniform(-5, 5), 2),
+            "volume_ratio": round(random.uniform(0.8, 2.5), 2),
+            "momentum": random.choice(["Bullish", "Bearish", "Neutral"])
+        })
+    
+    return sorted(data, key=lambda x: x["sentiment_score"])
+
+def generate_liquidity_fragmentation():
+    """Generate liquidity fragmentation index data."""
+    venues = ["Primary Market", "Dark Pools", "ECNs", "Crossing Networks", "Internalization"]
+    assets = ["Equities", "Fixed Income", "FX", "Commodities"]
+    
+    data = []
+    for asset in assets:
+        total_volume = random.uniform(1000, 5000)
+        remaining = total_volume
+        
+        for i, venue in enumerate(venues):
+            if i == len(venues) - 1:
+                volume = remaining
+            else:
+                volume = random.uniform(0, remaining * 0.4)
+                remaining -= volume
+            
+            bid_ask = random.uniform(0.5, 5.0)
+            
+            data.append({
+                "asset_class": asset,
+                "venue": venue,
+                "volume_share": round(volume / total_volume * 100, 1),
+                "bid_ask_spread": round(bid_ask, 2),
+                "fragmentation_score": round(random.uniform(20, 80), 1),
+                "liquidity_score": round(100 - bid_ask * 10, 1)
+            })
+    
+    return data
+
+def generate_arbitrage_opportunities():
+    """Generate cross-asset arbitrage monitor data."""
+    opportunities = [
+        "CDS vs Bond Spread", "ETF vs NAV", "Calendar Spread", 
+        "Cross-Currency", "Index Arbitrage", "Convertible Bond"
+    ]
+    
+    data = []
+    for i, opp in enumerate(opportunities):
+        data.append({
+            "opportunity": opp,
+            "spread_bps": round(random.uniform(-10, 25), 1),
+            "historical_avg": round(random.uniform(2, 8), 1),
+            "z_score": round(random.uniform(-2.5, 3.0), 2),
+            "volume": round(random.uniform(50, 500), 2),
+            "signal_strength": random.choice(["Weak", "Moderate", "Strong"]),
+            "risk_adjusted_return": round(random.uniform(-5, 15), 2),
+            "trade_feasibility": round(random.uniform(60, 95), 0)
+        })
+    
+    return sorted(data, key=lambda x: abs(x["z_score"]), reverse=True)
+
+def generate_flow_momentum():
+    """Generate flow momentum tracker data."""
+    securities = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "META", "NVDA", "SPY", "QQQ", "IWM"]
+    
+    data = []
+    dates, _ = generate_time_series(7)
+    
+    for security in securities:
+        net_flow = []
+        cumulative = 0
+        
+        for date in dates:
+            daily_flow = random.uniform(-100, 100)
+            cumulative += daily_flow
+            net_flow.append(round(daily_flow, 2))
+        
+        momentum_score = cumulative / len(dates)
+        
+        data.append({
+            "security": security,
+            "dates": dates,
+            "daily_flows": net_flow,
+            "cumulative_flow": round(cumulative, 2),
+            "momentum_score": round(momentum_score, 2),
+            "volume_trend": random.choice(["Increasing", "Decreasing", "Stable"]),
+            "price_correlation": round(random.uniform(-0.8, 0.8), 3),
+            "signal": "Buy" if momentum_score > 10 else "Sell" if momentum_score < -10 else "Hold"
+        })
+    
+    return sorted(data, key=lambda x: abs(x["momentum_score"]), reverse=True)
+
+# 1. Repo Squeeze Detector
+@register_widget({
+    "name": "Repo Squeeze Detector",
+    "description": "Detect spikes in collateral demand and repo rates",
+    "category": "Trading Strategy",
+    "subCategory": "Fixed Income",
+    "type": "chart",
+    "endpoint": "trading_strategy/repo_squeeze",
+    "gridData": {"w": 20, "h": 12},
+    "raw": True,
+    "params": [
+        {
+            "paramName": "security_filter",
+            "value": "All",
+            "label": "Security",
+            "type": "text",
+            "options": [
+                {"label": "All", "value": "All"},
+                {"label": "UST 2Y", "value": "UST 2Y"},
+                {"label": "UST 5Y", "value": "UST 5Y"},
+                {"label": "UST 10Y", "value": "UST 10Y"},
+                {"label": "UST 30Y", "value": "UST 30Y"}
+            ]
+        }
+    ]
+})
+@router.get("/repo_squeeze")
+def get_repo_squeeze(security_filter: str = "All", raw: bool = False, theme: str = "dark"):
+    """Get repo squeeze detection data."""
+    data = generate_repo_squeeze_data()
+    
+    if raw:
+        return data
+    
+    df = pd.DataFrame(data)
+    if security_filter != "All":
+        df = df[df["security"] == security_filter]
+    
+    colors = get_theme_colors(theme)
+    
+    fig = make_subplots(
+        rows=2, cols=1,
+        shared_xaxes=True,
+        vertical_spacing=0.1,
+        row_heights=[0.7, 0.3],
+        subplot_titles=('Repo Rates vs General Rate', 'Squeeze Premium')
+    )
+    
+    for security in df["security"].unique():
+        security_data = df[df["security"] == security]
+        
+        # Repo rates
+        fig.add_trace(
+            go.Scatter(x=security_data["date"], y=security_data["repo_rate"],
+                      name=f"{security} Repo", mode='lines'),
+            row=1, col=1
+        )
+        
+        # Squeeze premium
+        fig.add_trace(
+            go.Bar(x=security_data["date"], y=security_data["squeeze_premium"],
+                  name=f"{security} Squeeze", opacity=0.6),
+            row=2, col=1
+        )
+    
+    # Add general rate line
+    general_data = df.groupby("date")["general_rate"].mean().reset_index()
+    fig.add_trace(
+        go.Scatter(x=general_data["date"], y=general_data["general_rate"],
+                  name="General Rate", line=dict(dash='dash', color='gray')),
+        row=1, col=1
+    )
+    
+    layout_config = base_layout(theme=theme)
+    layout_config.update({
+        'title': 'Repo Squeeze Detection',
+        'xaxis2_title': 'Date',
+        'yaxis_title': 'Rate (%)',
+        'yaxis2_title': 'Squeeze Premium (bps)',
+        'hovermode': 'x unified',
+        'height': 600
+    })
+    
+    fig.update_layout(layout_config)
+    
+    figure_json = json.loads(fig.to_json())
+    figure_json['config'] = get_toolbar_config()
+    
+    return figure_json
+
+# 2. Short-Interest Sentiment Gauge
+@register_widget({
+    "name": "Short-Interest Sentiment Gauge",
+    "description": "Market bearishness proxy by sector",
+    "category": "Trading Strategy",
+    "subCategory": "Sentiment Analysis",
+    "type": "table",
+    "endpoint": "trading_strategy/sentiment_gauge",
+    "gridData": {"w": 20, "h": 10},
+    "data": {
+        "table": {
+            "enableCharts": True,
+            "chartView": {
+                "enabled": True,
+                "chartType": "bar"
+            },
+            "columnsDefs": [
+                {
+                    "field": "sector",
+                    "headerName": "Sector",
+                    "width": 120,
+                    "pinned": "left",
+                    "chartDataType": "category"
+                },
+                {
+                    "field": "short_interest_pct",
+                    "headerName": "Short Interest (%)",
+                    "width": 140,
+                    "cellDataType": "number",
+                    "formatterFn": "normalizedPercent",
+                    "chartDataType": "series"
+                },
+                {
+                    "field": "sentiment_score",
+                    "headerName": "Sentiment Score",
+                    "width": 130,
+                    "cellDataType": "number",
+                    "renderFn": "columnColor",
+                    "renderFnParams": {
+                        "colorRules": [
+                            {"condition": "gt", "value": 70, "color": "#10b981", "fill": False},
+                            {"condition": "gt", "value": 50, "color": "#f59e0b", "fill": False},
+                            {"condition": "lte", "value": 50, "color": "#ef4444", "fill": False}
+                        ]
+                    }
+                },
+                {
+                    "field": "trend_7d",
+                    "headerName": "7D Trend (%)",
+                    "width": 120,
+                    "cellDataType": "number",
+                    "formatterFn": "normalizedPercent",
+                    "renderFn": "greenRed"
+                },
+                {
+                    "field": "volume_ratio",
+                    "headerName": "Volume Ratio",
+                    "width": 120,
+                    "cellDataType": "number"
+                },
+                {
+                    "field": "momentum",
+                    "headerName": "Momentum",
+                    "width": 100,
+                    "renderFn": "columnColor",
+                    "renderFnParams": {
+                        "colorRules": [
+                            {"condition": "eq", "value": "Bullish", "color": "#10b981", "fill": False},
+                            {"condition": "eq", "value": "Bearish", "color": "#ef4444", "fill": False},
+                            {"condition": "eq", "value": "Neutral", "color": "#6b7280", "fill": False}
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+})
+@router.get("/sentiment_gauge")
+def get_sentiment_gauge():
+    """Get short-interest sentiment gauge."""
+    return generate_sentiment_gauge()
+
+# 3. Liquidity Fragmentation Index
+@register_widget({
+    "name": "Liquidity Fragmentation Index",
+    "description": "Bid/ask spreads inferred from clearing data",
+    "category": "Trading Strategy",
+    "subCategory": "Market Structure",
+    "type": "chart",
+    "endpoint": "trading_strategy/liquidity_fragmentation",
+    "gridData": {"w": 20, "h": 10}
+})
+@router.get("/liquidity_fragmentation")
+def get_liquidity_fragmentation(theme: str = "dark"):
+    """Get liquidity fragmentation analysis."""
+    data = generate_liquidity_fragmentation()
+    df = pd.DataFrame(data)
+    
+    colors = get_theme_colors(theme)
+    
+    fig = go.Figure()
+    
+    asset_classes = df["asset_class"].unique()
+    venues = df["venue"].unique()
+    
+    # Create stacked bar chart
+    for venue in venues:
+        venue_data = df[df["venue"] == venue]
+        
+        fig.add_trace(go.Bar(
+            x=venue_data["asset_class"],
+            y=venue_data["volume_share"],
+            name=venue,
+            text=[f'{v}%' for v in venue_data["volume_share"]],
+            textposition='inside'
+        ))
+    
+    layout_config = base_layout(theme=theme)
+    layout_config.update({
+        'title': 'Market Volume Distribution by Venue',
+        'xaxis_title': 'Asset Class',
+        'yaxis_title': 'Volume Share (%)',
+        'barmode': 'stack',
+        'hovermode': 'x unified'
+    })
+    
+    fig.update_layout(layout_config)
+    
+    figure_json = json.loads(fig.to_json())
+    figure_json['config'] = get_toolbar_config()
+    
+    return figure_json
+
+# 4. Cross-Asset Arbitrage Monitor
+@register_widget({
+    "name": "Cross-Asset Arbitrage Monitor",
+    "description": "CDS vs bond spreads, ETF vs NAV deviations",
+    "category": "Trading Strategy",
+    "subCategory": "Arbitrage",
+    "type": "table",
+    "endpoint": "trading_strategy/arbitrage_monitor",
+    "gridData": {"w": 20, "h": 10},
+    "data": {
+        "table": {
+            "enableCharts": True,
+            "chartView": {
+                "enabled": False,
+                "chartType": "scatter"
+            },
+            "columnsDefs": [
+                {
+                    "field": "opportunity",
+                    "headerName": "Opportunity",
+                    "width": 150,
+                    "pinned": "left"
+                },
+                {
+                    "field": "spread_bps",
+                    "headerName": "Current Spread (bps)",
+                    "width": 150,
+                    "cellDataType": "number",
+                    "renderFn": "greenRed"
+                },
+                {
+                    "field": "historical_avg",
+                    "headerName": "Historical Avg (bps)",
+                    "width": 150,
+                    "cellDataType": "number"
+                },
+                {
+                    "field": "z_score",
+                    "headerName": "Z-Score",
+                    "width": 100,
+                    "cellDataType": "number",
+                    "renderFn": "columnColor",
+                    "renderFnParams": {
+                        "colorRules": [
+                            {"condition": "gt", "value": 2, "color": "#ef4444", "fill": True},
+                            {"condition": "gt", "value": 1, "color": "#f59e0b", "fill": False},
+                            {"condition": "lt", "value": -1, "color": "#10b981", "fill": False}
+                        ]
+                    }
+                },
+                {
+                    "field": "volume",
+                    "headerName": "Volume ($M)",
+                    "width": 120,
+                    "cellDataType": "number",
+                    "formatterFn": "normalizedPercent"
+                },
+                {
+                    "field": "signal_strength",
+                    "headerName": "Signal",
+                    "width": 100,
+                    "renderFn": "columnColor",
+                    "renderFnParams": {
+                        "colorRules": [
+                            {"condition": "eq", "value": "Strong", "color": "#10b981", "fill": True},
+                            {"condition": "eq", "value": "Moderate", "color": "#f59e0b", "fill": False},
+                            {"condition": "eq", "value": "Weak", "color": "#6b7280", "fill": False}
+                        ]
+                    }
+                },
+                {
+                    "field": "risk_adjusted_return",
+                    "headerName": "Risk-Adj Return (%)",
+                    "width": 160,
+                    "cellDataType": "number",
+                    "formatterFn": "normalizedPercent",
+                    "renderFn": "greenRed"
+                }
+            ]
+        }
+    }
+})
+@router.get("/arbitrage_monitor")
+def get_arbitrage_monitor():
+    """Get cross-asset arbitrage opportunities."""
+    return generate_arbitrage_opportunities()
+
+# 5. Flow Momentum Tracker
+@register_widget({
+    "name": "Flow Momentum Tracker",
+    "description": "Net buy/sell activity mapped to performance",
+    "category": "Trading Strategy",
+    "subCategory": "Flow Analysis",
+    "type": "chart",
+    "endpoint": "trading_strategy/flow_momentum",
+    "gridData": {"w": 20, "h": 12},
+    "raw": True
+})
+@router.get("/flow_momentum")
+def get_flow_momentum(raw: bool = False, theme: str = "dark"):
+    """Get flow momentum analysis."""
+    data = generate_flow_momentum()
+    
+    if raw:
+        return data
+    
+    colors = get_theme_colors(theme)
+    
+    fig = make_subplots(
+        rows=2, cols=1,
+        shared_xaxes=True,
+        vertical_spacing=0.1,
+        row_heights=[0.7, 0.3],
+        subplot_titles=('Cumulative Flow by Security', 'Momentum Score')
+    )
+    
+    # Plot top 5 securities by momentum
+    top_securities = sorted(data, key=lambda x: abs(x["momentum_score"]), reverse=True)[:5]
+    
+    for security_data in top_securities:
+        # Cumulative flow
+        cumulative = np.cumsum(security_data["daily_flows"])
+        
+        fig.add_trace(
+            go.Scatter(x=security_data["dates"], y=cumulative,
+                      name=security_data["security"], mode='lines'),
+            row=1, col=1
+        )
+    
+    # Momentum scores
+    securities = [s["security"] for s in top_securities]
+    momentum_scores = [s["momentum_score"] for s in top_securities]
+    colors_list = ['#10b981' if m > 0 else '#ef4444' for m in momentum_scores]
+    
+    fig.add_trace(
+        go.Bar(x=securities, y=momentum_scores, 
+               marker_color=colors_list, showlegend=False),
+        row=2, col=1
+    )
+    
+    layout_config = base_layout(theme=theme)
+    layout_config.update({
+        'title': 'Flow Momentum Analysis',
+        'xaxis2_title': 'Security',
+        'yaxis_title': 'Cumulative Flow ($M)',
+        'yaxis2_title': 'Momentum Score',
+        'hovermode': 'x unified',
+        'height': 600
+    })
+    
+    fig.update_layout(layout_config)
+    
+    figure_json = json.loads(fig.to_json())
+    figure_json['config'] = get_toolbar_config()
+    
+    return figure_json
+
+# 6. Trading Strategy Metrics
+@register_widget({
+    "name": "Trading Strategy Metrics",
+    "description": "Key trading and investment strategy metrics",
+    "category": "Trading Strategy",
+    "subCategory": "Summary",
+    "type": "metric",
+    "endpoint": "trading_strategy/metrics",
+    "gridData": {"w": 20, "h": 4}
+})
+@router.get("/metrics")
+def get_trading_strategy_metrics():
+    """Get trading strategy metrics."""
+    return [
+        {
+            "label": "Alpha Opportunities",
+            "value": "23",
+            "delta": "4.0"
+        },
+        {
+            "label": "Avg Spread Capture",
+            "value": "2.8bps",
+            "delta": "0.3"
+        },
+        {
+            "label": "Flow Correlation",
+            "value": "0.73",
+            "delta": "0.05"
+        },
+        {
+            "label": "Squeeze Events",
+            "value": "4",
+            "delta": "1.0"
+        },
+        {
+            "label": "Strategy Score",
+            "value": "87/100",
+            "delta": "3.0"
+        }
+    ]
