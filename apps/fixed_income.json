@@ -1,7 +1,7 @@
 {
   "name": "DTCC Fixed Income Markets",
   "description": "Comprehensive treasury and repo market monitoring dashboard tracking trade volumes by tenor, repo rate spreads, settlement failures, dealer activity, and liquidity conditions across fixed income securities.",
-  "img": "https://openbb-assets.s3.amazonaws.com/dtcc/fixed-income.png",
+  "img": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=300&fit=crop",
   "allowCustomization": true,
   "tabs": {
     "notes": {

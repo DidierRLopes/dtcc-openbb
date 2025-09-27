@@ -1,7 +1,7 @@
 {
   "name": "DTCC Market Surveillance",
   "description": "Comprehensive market transparency and surveillance dashboard providing real-time monitoring of trade volumes, anomaly detection, counterparty exposure analysis, and regulatory compliance tracking across all asset classes.",
-  "img": "https://openbb-assets.s3.amazonaws.com/dtcc/market-surveillance.png",
+  "img": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop",
   "allowCustomization": true,
   "tabs": {
     "notes": {

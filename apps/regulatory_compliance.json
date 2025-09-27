@@ -1,7 +1,7 @@
 {
   "name": "DTCC Regulatory & Compliance",
   "description": "Comprehensive regulatory compliance monitoring dashboard providing audit trails, exception reporting, KYC/AML risk flagging, and real-time compliance alerting across all regulatory frameworks.",
-  "img": "https://openbb-assets.s3.amazonaws.com/dtcc/regulatory-compliance.png",
+  "img": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop",
   "allowCustomization": true,
   "tabs": {
     "notes": {

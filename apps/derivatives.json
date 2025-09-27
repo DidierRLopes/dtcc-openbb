@@ -1,7 +1,7 @@
 {
   "name": "DTCC Derivatives Analytics",
   "description": "Advanced derivatives market analysis dashboard providing insights into swap notionals, CDS spreads, volatility surfaces, net positions, and counterparty networks across OTC derivatives markets.",
-  "img": "https://openbb-assets.s3.amazonaws.com/dtcc/derivatives.png",
+  "img": "https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=400&h=300&fit=crop",
   "allowCustomization": true,
   "tabs": {
     "notes": {

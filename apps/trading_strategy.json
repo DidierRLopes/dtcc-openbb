@@ -1,7 +1,7 @@
 {
   "name": "DTCC Trading Strategy",
   "description": "Advanced trading insights and investment strategy dashboard featuring repo squeeze detection, sentiment analysis, liquidity fragmentation monitoring, arbitrage opportunities, and flow momentum tracking.",
-  "img": "https://openbb-assets.s3.amazonaws.com/dtcc/trading-strategy.png",
+  "img": "https://images.unsplash.com/photo-1618044619888-009e412ff12a?w=400&h=300&fit=crop",
   "allowCustomization": true,
   "tabs": {
     "notes": {

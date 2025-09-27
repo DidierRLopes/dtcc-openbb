@@ -1,7 +1,7 @@
 {
   "name": "DTCC Risk Management",
   "description": "Advanced risk management and stress testing dashboard featuring counterparty exposure analysis, collateral requirement forecasting, settlement risk monitoring, and comprehensive stress scenario modeling.",
-  "img": "https://openbb-assets.s3.amazonaws.com/dtcc/risk-management.png",
+  "img": "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=400&h=300&fit=crop",
   "allowCustomization": true,
   "tabs": {
     "notes": {
