@@ -594,7 +594,9 @@ The DTCC Trading Strategy Dashboard provides advanced trading insights and inves
 
 ### Widgets:
 • **Trading Strategy Metrics**: Key strategy indicators including alpha opportunities (23), average spread capture (2.8bps), flow correlation (0.73), squeeze events (4), and strategy score (87/100)
+
 • **Repo Squeeze Detector**: Multi-panel analysis showing repo rates vs general rates with squeeze premium identification across treasury securities
+
 • **Cross-Asset Arbitrage Monitor**: Comprehensive table of arbitrage opportunities with z-scores, signal strength, and risk-adjusted return analysis
 
 ---
@@ -604,32 +606,48 @@ The DTCC Trading Strategy Dashboard provides advanced trading insights and inves
 
 ### Widgets:
 • **Short-Interest Sentiment Gauge**: Sector-by-sector sentiment analysis based on short interest levels with momentum and trend indicators
+
 • **Liquidity Fragmentation Index**: Market structure analysis showing volume distribution across different venues and asset classes
+
 • **Flow Momentum Tracker**: Time series analysis of cumulative flows and momentum scores for top securities with correlation to price movements
 
 ---
 
 ## Data Sources
 • **DTCC Trading Data**: Comprehensive trade flow data across all asset classes for momentum and sentiment analysis
+
 • **Repo Market Data**: Real-time repo rates, collateral availability, and squeeze detection across treasury and agency securities
+
 • **Options Market Data**: Implied volatility surfaces, options flow data, and derivatives positioning for sentiment analysis
+
 • **Market Structure Data**: Venue-specific trading data, dark pool flows, and liquidity fragmentation metrics
+
 • **Alternative Data**: Sentiment indicators, news flow analysis, and social media sentiment for enhanced market intelligence
 
 ## Key Metrics Tracked
 • **Arbitrage Opportunities**: Spread relationships, z-score analysis, historical deviations, and trade feasibility assessments across asset classes
+
 • **Repo Market Dynamics**: Squeeze premiums, collateral scarcity indicators, and funding cost differentials for alpha generation
+
 • **Sentiment Indicators**: Short interest ratios, put-call ratios, volatility skew, and sentiment momentum across sectors and securities
+
 • **Flow Analytics**: Institutional flow patterns, momentum persistence, price correlation, and flow-based signal generation
+
 • **Liquidity Metrics**: Fragmentation indices, bid-ask spreads, market depth, and liquidity transformation costs across venues
+
 • **Strategy Performance**: Alpha generation metrics, Sharpe ratios, strategy correlation, and risk-adjusted performance attribution
+
 • **Market Microstructure**: Order flow dynamics, execution quality, and market impact analysis for optimal trade execution
 
 ## Use Cases
 • **Portfolio Managers**: Optimize asset allocation, identify alpha opportunities, and enhance risk-adjusted returns through systematic strategy deployment
+
 • **Quantitative Traders**: Develop and backtest systematic trading strategies using flow momentum, sentiment, and arbitrage signals
+
 • **Fixed Income Traders**: Capitalize on repo squeeze events, yield curve arbitrage, and duration-based strategies in treasury markets
+
 • **Risk Arbitrageurs**: Identify and execute cross-asset arbitrage opportunities while managing associated risks and correlation exposures
+
 • **Market Makers**: Optimize inventory management, predict flow patterns, and enhance market-making profitability through superior market intelligence"""
 
     return markdown_content

@@ -573,7 +573,9 @@ The DTCC Risk Management Dashboard provides advanced risk management and stress 
 
 ### Widgets:
 • **Risk Metrics Summary**: Key risk indicators including total exposure ($28.4B), collateral coverage (87.3%), settlement fail rate (0.42%), liquidity score (78/100), and VaR 99% ($142M)
+
 • **Counterparty Exposure Treemap**: Hierarchical visualization of exposures by firm and sector, switchable between gross exposure, net exposure, and collateralized views
+
 • **Liquidity Heatmap**: Repo availability matrix across collateral types (Treasury, Agency, MBS, Corporate IG/HY, Equity) and maturity buckets
 
 ---
@@ -583,7 +585,9 @@ The DTCC Risk Management Dashboard provides advanced risk management and stress 
 
 ### Widgets:
 • **Collateral Requirement Forecast**: 90-day projection of collateral needs under baseline, stressed (2008-like), and extreme stress scenarios
+
 • **Settlement Fails Tracker**: Stacked area chart showing fails by asset class (Treasury, Equity, MBS, Corporate) with trend analysis
+
 • **Stress Test Results**: Comprehensive scenario analysis table showing probability, P&L impact, collateral calls, liquidity needs, and risk scores for various stress events
 
 ---

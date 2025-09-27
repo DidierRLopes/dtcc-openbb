@@ -502,7 +502,9 @@ The DTCC Equities & ETF Dashboard provides comprehensive equities and ETF market
 
 ### Widgets:
 • **Equities & ETF Metrics**: Key market indicators including daily volume ($127B), ETF net flows ($2.4B), short interest (15.2B shares), settlement rate (99.91%), and average borrow cost (3.2%)
+
 • **Settlement Obligations Timeline**: Bar chart showing T+1 and T+2 settlement obligations over the next 14 days with weekend adjustments
+
 • **ETF Creation/Redemption Flows**: Detailed table of ETF flows by fund with creation, redemption, and net flow analysis with chart visualization
 
 ---
@@ -512,32 +514,48 @@ The DTCC Equities & ETF Dashboard provides comprehensive equities and ETF market
 
 ### Widgets:
 • **Short Interest Tracker**: Comprehensive table of securities with high short interest including shares short, short ratios, days to cover, borrow rates, and 7-day trends
+
 • **Concentration Risk Monitor**: Analysis of largest net buy/sell obligations by security with concentration scores and settlement risk indicators
+
 • **Crowded Trade Alerts**: Real-time alert system for borrow spikes, delivery fails, unusual volume, and concentration breaches with severity levels
 
 ---
 
 ## Data Sources
 • **DTCC Settlement Systems**: Real-time feeds from National Securities Clearing Corporation (NSCC) for settlement obligation tracking
+
 • **ETF Data Providers**: Direct integration with ETF sponsors and authorized participants for creation/redemption flow data
+
 • **Securities Lending Markets**: Real-time borrow availability, rates, and utilization data from major securities lending platforms
+
 • **Exchange Data Feeds**: Trading volume, share outstanding, and corporate action data from major U.S. equity exchanges
+
 • **Regulatory Filings**: Short interest reports, institutional holdings, and other regulatory data for concentration analysis
 
 ## Key Metrics Tracked
 • **Settlement Analytics**: Settlement rates, fail-to-deliver amounts, aging analysis, and settlement cycle performance metrics
+
 • **ETF Flow Analysis**: Creation/redemption volumes, premium/discount tracking, NAV deviation analysis, and basket composition impacts
+
 • **Short Interest Metrics**: Short interest ratios, days to cover, utilization rates, borrow costs, and short squeeze indicators
+
 • **Concentration Indicators**: Net settlement obligations, market share concentration, single-name exposure limits, and operational risk metrics
+
 • **Liquidity Measures**: Available-for-borrow inventory, borrow demand patterns, and securities lending revenue analytics
+
 • **Risk Alerts**: Threshold breach monitoring, unusual activity detection, and early warning system metrics
+
 • **Operational Efficiency**: Straight-through processing rates, exception handling, and settlement infrastructure performance
 
 ## Use Cases
 • **Settlement Risk Managers**: Monitor settlement obligations, track settlement performance, and manage operational risk in equity clearing
+
 • **ETF Traders & Market Makers**: Track ETF flows, identify arbitrage opportunities, and monitor creation/redemption efficiency
+
 • **Securities Lending Desks**: Monitor borrow demand, optimize inventory allocation, and manage securities lending revenue
+
 • **Risk Management Teams**: Assess concentration risks, monitor crowded trades, and track potential settlement stress scenarios
+
 • **Compliance Officers**: Ensure adherence to settlement regulations and monitor for market manipulation in heavily shorted securities"""
 
     return markdown_content
