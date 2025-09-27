@@ -168,7 +168,7 @@ def get_regulation_heatmap(theme: str = "dark"):
     
     layout_config = base_layout(theme=theme)
     layout_config.update({
-        'title': 'Regulatory Compliance Heatmap',
+        # 'title': 'Regulatory Compliance Heatmap',
         'xaxis_title': 'Obligation Type',
         'yaxis_title': 'Regulation',
         'height': 400

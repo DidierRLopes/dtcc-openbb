@@ -218,7 +218,7 @@ def get_repo_squeeze(security_filter: str = "All", raw: bool = False, theme: str
     
     layout_config = base_layout(theme=theme)
     layout_config.update({
-        'title': 'Repo Squeeze Detection',
+        # 'title': 'Repo Squeeze Detection',
         'xaxis2_title': 'Date',
         'yaxis_title': 'Rate (%)',
         'yaxis2_title': 'Squeeze Premium (bps)',
@@ -352,7 +352,7 @@ def get_liquidity_fragmentation(theme: str = "dark"):
     
     layout_config = base_layout(theme=theme)
     layout_config.update({
-        'title': 'Market Volume Distribution by Venue',
+        # 'title': 'Market Volume Distribution by Venue',
         'xaxis_title': 'Asset Class',
         'yaxis_title': 'Volume Share (%)',
         'barmode': 'stack',
@@ -508,7 +508,7 @@ def get_flow_momentum(raw: bool = False, theme: str = "dark"):
     
     layout_config = base_layout(theme=theme)
     layout_config.update({
-        'title': 'Flow Momentum Analysis',
+        # 'title': 'Flow Momentum Analysis',
         'xaxis2_title': 'Security',
         'yaxis_title': 'Cumulative Flow ($M)',
         'yaxis2_title': 'Momentum Score',

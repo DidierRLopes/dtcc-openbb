@@ -73,7 +73,7 @@ def get_treasury_volumes(period: str = "30d", raw: bool = False, theme: str = "d
     
     layout_config = base_layout(theme=theme)
     layout_config.update({
-        'title': 'Treasury Trade Volumes by Tenor',
+        # 'title': 'Treasury Trade Volumes by Tenor',
         'xaxis_title': 'Date',
         'yaxis_title': 'Volume ($B)',
         'hovermode': 'x unified',
@@ -147,7 +147,7 @@ def get_repo_spreads(theme: str = "dark"):
     
     layout_config = base_layout(theme=theme)
     layout_config.update({
-        'title': 'Repo Rate Monitor',
+        # 'title': 'Repo Rate Monitor',
         'xaxis2_title': 'Date',
         'yaxis_title': 'Rate (%)',
         'yaxis2_title': 'Spread (bps)',
@@ -338,7 +338,7 @@ def get_liquidity_curve(theme: str = "dark"):
     
     layout_config = base_layout(theme=theme)
     layout_config.update({
-        'title': 'Repo Liquidity Availability',
+        # 'title': 'Repo Liquidity Availability',
         'xaxis_title': 'Term',
         'yaxis_title': 'Collateral Type',
         'height': 400

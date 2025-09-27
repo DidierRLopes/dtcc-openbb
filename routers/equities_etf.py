@@ -122,7 +122,7 @@ def get_settlement_timeline(raw: bool = False, theme: str = "dark"):
     
     layout_config = base_layout(theme=theme)
     layout_config.update({
-        'title': 'Settlement Obligations Timeline',
+        # 'title': 'Settlement Obligations Timeline',
         'xaxis_title': 'Settlement Date',
         'yaxis_title': 'Obligations ($B)',
         'barmode': 'group',

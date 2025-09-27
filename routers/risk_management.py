@@ -173,7 +173,7 @@ def get_exposure_treemap(exposure_type: str = "gross", theme: str = "dark"):
     
     layout_config = base_layout(theme=theme)
     layout_config.update({
-        'title': f'Counterparty {exposure_type.title()} Exposure by Sector',
+        # 'title': f'Counterparty {exposure_type.title()} Exposure by Sector',
         'height': 500
     })
     
@@ -256,7 +256,7 @@ def get_collateral_forecast(forecast_days: int = 30, theme: str = "dark"):
     
     layout_config = base_layout(theme=theme)
     layout_config.update({
-        'title': 'Collateral Requirement Forecast',
+        # 'title': 'Collateral Requirement Forecast',
         'xaxis_title': 'Date',
         'yaxis_title': 'Collateral Required ($B)',
         'hovermode': 'x unified',
@@ -343,7 +343,7 @@ def get_settlement_fails(raw: bool = False, theme: str = "dark"):
     
     layout_config = base_layout(theme=theme)
     layout_config.update({
-        'title': 'Settlement Fails by Asset Class',
+        # 'title': 'Settlement Fails by Asset Class',
         'xaxis_title': 'Date',
         'yaxis_title': 'Fails Amount ($M)',
         'hovermode': 'x unified'
@@ -391,7 +391,7 @@ def get_liquidity_heatmap(theme: str = "dark"):
     
     layout_config = base_layout(theme=theme)
     layout_config.update({
-        'title': 'Liquidity Availability Heatmap',
+        # 'title': 'Liquidity Availability Heatmap',
         'xaxis_title': 'Maturity',
         'yaxis_title': 'Collateral Type',
         'height': 400

@@ -1,84 +1,118 @@
 """
-Plotly configuration for Causeway backend with light and dark theme support.
+Plotly configuration for DTCC OpenBB Dashboard with official DTCC branding colors.
 """
 
 import plotly.graph_objects as go
 
+# DTCC Official Brand Colors
+DTCC_COLORS = {
+    'jaffa': '#ED6D3C',        # Primary brand color (RGB: 237, 109, 60)
+    'eden': '#0E5447',         # Secondary/complementary color  
+    'gallery': '#EBEBEB',      # Neutral off-white/light tone
+    'cream': '#F8F6F3',        # Cream/off-white neutral background
+    'dark_grey': '#2E2E2E',    # Dark tone for text/contrast
+    'light_grey': '#8E8E8E',   # Medium grey for secondary text
+}
+
+def get_dtcc_palette():
+    """Get DTCC color palette for charts."""
+    return [
+        DTCC_COLORS['jaffa'],      # Primary
+        DTCC_COLORS['eden'],       # Secondary
+        '#B85D47',                 # Jaffa variant
+        '#1A6B5A',                 # Eden variant
+        '#F4946B',                 # Light Jaffa
+        '#236B5C',                 # Medium Eden
+        '#D96343',                 # Medium Jaffa
+        '#0F4A3F',                 # Dark Eden
+    ]
 
 def get_theme_colors(theme='dark'):
-    """Get color configuration for light and dark themes."""
+    """Get DTCC color configuration for light and dark themes."""
     if theme == 'dark':
         return {
             'text': '#FFFFFF',
-            'bg_color': '#151518',
-            'paper_bg': '#151518',
-            'grid_color': 'rgba(128, 128, 128, 0.2)',
-            'zeroline_color': 'rgba(128, 128, 128, 0.4)',
-            'line_color': '#4169E1',
-            'main_line': '#FF8000',  # Orange for dark theme
-            'positive_color': '#00C851',
-            'negative_color': '#FF4444',
-            'neutral': '#2D9BF0',  # Blue
-            'neutral_color': '#33B5E5',
+            'bg_color': '#151518',        # OpenBB dark background
+            'paper_bg': '#151518',       # OpenBB dark background
+            'grid_color': 'rgba(255, 255, 255, 0.1)',
+            'zeroline_color': 'rgba(255, 255, 255, 0.2)',
+            'line_color': DTCC_COLORS['jaffa'],
+            'main_line': DTCC_COLORS['jaffa'],
+            'positive_color': DTCC_COLORS['eden'],
+            'negative_color': '#E74C3C',
+            'neutral': DTCC_COLORS['jaffa'],
+            'neutral_color': DTCC_COLORS['eden'],
             'hover_bg': 'rgba(0, 0, 0, 0.8)',
-            'legend_bg': 'rgba(0, 0, 0, 0.5)',
-            'legend_border': 'rgba(255, 255, 255, 0.2)',
-            'grid': 'rgba(51, 51, 51, 0.3)',
+            'legend_bg': 'rgba(0, 0, 0, 0.7)',
+            'legend_border': f"rgba(237, 109, 60, 0.3)",
+            'grid': 'rgba(255, 255, 255, 0.1)',
             'heatmap': {
                 'zmid': 0,
                 'text_color': '#FFFFFF'
-            }
+            },
+            'palette': get_dtcc_palette()
         }
     else:  # light theme
         return {
-            'text': '#2E2E2E',
-            'bg_color': '#FFFFFF',
-            'paper_bg': '#FFFFFF',
-            'grid_color': 'rgba(128, 128, 128, 0.3)',
-            'zeroline_color': 'rgba(128, 128, 128, 0.5)',
-            'line_color': '#2E5090',
-            'main_line': '#2E5090',  # Navy blue for light theme
-            'positive_color': '#008F11',
-            'negative_color': '#CC0000',
-            'neutral': '#00AA44',  # Forest green
-            'neutral_color': '#1976D2',
-            'hover_bg': 'rgba(255, 255, 255, 0.9)',
-            'legend_bg': 'rgba(255, 255, 255, 0.8)',
-            'legend_border': 'rgba(0, 0, 0, 0.2)',
-            'grid': 'rgba(221, 221, 221, 0.3)',
+            'text': DTCC_COLORS['dark_grey'],
+            'bg_color': '#FFFFFF',       # OpenBB light background (white)
+            'paper_bg': '#FFFFFF',      # OpenBB light background (white)
+            'grid_color': 'rgba(0, 0, 0, 0.15)',
+            'zeroline_color': 'rgba(0, 0, 0, 0.25)',
+            'line_color': DTCC_COLORS['jaffa'],
+            'main_line': DTCC_COLORS['jaffa'],
+            'positive_color': DTCC_COLORS['eden'],
+            'negative_color': '#C0392B',
+            'neutral': DTCC_COLORS['eden'],
+            'neutral_color': DTCC_COLORS['jaffa'],
+            'hover_bg': 'rgba(255, 255, 255, 0.95)',
+            'legend_bg': 'rgba(255, 255, 255, 0.9)',
+            'legend_border': f"rgba(237, 109, 60, 0.2)",
+            'grid': 'rgba(0, 0, 0, 0.1)',
             'heatmap': {
                 'zmid': 0,
-                'text_color': '#333333'
-            }
+                'text_color': DTCC_COLORS['dark_grey']
+            },
+            'palette': get_dtcc_palette()
         }
 
 
-def base_layout(x_title=None, y_title=None, theme='dark', margin=None, height=None):
-    """Create base layout configuration for charts."""
+def base_layout(x_title=None, y_title=None, theme='dark', margin=None, height=None, show_title=False):
+    """Create base layout configuration for DTCC branded charts."""
     colors = get_theme_colors(theme)
     
-    default_margin = {'l': 50, 'r': 50, 't': 10, 'b': 50, 'pad': 0}
+    # Optimized margins for dashboard widgets (no title space needed)
+    default_margin = {'l': 50, 'r': 50, 't': 20, 'b': 50, 'pad': 0}
     if margin:
         default_margin.update(margin)
     
     layout = {
         'plot_bgcolor': colors['bg_color'],
         'paper_bgcolor': colors['paper_bg'],
-        'font': {'color': colors['text'], 'family': 'Arial, sans-serif'},
+        'font': {
+            'color': colors['text'], 
+            'family': 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+            'size': 12
+        },
         'showlegend': True,
         'hovermode': 'closest',
         'margin': default_margin,
+        'colorway': colors['palette'],  # Use DTCC color palette
         'xaxis': {
-            'title': {'text': x_title, 'font': {'color': colors['text']}} if x_title else None,
+            'title': {'text': x_title, 'font': {'color': colors['text'], 'size': 11}} if x_title else None,
             'gridcolor': colors['grid_color'],
             'zeroline': True,
             'zerolinecolor': colors['zeroline_color'],
-            'tickfont': {'color': colors['text']}
+            'tickfont': {'color': colors['text'], 'size': 10},
+            'linecolor': colors['grid_color'],
+            'linewidth': 1
         },
         'yaxis': {
-            'title': {'text': y_title, 'font': {'color': colors['text']}} if y_title else None,
+            'title': {'text': y_title, 'font': {'color': colors['text'], 'size': 11}} if y_title else None,
             'gridcolor': colors['grid_color'],
-            'tickfont': {'color': colors['text']}
+            'tickfont': {'color': colors['text'], 'size': 10},
+            'linecolor': colors['grid_color'],
+            'linewidth': 1
         },
         'legend': {
             'orientation': 'v',
@@ -89,9 +123,12 @@ def base_layout(x_title=None, y_title=None, theme='dark', margin=None, height=No
             'bgcolor': colors['legend_bg'],
             'bordercolor': colors['legend_border'],
             'borderwidth': 1,
-            'font': {'color': colors['text']}
+            'font': {'color': colors['text'], 'size': 10}
         }
     }
+    
+    # Never show main title on charts (handled by OpenBB widget system)
+    layout['title'] = None
     
     if height:
         layout['height'] = height
@@ -100,11 +137,11 @@ def base_layout(x_title=None, y_title=None, theme='dark', margin=None, height=No
 
 
 def create_line_trace(x_data, y_data, name, theme='dark', color=None, dash=None, width=2):
-    """Create a line trace with theme-appropriate styling."""
+    """Create a line trace with DTCC branded styling."""
     colors = get_theme_colors(theme)
     
     if not color:
-        color = colors['line_color']
+        color = colors['line_color']  # Uses DTCC Jaffa by default
     
     line_config = {'color': color, 'width': width}
     if dash:
@@ -115,19 +152,23 @@ def create_line_trace(x_data, y_data, name, theme='dark', color=None, dash=None,
         y=y_data,
         mode='lines',
         name=name,
-        line=line_config
+        line=line_config,
+        hovertemplate='<b>%{fullData.name}</b><br>' +
+                     'X: %{x}<br>' +
+                     'Y: %{y}<br>' +
+                     '<extra></extra>'
     )
 
 
 def create_vertical_line_trace(x_value, y_range, name, theme='dark', color=None):
-    """Create a vertical line trace for markers."""
+    """Create a vertical line trace with DTCC branded markers."""
     colors = get_theme_colors(theme)
     
     if not color:
-        if 'current' in name.lower():
-            color = colors['negative_color']
+        if 'current' in name.lower() or 'actual' in name.lower():
+            color = DTCC_COLORS['jaffa']  # Primary color for current/actual
         elif 'target' in name.lower() or 'consensus' in name.lower():
-            color = colors['positive_color']
+            color = DTCC_COLORS['eden']   # Secondary color for targets
         else:
             color = colors['neutral_color']
     
@@ -139,6 +180,36 @@ def create_vertical_line_trace(x_value, y_range, name, theme='dark', color=None)
         line={'color': color, 'dash': 'dash', 'width': 2},
         showlegend=True,
         hoverinfo='skip'
+    )
+
+
+def create_dtcc_heatmap(z_data, x_labels, y_labels, theme='dark', colorscale=None):
+    """Create a heatmap with DTCC branded colors."""
+    if not colorscale:
+        # DTCC branded colorscale from cream to jaffa to eden
+        colorscale = [
+            [0.0, DTCC_COLORS['cream']],
+            [0.3, DTCC_COLORS['gallery']],
+            [0.6, DTCC_COLORS['jaffa']],
+            [1.0, DTCC_COLORS['eden']]
+        ]
+    
+    colors = get_theme_colors(theme)
+    
+    return go.Heatmap(
+        z=z_data,
+        x=x_labels,
+        y=y_labels,
+        colorscale=colorscale,
+        showscale=True,
+        hovertemplate='<b>%{y}</b><br>' +
+                     '%{x}<br>' +
+                     'Value: %{z}<br>' +
+                     '<extra></extra>',
+        colorbar={
+            'title': {'side': 'right', 'font': {'color': colors['text'], 'size': 10}},
+            'tickfont': {'color': colors['text'], 'size': 9}
+        }
     )
 
 

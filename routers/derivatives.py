@@ -181,7 +181,7 @@ def get_cds_spreads(view: str = "indices", raw: bool = False, theme: str = "dark
     
     layout_config = base_layout(theme=theme)
     layout_config.update({
-        'title': 'CDS Spread Monitor',
+        # 'title': 'CDS Spread Monitor',
         'xaxis_title': 'Date',
         'yaxis_title': 'Spread (bps)',
         'hovermode': 'x unified',
@@ -227,7 +227,7 @@ def get_volatility_surface(theme: str = "dark"):
     
     layout_config = base_layout(theme=theme)
     layout_config.update({
-        'title': 'Implied Volatility Surface',
+        # 'title': 'Implied Volatility Surface',
         'scene': dict(
             xaxis_title='Strike',
             yaxis_title='Maturity (Days)',
@@ -379,7 +379,7 @@ def get_derivatives_counterparty_network(theme: str = "dark"):
     
     layout_config = base_layout(theme=theme)
     layout_config.update({
-        'title': 'Derivatives Exposure Flow Network',
+        # 'title': 'Derivatives Exposure Flow Network',
         'height': 600
     })
     

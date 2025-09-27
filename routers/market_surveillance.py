@@ -67,11 +67,11 @@ def get_trade_volume_heatmap(date_range: str = "7d", theme: str = "dark"):
     
     layout_config = base_layout(theme=theme)
     layout_config.update({
-        'title': {
-            'text': f"Trade Volume Heatmap - {date_range}",
-            'x': 0.5,
-            'xanchor': 'center'
-        },
+        # 'title': {
+        #     'text': f"Trade Volume Heatmap - {date_range}",
+        #     'x': 0.5,
+        #     'xanchor': 'center'
+        # },
         'xaxis_title': "Hour (UTC)",
         'yaxis_title': "Asset Class",
         'height': 500
@@ -278,7 +278,7 @@ def get_counterparty_network(min_exposure: float = 50, theme: str = "dark"):
     
     layout_config = base_layout(theme=theme)
     layout_config.update({
-        'title': 'Counterparty Exposure Network',
+        # 'title': 'Counterparty Exposure Network',
         'showlegend': False,
         'xaxis': {'showgrid': False, 'zeroline': False, 'visible': False},
         'yaxis': {'showgrid': False, 'zeroline': False, 'visible': False},
