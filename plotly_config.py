@@ -6,25 +6,27 @@ import plotly.graph_objects as go
 
 # DTCC Official Brand Colors
 DTCC_COLORS = {
-    'jaffa': '#ED6D3C',        # Primary brand color (RGB: 237, 109, 60)
-    'eden': '#0E5447',         # Secondary/complementary color  
-    'gallery': '#EBEBEB',      # Neutral off-white/light tone
-    'cream': '#F8F6F3',        # Cream/off-white neutral background
-    'dark_grey': '#2E2E2E',    # Dark tone for text/contrast
-    'light_grey': '#8E8E8E',   # Medium grey for secondary text
+    'primary_orange': '#ED6D3C',    # Core orange tone - accent buttons, highlights
+    'primary_green': '#0E5447',     # Prominent navigation, accent elements
+    'orange_light': '#F28352',      # Lighter orange variant/tint for hover states
+    'green_dark': '#0B413A',        # Darker green variant for hover/shadow states
+    'gallery': '#EBEBEB',           # Neutral off-white/light tone
+    'cream': '#F8F6F3',             # Cream/off-white neutral background
+    'dark_grey': '#2E2E2E',         # Dark tone for text/contrast
+    'light_grey': '#8E8E8E',        # Medium grey for secondary text
 }
 
 def get_dtcc_palette():
     """Get DTCC color palette for charts."""
     return [
-        DTCC_COLORS['jaffa'],      # Primary
-        DTCC_COLORS['eden'],       # Secondary
-        '#B85D47',                 # Jaffa variant
-        '#1A6B5A',                 # Eden variant
-        '#F4946B',                 # Light Jaffa
-        '#236B5C',                 # Medium Eden
-        '#D96343',                 # Medium Jaffa
-        '#0F4A3F',                 # Dark Eden
+        DTCC_COLORS['primary_orange'],  # Primary - Core orange
+        DTCC_COLORS['primary_green'],   # Secondary - Core green/teal
+        DTCC_COLORS['orange_light'],    # Tertiary - Light orange variant
+        DTCC_COLORS['green_dark'],      # Quaternary - Dark green variant
+        '#F4946B',                      # Fifth - Even lighter orange
+        '#236B5C',                      # Sixth - Medium green
+        '#D96343',                      # Seventh - Medium orange
+        '#174A3E',                      # Eighth - Alternative green shade
     ]
 
 def get_theme_colors(theme='dark'):
@@ -36,12 +38,12 @@ def get_theme_colors(theme='dark'):
             'paper_bg': '#151518',       # OpenBB dark background
             'grid_color': 'rgba(255, 255, 255, 0.1)',
             'zeroline_color': 'rgba(255, 255, 255, 0.2)',
-            'line_color': DTCC_COLORS['jaffa'],
-            'main_line': DTCC_COLORS['jaffa'],
-            'positive_color': DTCC_COLORS['eden'],
-            'negative_color': '#E74C3C',
-            'neutral': DTCC_COLORS['jaffa'],
-            'neutral_color': DTCC_COLORS['eden'],
+            'line_color': DTCC_COLORS['primary_orange'],
+            'main_line': DTCC_COLORS['primary_orange'],
+            'positive_color': DTCC_COLORS['primary_green'],
+            'negative_color': DTCC_COLORS['primary_orange'],
+            'neutral': DTCC_COLORS['orange_light'],
+            'neutral_color': DTCC_COLORS['primary_green'],
             'hover_bg': 'rgba(0, 0, 0, 0.8)',
             'legend_bg': 'rgba(0, 0, 0, 0.7)',
             'legend_border': f"rgba(237, 109, 60, 0.3)",
@@ -59,12 +61,12 @@ def get_theme_colors(theme='dark'):
             'paper_bg': '#FFFFFF',      # OpenBB light background (white)
             'grid_color': 'rgba(0, 0, 0, 0.15)',
             'zeroline_color': 'rgba(0, 0, 0, 0.25)',
-            'line_color': DTCC_COLORS['jaffa'],
-            'main_line': DTCC_COLORS['jaffa'],
-            'positive_color': DTCC_COLORS['eden'],
-            'negative_color': '#C0392B',
-            'neutral': DTCC_COLORS['eden'],
-            'neutral_color': DTCC_COLORS['jaffa'],
+            'line_color': DTCC_COLORS['primary_orange'],
+            'main_line': DTCC_COLORS['primary_orange'],
+            'positive_color': DTCC_COLORS['primary_green'],
+            'negative_color': DTCC_COLORS['primary_orange'],
+            'neutral': DTCC_COLORS['primary_green'],
+            'neutral_color': DTCC_COLORS['orange_light'],
             'hover_bg': 'rgba(255, 255, 255, 0.95)',
             'legend_bg': 'rgba(255, 255, 255, 0.9)',
             'legend_border': f"rgba(237, 109, 60, 0.2)",
@@ -77,7 +79,7 @@ def get_theme_colors(theme='dark'):
         }
 
 
-def base_layout(x_title=None, y_title=None, theme='dark', margin=None, height=None, show_title=False):
+def base_layout(x_title=None, y_title=None, theme='dark', margin=None, height=None, show_title=False, watermark=True):
     """Create base layout configuration for DTCC branded charts."""
     colors = get_theme_colors(theme)
     
@@ -127,6 +129,24 @@ def base_layout(x_title=None, y_title=None, theme='dark', margin=None, height=No
         }
     }
     
+    # Add DTCC watermark as background image
+    if watermark:
+        layout['images'] = [
+            {
+                'source': 'https://d2pasa6bkzkrjd.cloudfront.net/_resize/consensus2025/partner/500/site/consensus2025/images/userfiles/partners/15d6a0492f47a15733c125af54845766.png',
+                'xref': 'paper',
+                'yref': 'paper',
+                'x': 0.5,  # Center horizontally
+                'y': 0.5,  # Center vertically
+                'sizex': 0.6,
+                'sizey': 0.6,
+                'xanchor': 'center',
+                'yanchor': 'middle',
+                'opacity': 0.15,  # Semi-transparent watermark
+                'layer': 'below'  # Behind the chart data
+            }
+        ]
+    
     # Never show main title on charts (handled by OpenBB widget system)
     layout['title'] = None
     
@@ -166,9 +186,9 @@ def create_vertical_line_trace(x_value, y_range, name, theme='dark', color=None)
     
     if not color:
         if 'current' in name.lower() or 'actual' in name.lower():
-            color = DTCC_COLORS['jaffa']  # Primary color for current/actual
+            color = DTCC_COLORS['primary_orange']  # Primary color for current/actual
         elif 'target' in name.lower() or 'consensus' in name.lower():
-            color = DTCC_COLORS['eden']   # Secondary color for targets
+            color = DTCC_COLORS['primary_green']   # Secondary color for targets
         else:
             color = colors['neutral_color']
     
@@ -186,12 +206,12 @@ def create_vertical_line_trace(x_value, y_range, name, theme='dark', color=None)
 def create_dtcc_heatmap(z_data, x_labels, y_labels, theme='dark', colorscale=None):
     """Create a heatmap with DTCC branded colors."""
     if not colorscale:
-        # DTCC branded colorscale from cream to jaffa to eden
+        # DTCC branded colorscale from cream to orange to green
         colorscale = [
             [0.0, DTCC_COLORS['cream']],
             [0.3, DTCC_COLORS['gallery']],
-            [0.6, DTCC_COLORS['jaffa']],
-            [1.0, DTCC_COLORS['eden']]
+            [0.6, DTCC_COLORS['primary_orange']],
+            [1.0, DTCC_COLORS['primary_green']]
         ]
     
     colors = get_theme_colors(theme)
@@ -212,6 +232,47 @@ def create_dtcc_heatmap(z_data, x_labels, y_labels, theme='dark', colorscale=Non
         }
     )
 
+
+def get_dtcc_chart_colors():
+    """Get DTCC color mapping for common chart elements."""
+    return {
+        # Primary data series colors (based on DTCC palette)
+        'primary': DTCC_COLORS['primary_orange'],     # #ED6D3C - Core orange
+        'secondary': DTCC_COLORS['primary_green'],    # #0E5447 - Core green/teal
+        'tertiary': DTCC_COLORS['orange_light'],      # #F28352 - Light orange variant
+        'quaternary': DTCC_COLORS['green_dark'],      # #0B413A - Dark green variant
+        'fifth': '#F4946B',                           # Even lighter orange
+        'sixth': '#236B5C',                           # Medium green
+        'seventh': '#D96343',                         # Medium orange
+        'eighth': '#174A3E',                          # Alternative green shade
+        
+        # Status colors aligned with DTCC brand
+        'positive': DTCC_COLORS['primary_green'],     # Positive - Green/Teal
+        'negative': DTCC_COLORS['primary_orange'],    # Negative - Orange  
+        'neutral': DTCC_COLORS['orange_light'],       # Neutral - Light orange
+        'warning': DTCC_COLORS['orange_light'],       # Warning - Light orange
+        'info': DTCC_COLORS['green_dark'],            # Info - Dark green variant
+        
+        # Severity levels
+        'critical': DTCC_COLORS['primary_orange'],    # Critical - Core orange
+        'high': '#D96343',                            # High - Medium orange
+        'medium': DTCC_COLORS['orange_light'],        # Medium - Light orange  
+        'low': DTCC_COLORS['primary_green'],          # Low - Core green
+        
+        # Status states
+        'active': DTCC_COLORS['primary_orange'],      # Active - Core orange
+        'pending': DTCC_COLORS['orange_light'],       # Pending - Light orange
+        'completed': DTCC_COLORS['primary_green'],    # Completed - Core green
+        'failed': DTCC_COLORS['primary_orange'],      # Failed - Core orange
+        'open': DTCC_COLORS['primary_orange'],        # Open - Core orange
+        'resolved': DTCC_COLORS['primary_green'],     # Resolved - Core green
+        'investigating': DTCC_COLORS['orange_light'], # Investigating - Light orange
+        
+        # Trend indicators
+        'bullish': DTCC_COLORS['primary_green'],      # Bullish - Core green
+        'bearish': DTCC_COLORS['primary_orange'],     # Bearish - Core orange
+        'neutral_trend': DTCC_COLORS['orange_light']  # Neutral trend - Light orange
+    }
 
 def get_toolbar_config():
     """Get standard toolbar configuration for Plotly charts."""

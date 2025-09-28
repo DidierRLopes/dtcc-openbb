@@ -16,7 +16,7 @@ from mockup_data.data_generator import (
     generate_settlement_fails,
     generate_dealer_activity
 )
-from plotly_config import get_theme_colors, base_layout, get_toolbar_config
+from plotly_config import get_theme_colors, base_layout, get_toolbar_config, get_dtcc_chart_colors
 
 router = APIRouter(prefix="/fixed_income", tags=["Fixed Income"])
 
@@ -85,12 +85,13 @@ def get_treasury_volumes(time_period: str = "1M", treasury_types: List[str] = Qu
     colors = get_theme_colors(theme)
     fig = go.Figure()
     
+    dtcc_colors = get_dtcc_chart_colors()
     color_map = {
-        "Bills (1-12M)": "#3b82f6",
-        "Notes (2-10Y)": "#8b5cf6",
-        "Bonds (20-30Y)": "#ec4899",
-        "TIPS": "#f59e0b",
-        "FRNs": "#10b981"
+        "Bills (1-12M)": dtcc_colors['primary'],      # Core orange
+        "Notes (2-10Y)": dtcc_colors['secondary'],    # Core green
+        "Bonds (20-30Y)": dtcc_colors['tertiary'],    # Light orange
+        "TIPS": dtcc_colors['quaternary'],             # Dark green
+        "FRNs": dtcc_colors['fifth']                   # Even lighter orange
     }
     
     for tenor_data in data:
@@ -99,7 +100,7 @@ def get_treasury_volumes(time_period: str = "1M", treasury_types: List[str] = Qu
             y=tenor_data["volumes"],
             name=tenor_data["tenor"],
             mode='lines',
-            line=dict(width=2, color=color_map.get(tenor_data["tenor"], "#6b7280"))
+            line=dict(width=2, color=color_map.get(tenor_data["tenor"], dtcc_colors['neutral']))
         ))
     
     layout_config = base_layout(theme=theme)
@@ -187,20 +188,22 @@ def get_repo_spreads(benchmark_rates: List[str] = Query(default=["SOFR", "ON RRP
         subplot_titles=('Repo Rates', 'GCF-SOFR Spread')
     )
     
+    dtcc_colors = get_dtcc_chart_colors()
+    
     # Plot rates
     fig.add_trace(
         go.Scatter(x=data["dates"], y=data["GCF_Repo_USD"], 
-                  name="GCF Repo", line=dict(color="#3b82f6", width=2)),
+                  name="GCF Repo", line=dict(color=dtcc_colors['primary'], width=2)),
         row=1, col=1
     )
     fig.add_trace(
         go.Scatter(x=data["dates"], y=data["SOFR_USD"], 
-                  name="SOFR", line=dict(color="#8b5cf6", width=2)),
+                  name="SOFR", line=dict(color=dtcc_colors['secondary'], width=2)),
         row=1, col=1
     )
     fig.add_trace(
         go.Scatter(x=data["dates"], y=data["ON_RRP_USD"], 
-                  name="ON RRP", line=dict(color="#ec4899", width=2)),
+                  name="ON RRP", line=dict(color=dtcc_colors['tertiary'], width=2)),
         row=1, col=1
     )
     
@@ -210,7 +213,7 @@ def get_repo_spreads(benchmark_rates: List[str] = Query(default=["SOFR", "ON RRP
         go.Scatter(x=data["dates"], y=spread, 
                   name="GCF-SOFR Spread", 
                   fill='tozeroy',
-                  line=dict(color="#f59e0b", width=2)),
+                  line=dict(color=dtcc_colors['quaternary'], width=2)),
         row=2, col=1
     )
     
@@ -277,9 +280,9 @@ def get_repo_spreads(benchmark_rates: List[str] = Query(default=["SOFR", "ON RRP
                     "renderFn": "columnColor",
                     "renderFnParams": {
                         "colorRules": [
-                            {"condition": "gt", "value": 3, "color": "#ef4444", "fill": True},
-                            {"condition": "gt", "value": 2, "color": "#f59e0b", "fill": False},
-                            {"condition": "lte", "value": 2, "color": "#10b981", "fill": False}
+                            {"condition": "gt", "value": 3, "color": "#ED6D3C", "fill": True},
+                            {"condition": "gt", "value": 2, "color": "#F28352", "fill": False},
+                            {"condition": "lte", "value": 2, "color": "#0E5447", "fill": False}
                         ]
                     }
                 },

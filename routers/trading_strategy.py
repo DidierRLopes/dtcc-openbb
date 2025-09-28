@@ -12,7 +12,7 @@ sys.path.append('..')
 
 from shared.decorators import register_widget
 from mockup_data.data_generator import generate_time_series
-from plotly_config import get_theme_colors, base_layout, get_toolbar_config
+from plotly_config import get_theme_colors, base_layout, get_toolbar_config, get_dtcc_chart_colors
 
 router = APIRouter(prefix="/trading_strategy", tags=["Trading & Investment Strategy"])
 
@@ -303,9 +303,9 @@ def get_repo_squeeze(
                     "renderFn": "columnColor",
                     "renderFnParams": {
                         "colorRules": [
-                            {"condition": "gt", "value": 70, "color": "#10b981", "fill": False},
-                            {"condition": "gt", "value": 50, "color": "#f59e0b", "fill": False},
-                            {"condition": "lte", "value": 50, "color": "#ef4444", "fill": False}
+                            {"condition": "gt", "value": 70, "color": "#0E5447", "fill": False},
+                            {"condition": "gt", "value": 50, "color": "#F28352", "fill": False},
+                            {"condition": "lte", "value": 50, "color": "#ED6D3C", "fill": False}
                         ]
                     }
                 },
@@ -330,9 +330,9 @@ def get_repo_squeeze(
                     "renderFn": "columnColor",
                     "renderFnParams": {
                         "colorRules": [
-                            {"condition": "eq", "value": "Bullish", "color": "#10b981", "fill": False},
-                            {"condition": "eq", "value": "Bearish", "color": "#ef4444", "fill": False},
-                            {"condition": "eq", "value": "Neutral", "color": "#6b7280", "fill": False}
+                            {"condition": "eq", "value": "Bullish", "color": "#0E5447", "fill": False},
+                            {"condition": "eq", "value": "Bearish", "color": "#ED6D3C", "fill": False},
+                            {"condition": "eq", "value": "Neutral", "color": "#8E8E8E", "fill": False}
                         ]
                     }
                 }
@@ -505,9 +505,9 @@ def get_liquidity_fragmentation(
                     "renderFn": "columnColor",
                     "renderFnParams": {
                         "colorRules": [
-                            {"condition": "gt", "value": 2, "color": "#ef4444", "fill": True},
-                            {"condition": "gt", "value": 1, "color": "#f59e0b", "fill": False},
-                            {"condition": "lt", "value": -1, "color": "#10b981", "fill": False}
+                            {"condition": "gt", "value": 2, "color": "#ED6D3C", "fill": True},
+                            {"condition": "gt", "value": 1, "color": "#F28352", "fill": False},
+                            {"condition": "lt", "value": -1, "color": "#0E5447", "fill": False}
                         ]
                     }
                 },
@@ -525,9 +525,9 @@ def get_liquidity_fragmentation(
                     "renderFn": "columnColor",
                     "renderFnParams": {
                         "colorRules": [
-                            {"condition": "eq", "value": "Strong", "color": "#10b981", "fill": True},
-                            {"condition": "eq", "value": "Moderate", "color": "#f59e0b", "fill": False},
-                            {"condition": "eq", "value": "Weak", "color": "#6b7280", "fill": False}
+                            {"condition": "eq", "value": "Strong", "color": "#0E5447", "fill": True},
+                            {"condition": "eq", "value": "Moderate", "color": "#F28352", "fill": False},
+                            {"condition": "eq", "value": "Weak", "color": "#8E8E8E", "fill": False}
                         ]
                     }
                 },
@@ -661,7 +661,8 @@ def get_flow_momentum(
     # Momentum scores
     securities = [s["security"] for s in top_securities]
     momentum_scores = [s["momentum_score"] for s in top_securities]
-    colors_list = ['#10b981' if m > 0 else '#ef4444' for m in momentum_scores]
+    dtcc_colors = get_dtcc_chart_colors()
+    colors_list = [dtcc_colors['positive'] if m > 0 else dtcc_colors['negative'] for m in momentum_scores]
     
     fig.add_trace(
         go.Bar(x=securities, y=momentum_scores, 

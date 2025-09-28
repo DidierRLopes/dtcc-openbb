@@ -15,7 +15,7 @@ from mockup_data.data_generator import (
     generate_short_interest,
     generate_time_series
 )
-from plotly_config import get_theme_colors, base_layout, get_toolbar_config
+from plotly_config import get_theme_colors, base_layout, get_toolbar_config, get_dtcc_chart_colors
 
 router = APIRouter(prefix="/equities_etf", tags=["Equities & ETF"])
 
@@ -137,6 +137,7 @@ def get_settlement_timeline(
         return data
     
     colors = get_theme_colors(theme)
+    dtcc_colors = get_dtcc_chart_colors()
     
     fig = go.Figure()
     
@@ -145,7 +146,7 @@ def get_settlement_timeline(
         x=data["dates"],
         y=data["t1_obligations"],
         name='T+1 Obligations',
-        marker_color='#3b82f6',
+        marker_color=dtcc_colors['primary'],
         opacity=0.8
     ))
     
@@ -154,7 +155,7 @@ def get_settlement_timeline(
         x=data["dates"],
         y=data["t2_obligations"],
         name='T+2 Obligations',
-        marker_color='#8b5cf6',
+        marker_color=dtcc_colors['secondary'],
         opacity=0.8
     ))
     
@@ -319,9 +320,9 @@ def get_etf_flows(
                     "renderFn": "columnColor",
                     "renderFnParams": {
                         "colorRules": [
-                            {"condition": "gt", "value": 7, "color": "#ef4444", "fill": True},
-                            {"condition": "gt", "value": 5, "color": "#f59e0b", "fill": False},
-                            {"condition": "lte", "value": 3, "color": "#10b981", "fill": False}
+                            {"condition": "gt", "value": 7, "color": "#ED6D3C", "fill": True},
+                            {"condition": "gt", "value": 5, "color": "#F28352", "fill": False},
+                            {"condition": "lte", "value": 3, "color": "#0E5447", "fill": False}
                         ]
                     }
                 },
@@ -340,9 +341,9 @@ def get_etf_flows(
                     "renderFn": "columnColor",
                     "renderFnParams": {
                         "colorRules": [
-                            {"condition": "gt", "value": 10, "color": "#ef4444", "fill": True},
-                            {"condition": "gt", "value": 5, "color": "#f59e0b", "fill": False},
-                            {"condition": "lte", "value": 2, "color": "#10b981", "fill": False}
+                            {"condition": "gt", "value": 10, "color": "#ED6D3C", "fill": True},
+                            {"condition": "gt", "value": 5, "color": "#F28352", "fill": False},
+                            {"condition": "lte", "value": 2, "color": "#0E5447", "fill": False}
                         ]
                     }
                 },
@@ -450,9 +451,9 @@ def get_short_interest(
                     "renderFn": "columnColor",
                     "renderFnParams": {
                         "colorRules": [
-                            {"condition": "gt", "value": 80, "color": "#ef4444", "fill": True},
-                            {"condition": "gt", "value": 60, "color": "#f59e0b", "fill": False},
-                            {"condition": "lte", "value": 40, "color": "#10b981", "fill": False}
+                            {"condition": "gt", "value": 80, "color": "#ED6D3C", "fill": True},
+                            {"condition": "gt", "value": 60, "color": "#F28352", "fill": False},
+                            {"condition": "lte", "value": 40, "color": "#0E5447", "fill": False}
                         ]
                     }
                 },
@@ -464,9 +465,9 @@ def get_short_interest(
                     "renderFn": "columnColor",
                     "renderFnParams": {
                         "colorRules": [
-                            {"condition": "gt", "value": 30, "color": "#ef4444", "fill": True},
-                            {"condition": "gt", "value": 20, "color": "#f59e0b", "fill": False},
-                            {"condition": "lte", "value": 10, "color": "#10b981", "fill": False}
+                            {"condition": "gt", "value": 30, "color": "#ED6D3C", "fill": True},
+                            {"condition": "gt", "value": 20, "color": "#F28352", "fill": False},
+                            {"condition": "lte", "value": 10, "color": "#0E5447", "fill": False}
                         ]
                     }
                 }
@@ -558,9 +559,9 @@ def get_concentration_risk(
                     "renderFn": "columnColor",
                     "renderFnParams": {
                         "colorRules": [
-                            {"condition": "eq", "value": "Critical", "color": "#ef4444", "fill": True},
-                            {"condition": "eq", "value": "High", "color": "#f59e0b", "fill": True},
-                            {"condition": "eq", "value": "Medium", "color": "#3b82f6", "fill": False}
+                            {"condition": "eq", "value": "Critical", "color": "#ED6D3C", "fill": True},
+                            {"condition": "eq", "value": "High", "color": "#F28352", "fill": True},
+                            {"condition": "eq", "value": "Medium", "color": "#0E5447", "fill": False}
                         ]
                     }
                 },

@@ -15,7 +15,7 @@ from mockup_data.data_generator import (
     generate_cds_spreads,
     generate_counterparties
 )
-from plotly_config import get_theme_colors, base_layout, get_toolbar_config
+from plotly_config import get_theme_colors, base_layout, get_toolbar_config, get_dtcc_chart_colors
 
 router = APIRouter(prefix="/derivatives", tags=["Derivatives"])
 

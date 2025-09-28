@@ -16,7 +16,7 @@ from mockup_data.data_generator import (
     generate_time_series,
     generate_asset_classes
 )
-from plotly_config import get_theme_colors, base_layout, get_toolbar_config
+from plotly_config import get_theme_colors, base_layout, get_toolbar_config, get_dtcc_chart_colors
 
 router = APIRouter(prefix="/risk_management", tags=["Risk Management"])
 
@@ -294,7 +294,7 @@ def get_collateral_forecast(forecast_horizon: str = "30D", stress_scenarios: Lis
         y=baseline,
         name='Baseline',
         mode='lines',
-        line=dict(color='#10b981', width=2)
+        line=dict(color='#0E5447', width=2)  # DTCC Primary Green
     ))
     
     # Add stressed scenario
@@ -303,7 +303,7 @@ def get_collateral_forecast(forecast_horizon: str = "30D", stress_scenarios: Lis
         y=stressed,
         name='Stressed (2008-like)',
         mode='lines',
-        line=dict(color='#f59e0b', width=2, dash='dash')
+        line=dict(color='#F28352', width=2, dash='dash')  # DTCC Light Orange
     ))
     
     # Add extreme scenario
@@ -312,7 +312,7 @@ def get_collateral_forecast(forecast_horizon: str = "30D", stress_scenarios: Lis
         y=extreme,
         name='Extreme Stress',
         mode='lines',
-        line=dict(color='#ef4444', width=2, dash='dot')
+        line=dict(color='#ED6D3C', width=2, dash='dot')  # DTCC Primary Orange
     ))
     
     # Add fill between baseline and extreme
@@ -416,7 +416,7 @@ def get_settlement_fails(time_period: str = "1M", asset_classes_filter: List[str
         mode='lines',
         stackgroup='one',
         fillcolor='rgba(59, 130, 246, 0.5)',
-        line=dict(color='#3b82f6', width=0)
+        line=dict(color='#ED6D3C', width=0)  # DTCC Primary Orange
     ))
     
     fig.add_trace(go.Scatter(
@@ -426,7 +426,7 @@ def get_settlement_fails(time_period: str = "1M", asset_classes_filter: List[str
         mode='lines',
         stackgroup='one',
         fillcolor='rgba(139, 92, 246, 0.5)',
-        line=dict(color='#8b5cf6', width=0)
+        line=dict(color='#0E5447', width=0)  # DTCC Primary Green
     ))
     
     fig.add_trace(go.Scatter(
@@ -436,7 +436,7 @@ def get_settlement_fails(time_period: str = "1M", asset_classes_filter: List[str
         mode='lines',
         stackgroup='one',
         fillcolor='rgba(236, 72, 153, 0.5)',
-        line=dict(color='#ec4899', width=0)
+        line=dict(color='#F28352', width=0)  # DTCC Light Orange
     ))
     
     fig.add_trace(go.Scatter(
@@ -446,7 +446,7 @@ def get_settlement_fails(time_period: str = "1M", asset_classes_filter: List[str
         mode='lines',
         stackgroup='one',
         fillcolor='rgba(245, 158, 11, 0.5)',
-        line=dict(color='#f59e0b', width=0)
+        line=dict(color='#0B413A', width=0)  # DTCC Dark Green
     ))
     
     layout_config = base_layout(theme=theme)
@@ -683,10 +683,10 @@ def get_risk_metrics(risk_category: str = "All", calculation_method: str = "VaR"
                     "renderFn": "columnColor",
                     "renderFnParams": {
                         "colorRules": [
-                            {"condition": "gt", "value": 80, "color": "#ef4444", "fill": True},
-                            {"condition": "gt", "value": 60, "color": "#f59e0b", "fill": True},
-                            {"condition": "gt", "value": 40, "color": "#3b82f6", "fill": False},
-                            {"condition": "lte", "value": 40, "color": "#10b981", "fill": False}
+                            {"condition": "gt", "value": 80, "color": "#ED6D3C", "fill": True},
+                            {"condition": "gt", "value": 60, "color": "#F28352", "fill": True},
+                            {"condition": "gt", "value": 40, "color": "#0E5447", "fill": False},
+                            {"condition": "lte", "value": 40, "color": "#0B413A", "fill": False}
                         ]
                     }
                 }

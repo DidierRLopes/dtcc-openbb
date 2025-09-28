@@ -17,7 +17,7 @@ from mockup_data.data_generator import (
     generate_compliance_alerts,
     generate_time_series
 )
-from plotly_config import get_theme_colors, base_layout, get_toolbar_config
+from plotly_config import get_theme_colors, base_layout, get_toolbar_config, get_dtcc_chart_colors
 
 router = APIRouter(prefix="/market_surveillance", tags=["Market Surveillance"])
 
@@ -150,10 +150,10 @@ def get_trade_volume_heatmap(time_period: str = "1M", asset_classes: List[str] =
                     "renderFn": "columnColor",
                     "renderFnParams": {
                         "colorRules": [
-                            {"condition": "eq", "value": "Critical", "color": "#ef4444", "fill": True},
-                            {"condition": "eq", "value": "High", "color": "#f59e0b", "fill": True},
-                            {"condition": "eq", "value": "Medium", "color": "#3b82f6", "fill": False},
-                            {"condition": "eq", "value": "Low", "color": "#10b981", "fill": False}
+                            {"condition": "eq", "value": "Critical", "color": "#ED6D3C", "fill": True},
+                            {"condition": "eq", "value": "High", "color": "#F28352", "fill": True},
+                            {"condition": "eq", "value": "Medium", "color": "#0E5447", "fill": False},
+                            {"condition": "eq", "value": "Low", "color": "#0B413A", "fill": False}
                         ]
                     }
                 },
@@ -182,9 +182,9 @@ def get_trade_volume_heatmap(time_period: str = "1M", asset_classes: List[str] =
                     "renderFn": "columnColor",
                     "renderFnParams": {
                         "colorRules": [
-                            {"condition": "eq", "value": "Open", "color": "#ef4444", "fill": False},
-                            {"condition": "eq", "value": "Investigating", "color": "#f59e0b", "fill": False},
-                            {"condition": "eq", "value": "Resolved", "color": "#10b981", "fill": False}
+                            {"condition": "eq", "value": "Open", "color": "#ED6D3C", "fill": False},
+                            {"condition": "eq", "value": "Investigating", "color": "#F28352", "fill": False},
+                            {"condition": "eq", "value": "Resolved", "color": "#0E5447", "fill": False}
                         ]
                     }
                 }
@@ -429,10 +429,10 @@ def get_counterparty_network(min_exposure: float = 50, counterparty_types: List[
                     "renderFn": "columnColor",
                     "renderFnParams": {
                         "colorRules": [
-                            {"condition": "eq", "value": "Dodd-Frank", "color": "#3b82f6", "fill": False},
-                            {"condition": "eq", "value": "MiFID II", "color": "#8b5cf6", "fill": False},
-                            {"condition": "eq", "value": "EMIR", "color": "#ec4899", "fill": False},
-                            {"condition": "eq", "value": "Basel III", "color": "#f59e0b", "fill": False}
+                            {"condition": "eq", "value": "Dodd-Frank", "color": "#ED6D3C", "fill": False},
+                            {"condition": "eq", "value": "MiFID II", "color": "#0E5447", "fill": False},
+                            {"condition": "eq", "value": "EMIR", "color": "#F28352", "fill": False},
+                            {"condition": "eq", "value": "Basel III", "color": "#0B413A", "fill": False}
                         ]
                     }
                 },

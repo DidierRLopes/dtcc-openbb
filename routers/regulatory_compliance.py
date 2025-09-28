@@ -11,7 +11,7 @@ sys.path.append('..')
 
 from shared.decorators import register_widget
 from mockup_data.data_generator import generate_counterparties
-from plotly_config import get_theme_colors, base_layout, get_toolbar_config
+from plotly_config import get_theme_colors, base_layout, get_toolbar_config, get_dtcc_chart_colors
 
 router = APIRouter(prefix="/regulatory_compliance", tags=["Regulatory & Compliance"])
 
@@ -257,9 +257,9 @@ def get_regulation_heatmap(
                     "renderFn": "columnColor",
                     "renderFnParams": {
                         "colorRules": [
-                            {"condition": "eq", "value": "Completed", "color": "#10b981", "fill": False},
-                            {"condition": "eq", "value": "Pending", "color": "#f59e0b", "fill": False},
-                            {"condition": "eq", "value": "Failed", "color": "#ef4444", "fill": True}
+                            {"condition": "eq", "value": "Completed", "color": "#0E5447", "fill": False},
+                            {"condition": "eq", "value": "Pending", "color": "#F28352", "fill": False},
+                            {"condition": "eq", "value": "Failed", "color": "#ED6D3C", "fill": True}
                         ]
                     }
                 },
@@ -373,10 +373,10 @@ def get_audit_trail(
                     "renderFn": "columnColor",
                     "renderFnParams": {
                         "colorRules": [
-                            {"condition": "eq", "value": "Critical", "color": "#ef4444", "fill": True},
-                            {"condition": "eq", "value": "High", "color": "#f59e0b", "fill": True},
-                            {"condition": "eq", "value": "Medium", "color": "#3b82f6", "fill": False},
-                            {"condition": "eq", "value": "Low", "color": "#10b981", "fill": False}
+                            {"condition": "eq", "value": "Critical", "color": "#ED6D3C", "fill": True},
+                            {"condition": "eq", "value": "High", "color": "#F28352", "fill": True},
+                            {"condition": "eq", "value": "Medium", "color": "#0E5447", "fill": False},
+                            {"condition": "eq", "value": "Low", "color": "#0B413A", "fill": False}
                         ]
                     }
                 },
@@ -398,9 +398,9 @@ def get_audit_trail(
                     "renderFn": "columnColor",
                     "renderFnParams": {
                         "colorRules": [
-                            {"condition": "eq", "value": "Resolved", "color": "#10b981", "fill": False},
-                            {"condition": "eq", "value": "Open", "color": "#ef4444", "fill": False},
-                            {"condition": "eq", "value": "In Progress", "color": "#f59e0b", "fill": False}
+                            {"condition": "eq", "value": "Resolved", "color": "#0E5447", "fill": False},
+                            {"condition": "eq", "value": "Open", "color": "#ED6D3C", "fill": False},
+                            {"condition": "eq", "value": "In Progress", "color": "#F28352", "fill": False}
                         ]
                     }
                 },
@@ -491,9 +491,9 @@ def get_exceptions(
                     "renderFn": "columnColor",
                     "renderFnParams": {
                         "colorRules": [
-                            {"condition": "gt", "value": 85, "color": "#ef4444", "fill": True},
-                            {"condition": "gt", "value": 70, "color": "#f59e0b", "fill": False},
-                            {"condition": "lte", "value": 70, "color": "#10b981", "fill": False}
+                            {"condition": "gt", "value": 85, "color": "#ED6D3C", "fill": True},
+                            {"condition": "gt", "value": 70, "color": "#F28352", "fill": False},
+                            {"condition": "lte", "value": 70, "color": "#0E5447", "fill": False}
                         ]
                     }
                 },
@@ -510,9 +510,9 @@ def get_exceptions(
                     "renderFn": "columnColor",
                     "renderFnParams": {
                         "colorRules": [
-                            {"condition": "eq", "value": "Active", "color": "#ef4444", "fill": False},
-                            {"condition": "eq", "value": "Cleared", "color": "#10b981", "fill": False},
-                            {"condition": "eq", "value": "Under Review", "color": "#f59e0b", "fill": False}
+                            {"condition": "eq", "value": "Active", "color": "#ED6D3C", "fill": False},
+                            {"condition": "eq", "value": "Cleared", "color": "#0E5447", "fill": False},
+                            {"condition": "eq", "value": "Under Review", "color": "#F28352", "fill": False}
                         ]
                     }
                 },
@@ -629,9 +629,9 @@ def get_kyc_aml_flags(
                     "renderFn": "columnColor",
                     "renderFnParams": {
                         "colorRules": [
-                            {"condition": "eq", "value": "Critical", "color": "#ef4444", "fill": True},
-                            {"condition": "eq", "value": "Warning", "color": "#f59e0b", "fill": False},
-                            {"condition": "eq", "value": "Info", "color": "#3b82f6", "fill": False}
+                            {"condition": "eq", "value": "Critical", "color": "#ED6D3C", "fill": True},
+                            {"condition": "eq", "value": "Warning", "color": "#F28352", "fill": False},
+                            {"condition": "eq", "value": "Info", "color": "#0E5447", "fill": False}
                         ]
                     }
                 },
