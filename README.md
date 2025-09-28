@@ -231,6 +231,16 @@ The system includes comprehensive mock data generators that simulate realistic D
 
 This project is provided as-is for demonstration and development purposes.
 
+## Branding
+
+Logo: https://d2pasa6bkzkrjd.cloudfront.net/_resize/consensus2025/partner/500/site/consensus2025/images/userfiles/partners/15d6a0492f47a15733c125af54845766.png
+
+Palette:
+- #0E5447
+- #ED6D3C
+- #0B413A
+- #F28352
+
 ---
 
 **Built for OpenBB Workspace** | **Comprehensive DTCC Market Analytics**
