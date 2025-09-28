@@ -281,8 +281,7 @@ def get_repo_spreads(benchmark_rates: List[str] = Query(default=["SOFR", "ON RRP
                     "renderFnParams": {
                         "colorRules": [
                             {"condition": "gt", "value": 3, "color": "#ED6D3C", "fill": True},
-                            {"condition": "gt", "value": 2, "color": "#F28352", "fill": False},
-                            {"condition": "lte", "value": 2, "color": "#0E5447", "fill": False}
+                            {"condition": "lte", "value": 3, "color": "#0E5447", "fill": False}
                         ]
                     }
                 },
