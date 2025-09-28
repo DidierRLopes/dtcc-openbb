@@ -238,8 +238,7 @@ Logo: https://d2pasa6bkzkrjd.cloudfront.net/_resize/consensus2025/partner/500/si
 Palette:
 - #0E5447
 - #ED6D3C
-- #0B413A
-- #F28352
+- #f6c544
 
 ---
 
