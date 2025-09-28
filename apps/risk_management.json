@@ -11,9 +11,10 @@
         {
           "i": "risk_management/notes",
           "x": 0,
-          "y": 0,
+          "y": 2,
           "w": 40,
-          "h": 30
+          "h": 30,
+          "groups": []
         }
       ]
     },
@@ -24,23 +25,31 @@
         {
           "i": "risk_management/risk_metrics",
           "x": 0,
-          "y": 0,
+          "y": 2,
           "w": 40,
-          "h": 4
+          "h": 5,
+          "groups": []
         },
         {
           "i": "risk_management/exposure_treemap",
           "x": 0,
-          "y": 4,
+          "y": 7,
           "w": 20,
-          "h": 12
+          "h": 19,
+          "state": {
+            "params": {
+              "exposure_type": "collateral"
+            }
+          },
+          "groups": []
         },
         {
           "i": "risk_management/liquidity_heatmap",
           "x": 20,
-          "y": 4,
+          "y": 7,
           "w": 20,
-          "h": 10
+          "h": 19,
+          "groups": []
         }
       ]
     },
@@ -51,23 +60,44 @@
         {
           "i": "risk_management/collateral_forecast",
           "x": 0,
-          "y": 0,
-          "w": 20,
-          "h": 10
+          "y": 12,
+          "w": 40,
+          "h": 9,
+          "groups": [
+            "Forecast Period Sync"
+          ]
         },
         {
           "i": "risk_management/settlement_fails",
-          "x": 20,
-          "y": 0,
-          "w": 20,
-          "h": 10
+          "x": 0,
+          "y": 2,
+          "w": 40,
+          "h": 10,
+          "groups": []
         },
         {
           "i": "risk_management/stress_test_results",
           "x": 0,
-          "y": 10,
+          "y": 21,
           "w": 40,
-          "h": 10
+          "h": 14,
+          "state": {
+            "chartView": {
+              "enabled": false,
+              "chartType": "column"
+            },
+            "columnState": {
+              "default": {
+                "columnPinning": {
+                  "leftColIds": [
+                    "scenario"
+                  ],
+                  "rightColIds": []
+                }
+              }
+            }
+          },
+          "groups": []
         }
       ]
     }

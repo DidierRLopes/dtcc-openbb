@@ -816,8 +816,11 @@ The DTCC Risk Management Dashboard provides advanced risk management and stress 
 
 ## Purpose
 • **Counterparty Risk Monitoring**: Track and analyze exposures across all counterparties with real-time risk scoring and concentration analysis
+
 • **Collateral Management**: Forecast collateral requirements under various scenarios including baseline, stressed, and extreme market conditions
+
 • **Settlement Risk Assessment**: Monitor settlement failures, track obligations, and identify potential disruptions across asset classes
+
 • **Stress Testing**: Run comprehensive stress tests using historical and hypothetical scenarios to assess portfolio resilience
 
 ---

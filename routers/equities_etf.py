@@ -746,8 +746,11 @@ The DTCC Equities & ETF Dashboard provides comprehensive equities and ETF market
 
 ## Purpose
 • **Settlement Risk Management**: Monitor T+1 and T+2 settlement obligations, track settlement rates, and identify potential settlement disruptions
+
 • **ETF Market Analysis**: Track creation and redemption flows, analyze ETF basket composition impacts, and monitor arbitrage opportunities
+
 • **Short Interest Monitoring**: Track borrowed shares outstanding, borrow rates, and identify securities with high short interest concentrations
+
 • **Concentration Risk Detection**: Identify securities with large net buy/sell obligations and monitor for potential settlement stress
 
 ---

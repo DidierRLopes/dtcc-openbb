@@ -11,9 +11,10 @@
         {
           "i": "market_surveillance/notes",
           "x": 0,
-          "y": 0,
+          "y": 2,
           "w": 40,
-          "h": 30
+          "h": 30,
+          "groups": []
         }
       ]
     },
@@ -24,23 +25,28 @@
         {
           "i": "market_surveillance/activity_metrics",
           "x": 0,
-          "y": 0,
+          "y": 2,
           "w": 40,
-          "h": 4
+          "h": 5,
+          "groups": []
         },
         {
           "i": "market_surveillance/trade_volume_heatmap",
           "x": 0,
-          "y": 4,
+          "y": 7,
           "w": 20,
-          "h": 12
+          "h": 18,
+          "groups": [
+            "Time Period Sync"
+          ]
         },
         {
           "i": "market_surveillance/counterparty_network",
           "x": 20,
-          "y": 4,
+          "y": 7,
           "w": 20,
-          "h": 15
+          "h": 18,
+          "groups": []
         }
       ]
     },
@@ -51,16 +57,40 @@
         {
           "i": "market_surveillance/anomaly_detector",
           "x": 0,
-          "y": 0,
+          "y": 2,
           "w": 40,
-          "h": 12
+          "h": 12,
+          "state": {
+            "chartView": {
+              "enabled": false,
+              "chartType": "line"
+            },
+            "columnState": {
+              "default": {
+                "columnPinning": {
+                  "leftColIds": [
+                    "id"
+                  ],
+                  "rightColIds": []
+                }
+              }
+            }
+          },
+          "groups": []
         },
         {
           "i": "market_surveillance/compliance_ticker",
           "x": 0,
-          "y": 12,
+          "y": 14,
           "w": 40,
-          "h": 8
+          "h": 9,
+          "state": {
+            "chartView": {
+              "enabled": false,
+              "chartType": "line"
+            }
+          },
+          "groups": []
         }
       ]
     }

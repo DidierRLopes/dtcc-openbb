@@ -11,9 +11,10 @@
         {
           "i": "regulatory_compliance/notes",
           "x": 0,
-          "y": 0,
+          "y": 2,
           "w": 40,
-          "h": 30
+          "h": 30,
+          "groups": []
         }
       ]
     },
@@ -24,23 +25,32 @@
         {
           "i": "regulatory_compliance/metrics",
           "x": 0,
-          "y": 0,
+          "y": 2,
           "w": 40,
-          "h": 4
+          "h": 5,
+          "groups": []
         },
         {
           "i": "regulatory_compliance/regulation_heatmap",
           "x": 0,
-          "y": 4,
+          "y": 7,
           "w": 20,
-          "h": 10
+          "h": 16,
+          "groups": []
         },
         {
           "i": "regulatory_compliance/alerts_ticker",
           "x": 20,
-          "y": 4,
+          "y": 7,
           "w": 20,
-          "h": 8
+          "h": 16,
+          "state": {
+            "chartView": {
+              "enabled": false,
+              "chartType": "line"
+            }
+          },
+          "groups": []
         }
       ]
     },
@@ -51,23 +61,76 @@
         {
           "i": "regulatory_compliance/audit_trail",
           "x": 0,
-          "y": 0,
+          "y": 2,
           "w": 40,
-          "h": 12
+          "h": 12,
+          "state": {
+            "chartView": {
+              "enabled": false,
+              "chartType": "line"
+            },
+            "columnState": {
+              "default": {
+                "columnPinning": {
+                  "leftColIds": [
+                    "trade_id"
+                  ],
+                  "rightColIds": []
+                }
+              }
+            }
+          },
+          "groups": [
+            "Trade Filter Sync"
+          ]
         },
         {
           "i": "regulatory_compliance/exceptions",
           "x": 0,
-          "y": 12,
+          "y": 14,
           "w": 20,
-          "h": 10
+          "h": 13,
+          "state": {
+            "chartView": {
+              "enabled": false,
+              "chartType": "line"
+            },
+            "columnState": {
+              "default": {
+                "columnPinning": {
+                  "leftColIds": [
+                    "exception_id"
+                  ],
+                  "rightColIds": []
+                }
+              }
+            }
+          },
+          "groups": []
         },
         {
           "i": "regulatory_compliance/kyc_aml_flags",
           "x": 20,
-          "y": 12,
+          "y": 14,
           "w": 20,
-          "h": 10
+          "h": 13,
+          "state": {
+            "chartView": {
+              "enabled": false,
+              "chartType": "column"
+            },
+            "columnState": {
+              "default": {
+                "columnPinning": {
+                  "leftColIds": [
+                    "entity"
+                  ],
+                  "rightColIds": []
+                }
+              }
+            }
+          },
+          "groups": []
         }
       ]
     }

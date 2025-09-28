@@ -13,7 +13,8 @@
           "x": 0,
           "y": 0,
           "w": 40,
-          "h": 30
+          "h": 30,
+          "groups": []
         }
       ]
     },
@@ -24,23 +25,45 @@
         {
           "i": "derivatives/metrics",
           "x": 0,
-          "y": 0,
+          "y": 2,
           "w": 40,
-          "h": 4
+          "h": 5,
+          "groups": []
         },
         {
           "i": "derivatives/swap_notionals",
           "x": 0,
-          "y": 4,
-          "w": 20,
-          "h": 10
+          "y": 18,
+          "w": 40,
+          "h": 13,
+          "state": {
+            "params": {
+              "currency_pairs": "All",
+              "notional_threshold": "10",
+              "include_compression": "false"
+            },
+            "chartModel": {
+              "modelType": "range",
+              "chartType": "heatmap",
+              "chartOptions": {},
+              "suppressChartRanges": true
+            },
+            "chartView": {
+              "enabled": true,
+              "chartType": "heatmap"
+            }
+          },
+          "groups": []
         },
         {
           "i": "derivatives/cds_spreads",
-          "x": 20,
-          "y": 4,
-          "w": 20,
-          "h": 12
+          "x": 0,
+          "y": 7,
+          "w": 40,
+          "h": 11,
+          "groups": [
+            "CDS View Sync"
+          ]
         }
       ]
     },
@@ -51,23 +74,42 @@
         {
           "i": "derivatives/volatility_surface",
           "x": 0,
-          "y": 0,
+          "y": 2,
           "w": 20,
-          "h": 15
+          "h": 13,
+          "groups": []
         },
         {
           "i": "derivatives/net_positions",
           "x": 20,
-          "y": 0,
+          "y": 2,
           "w": 20,
-          "h": 10
+          "h": 13,
+          "state": {
+            "chartView": {
+              "enabled": false,
+              "chartType": "groupedColumn"
+            },
+            "columnState": {
+              "default": {
+                "columnPinning": {
+                  "leftColIds": [
+                    "asset_class"
+                  ],
+                  "rightColIds": []
+                }
+              }
+            }
+          },
+          "groups": []
         },
         {
           "i": "derivatives/counterparty_network",
-          "x": 20,
-          "y": 10,
-          "w": 20,
-          "h": 15
+          "x": 0,
+          "y": 15,
+          "w": 40,
+          "h": 16,
+          "groups": []
         }
       ]
     }

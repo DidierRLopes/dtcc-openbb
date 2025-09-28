@@ -11,9 +11,10 @@
         {
           "i": "equities_etf/notes",
           "x": 0,
-          "y": 0,
+          "y": 2,
           "w": 40,
-          "h": 30
+          "h": 30,
+          "groups": []
         }
       ]
     },
@@ -24,23 +25,38 @@
         {
           "i": "equities_etf/metrics",
           "x": 0,
-          "y": 0,
+          "y": 2,
           "w": 40,
-          "h": 4
+          "h": 5,
+          "groups": []
         },
         {
           "i": "equities_etf/settlement_timeline",
           "x": 0,
-          "y": 4,
-          "w": 20,
-          "h": 10
+          "y": 16,
+          "w": 40,
+          "h": 9,
+          "groups": []
         },
         {
           "i": "equities_etf/etf_flows",
-          "x": 20,
-          "y": 4,
-          "w": 20,
-          "h": 10
+          "x": 0,
+          "y": 7,
+          "w": 40,
+          "h": 9,
+          "state": {
+            "chartModel": {
+              "modelType": "range",
+              "chartType": "groupedColumn",
+              "chartOptions": {},
+              "suppressChartRanges": true
+            },
+            "chartView": {
+              "enabled": true,
+              "chartType": "groupedColumn"
+            }
+          },
+          "groups": []
         }
       ]
     },
@@ -51,23 +67,64 @@
         {
           "i": "equities_etf/short_interest",
           "x": 0,
-          "y": 0,
-          "w": 20,
-          "h": 10
+          "y": 12,
+          "w": 40,
+          "h": 9,
+          "state": {
+            "chartView": {
+              "enabled": false,
+              "chartType": "column"
+            },
+            "columnState": {
+              "default": {
+                "columnPinning": {
+                  "leftColIds": [
+                    "symbol"
+                  ],
+                  "rightColIds": []
+                }
+              }
+            }
+          },
+          "groups": []
         },
         {
           "i": "equities_etf/concentration_risk",
-          "x": 20,
-          "y": 0,
-          "w": 20,
-          "h": 10
+          "x": 0,
+          "y": 2,
+          "w": 40,
+          "h": 10,
+          "state": {
+            "params": {
+              "risk_scoring": "Volatility Weighted",
+              "market_cap_filter": "Mid Cap"
+            },
+            "chartModel": {
+              "modelType": "range",
+              "chartType": "scatter",
+              "chartOptions": {},
+              "suppressChartRanges": true
+            },
+            "chartView": {
+              "enabled": true,
+              "chartType": "scatter"
+            }
+          },
+          "groups": []
         },
         {
           "i": "equities_etf/crowded_trades",
           "x": 0,
-          "y": 10,
+          "y": 21,
           "w": 40,
-          "h": 8
+          "h": 10,
+          "state": {
+            "chartView": {
+              "enabled": false,
+              "chartType": "line"
+            }
+          },
+          "groups": []
         }
       ]
     }

@@ -675,8 +675,11 @@ The DTCC Derivatives Analytics Dashboard provides advanced derivatives market an
 
 ## Purpose
 • **Swap Market Analysis**: Monitor interest rate, credit, and cross-currency swap activity with notional tracking and tenor analysis
+
 • **Credit Risk Monitoring**: Track CDS spreads across indices and single names with historical analysis and trend identification
+
 • **Options Market Intelligence**: Analyze implied volatility surfaces and options activity for risk management and trading insights
+
 • **Position Risk Assessment**: Monitor net open positions across asset classes and analyze concentration risks and exposure networks
 
 ---

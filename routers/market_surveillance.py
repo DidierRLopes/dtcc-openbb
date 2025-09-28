@@ -635,8 +635,11 @@ The DTCC Market Surveillance Dashboard provides comprehensive market transparenc
 
 ## Purpose
 • **Real-time Market Monitoring**: Track trading activity, volumes, and patterns across all major asset classes with sub-second latency
+
 • **Anomaly Detection**: Identify unusual settlement fails, trade cancellation spikes, and suspicious trading patterns using advanced algorithms
+
 • **Counterparty Risk Assessment**: Analyze exposure relationships and systemic risk through network visualization and concentration metrics
+
 • **Regulatory Compliance Oversight**: Monitor compliance with market regulations and generate alerts for potential violations
 
 ---

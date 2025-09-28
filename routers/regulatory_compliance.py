@@ -808,8 +808,11 @@ The DTCC Regulatory & Compliance Dashboard provides comprehensive regulatory com
 
 ## Purpose
 • **Regulatory Oversight**: Monitor compliance with global regulations including Dodd-Frank, MiFID II, EMIR, and Basel III across all business lines
+
 • **Audit Trail Management**: Provide complete trade lifecycle visibility from execution to settlement with full regulatory audit capabilities
+
 • **Exception Management**: Identify, track, and resolve regulatory exceptions including missing data, validation failures, and reporting gaps
+
 • **Risk Flag Monitoring**: Track KYC/AML risk indicators, sanctions screening results, and suspicious activity detection across counterparties
 
 ---
