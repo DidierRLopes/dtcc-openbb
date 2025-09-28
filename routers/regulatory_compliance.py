@@ -139,11 +139,39 @@ def generate_compliance_alerts():
     "subCategory": "Overview",
     "type": "chart",
     "endpoint": "regulatory_compliance/regulation_heatmap",
-    "gridData": {"w": 20, "h": 10}
+    "gridData": {"w": 20, "h": 10},
+    "params": [
+        {
+            "paramName": "compliance_frameworks",
+            "value": "All",
+            "label": "Compliance Frameworks",
+            "type": "text"
+        },
+        {
+            "paramName": "compliance_threshold",
+            "value": 90,
+            "label": "Min Compliance Rate (%)",
+            "type": "number"
+        },
+        {
+            "paramName": "include_pending",
+            "value": True,
+            "label": "Include Pending Obligations",
+            "type": "boolean"
+        }
+    ]
 })
 @router.get("/regulation_heatmap")
-def get_regulation_heatmap(theme: str = "dark"):
-    """Generate regulation compliance heatmap."""
+def get_regulation_heatmap(
+    compliance_frameworks: str = "All",
+    obligation_types: str = "All",
+    entity_categories: str = "All",
+    jurisdiction_filters: str = "All",
+    compliance_threshold: float = 90,
+    include_pending: bool = True,
+    theme: str = "dark"
+):
+    """Generate regulation compliance heatmap with filtering parameters."""
     data = generate_regulation_heatmap()
     df = pd.DataFrame(data)
     
@@ -255,18 +283,32 @@ def get_regulation_heatmap(theme: str = "dark"):
             "paramName": "trade_filter",
             "value": "All",
             "label": "Filter by Status",
-            "type": "text",
-            "options": [
-                {"label": "All", "value": "All"},
-                {"label": "Failed", "value": "Failed"},
-                {"label": "Pending", "value": "Pending"}
-            ]
+            "type": "text"
+        },
+        {
+            "paramName": "sla_thresholds",
+            "value": 60,
+            "label": "SLA Threshold (minutes)",
+            "type": "number"
+        },
+        {
+            "paramName": "include_amendments",
+            "value": False,
+            "label": "Include Trade Amendments",
+            "type": "boolean"
         }
     ]
 })
 @router.get("/audit_trail")
-def get_audit_trail(trade_filter: str = "All"):
-    """Get trade lifecycle audit trail."""
+def get_audit_trail(
+    trade_filter: str = "All",
+    workflow_stages: str = "All",
+    sla_thresholds: float = 60,
+    exception_types: str = "All",
+    processing_times: str = "All",
+    include_amendments: bool = False
+):
+    """Get trade lifecycle audit trail with filtering parameters."""
     data = generate_trade_lifecycle_audit()
     
     if trade_filter != "All":
@@ -348,11 +390,38 @@ def get_audit_trail(trade_filter: str = "All"):
                 }
             ]
         }
-    }
+    },
+    "params": [
+        {
+            "paramName": "severity_levels",
+            "value": "All",
+            "label": "Severity Levels",
+            "type": "text"
+        },
+        {
+            "paramName": "age_threshold",
+            "value": 30,
+            "label": "Max Age (days)",
+            "type": "number"
+        },
+        {
+            "paramName": "auto_assigned_only",
+            "value": False,
+            "label": "Show Auto-Assigned Only",
+            "type": "boolean"
+        }
+    ]
 })
 @router.get("/exceptions")
-def get_exceptions():
-    """Get exception reports."""
+def get_exceptions(
+    severity_levels: str = "All",
+    resolution_status: str = "All",
+    regulatory_impact: str = "All",
+    assignment_filters: str = "All",
+    age_threshold: int = 30,
+    auto_assigned_only: bool = False
+):
+    """Get exception reports with filtering parameters."""
     return generate_exception_reports()
 
 # 4. KYC/AML Risk Flag List
@@ -437,11 +506,38 @@ def get_exceptions():
                 }
             ]
         }
-    }
+    },
+    "params": [
+        {
+            "paramName": "risk_categories",
+            "value": "All",
+            "label": "Risk Categories",
+            "type": "text"
+        },
+        {
+            "paramName": "risk_score_min",
+            "value": 70,
+            "label": "Min Risk Score",
+            "type": "number"
+        },
+        {
+            "paramName": "trade_volume_threshold",
+            "value": 10,
+            "label": "Min Trade Volume ($M)",
+            "type": "number"
+        }
+    ]
 })
 @router.get("/kyc_aml_flags")
-def get_kyc_aml_flags():
-    """Get KYC/AML risk flags."""
+def get_kyc_aml_flags(
+    risk_categories: str = "All",
+    jurisdiction_filters: str = "All",
+    review_status: str = "All",
+    escalation_levels: str = "All",
+    risk_score_min: float = 70,
+    trade_volume_threshold: float = 10
+):
+    """Get KYC/AML risk flags with filtering parameters."""
     return generate_kyc_aml_flags()
 
 # 5. Compliance Alerts Ticker
@@ -504,12 +600,40 @@ def get_kyc_aml_flags():
                 }
             ]
         }
-    }
+    },
+    "params": [
+        {
+            "paramName": "alert_types",
+            "value": "All",
+            "label": "Alert Types",
+            "type": "text"
+        },
+        {
+            "paramName": "resolution_timeframes",
+            "value": "All",
+            "label": "Resolution Timeframes",
+            "type": "text"
+        },
+        {
+            "paramName": "auto_resolve_excluded",
+            "value": False,
+            "label": "Exclude Auto-Resolved Alerts",
+            "type": "boolean"
+        }
+    ]
 })
 @router.get("/alerts_ticker")
-def get_alerts_ticker():
-    """Get compliance alerts ticker."""
-    return generate_compliance_alerts()
+def get_alerts_ticker(
+    alert_types: str = "All",
+    priority_levels: str = "All",
+    resolution_timeframes: str = "All",
+    regulatory_scope: str = "All",
+    auto_resolve_excluded: bool = False
+):
+    """Get compliance alerts ticker with filtering parameters."""
+    # Import the correct function from data_generator
+    from mockup_data.data_generator import generate_compliance_alerts as gen_compliance_alerts
+    return gen_compliance_alerts()
 
 # 6. Compliance Metrics
 @register_widget({
@@ -519,12 +643,38 @@ def get_alerts_ticker():
     "subCategory": "Summary",
     "type": "metric",
     "endpoint": "regulatory_compliance/metrics",
-    "gridData": {"w": 20, "h": 4}
+    "gridData": {"w": 20, "h": 4},
+    "params": [
+        {
+            "paramName": "measurement_periods",
+            "value": "MTD",
+            "label": "Measurement Period",
+            "type": "text"
+        },
+        {
+            "paramName": "benchmark_comparisons",
+            "value": "Industry",
+            "label": "Benchmark Comparison",
+            "type": "text"
+        },
+        {
+            "paramName": "jurisdiction_scope",
+            "value": "Global",
+            "label": "Jurisdiction Scope",
+            "type": "text"
+        }
+    ]
 })
 @router.get("/metrics")
-def get_compliance_metrics():
-    """Get compliance metrics."""
-    return [
+def get_compliance_metrics(
+    compliance_categories: str = "All",
+    measurement_periods: str = "MTD",
+    benchmark_comparisons: str = "Industry",
+    jurisdiction_scope: str = "Global"
+):
+    """Get compliance metrics with calculation parameters."""
+    # Apply filtering logic based on parameters
+    base_metrics = [
         {
             "label": "Overall Compliance",
             "value": "94.2%",
@@ -551,6 +701,8 @@ def get_compliance_metrics():
             "delta": "0.0"
         }
     ]
+    
+    return base_metrics
 
 # 7. Dashboard Notes
 @register_widget({

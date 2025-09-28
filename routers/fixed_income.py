@@ -1,5 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
+from typing import List
 import json
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -31,22 +32,49 @@ router = APIRouter(prefix="/fixed_income", tags=["Fixed Income"])
     "raw": True,
     "params": [
         {
-            "paramName": "period",
-            "value": "30d",
+            "paramName": "time_period",
+            "value": "1M",
             "label": "Time Period",
             "type": "text",
             "options": [
-                {"label": "7 Days", "value": "7d"},
-                {"label": "30 Days", "value": "30d"},
-                {"label": "90 Days", "value": "90d"}
+                {"label": "1 Day", "value": "1D"},
+                {"label": "1 Week", "value": "1W"},
+                {"label": "1 Month", "value": "1M"},
+                {"label": "3 Months", "value": "3M"},
+                {"label": "1 Year", "value": "1Y"}
+            ]
+        },
+        {
+            "paramName": "min_trade_size",
+            "value": 1,
+            "label": "Min Trade Size ($M)",
+            "type": "number"
+        },
+        {
+            "paramName": "trading_venue",
+            "value": "All",
+            "label": "Trading Venue",
+            "type": "text",
+            "options": [
+                {"label": "All Venues", "value": "All"},
+                {"label": "Dealer-to-Customer", "value": "D2C"},
+                {"label": "Dealer-to-Dealer", "value": "D2D"},
+                {"label": "Electronic Trading", "value": "Electronic"},
+                {"label": "Voice Trading", "value": "Voice"},
+                {"label": "Primary Market", "value": "Primary"}
             ]
         }
     ]
 })
 @router.get("/treasury_volumes")
-def get_treasury_volumes(period: str = "30d", raw: bool = False, theme: str = "dark"):
+def get_treasury_volumes(time_period: str = "1M", treasury_types: List[str] = Query(default=["Bills (1-12M)", "Notes (2-10Y)"]), trading_venue: str = "All", min_trade_size: int = 1, maturity_bucket: str = "All", counterparty_segment: str = "All", raw: bool = False, theme: str = "dark"):
     """Get treasury trade volumes by tenor."""
-    data = generate_treasury_volumes()
+    data = generate_treasury_volumes(time_period=time_period, 
+                                   treasury_types=treasury_types,
+                                   trading_venue=trading_venue,
+                                   min_trade_size=min_trade_size,
+                                   maturity_bucket=maturity_bucket,
+                                   counterparty_segment=counterparty_segment)
     
     if raw:
         return data
@@ -102,12 +130,47 @@ def get_treasury_volumes(period: str = "30d", raw: bool = False, theme: str = "d
     "type": "chart",
     "endpoint": "fixed_income/repo_spreads",
     "gridData": {"w": 20, "h": 10},
-    "refetchInterval": 300000
+    "refetchInterval": 300000,
+    "params": [
+        {
+            "paramName": "time_horizon_repo",
+            "value": "1M",
+            "label": "Time Horizon",
+            "type": "text",
+            "options": [
+                {"label": "1 Day", "value": "1D"},
+                {"label": "1 Week", "value": "1W"},
+                {"label": "1 Month", "value": "1M"},
+                {"label": "3 Months", "value": "3M"},
+                {"label": "6 Months", "value": "6M"}
+            ]
+        },
+        {
+            "paramName": "spread_analysis",
+            "value": True,
+            "label": "Show Spread Analysis",
+            "type": "boolean"
+        },
+        {
+            "paramName": "benchmark_rate",
+            "value": "SOFR",
+            "label": "Benchmark Rate",
+            "type": "text",
+            "options": [
+                {"label": "SOFR", "value": "SOFR"},
+                {"label": "Fed Funds", "value": "FedFunds"},
+                {"label": "Treasury Bill", "value": "TBill"},
+                {"label": "ON RRP", "value": "ONRRP"}
+            ]
+        }
+    ]
 })
 @router.get("/repo_spreads")
-def get_repo_spreads(theme: str = "dark"):
+def get_repo_spreads(benchmark_rates: List[str] = Query(default=["SOFR", "ON RRP"]), repo_types: List[str] = Query(default=["GCF Repo"]), collateral_grades: List[str] = Query(default=["Treasury", "Agency"]), time_horizon_repo: str = "1M", spread_analysis: bool = True, theme: str = "dark"):
     """Track repo rate spreads."""
-    data = generate_repo_rates()
+    data = generate_repo_rates(time_period=time_horizon_repo,
+                             currencies=["USD"],
+                             region="US")
     colors = get_theme_colors(theme)
     
     fig = make_subplots(
@@ -120,23 +183,23 @@ def get_repo_spreads(theme: str = "dark"):
     
     # Plot rates
     fig.add_trace(
-        go.Scatter(x=data["dates"], y=data["GCF_Repo"], 
+        go.Scatter(x=data["dates"], y=data["GCF_Repo_USD"], 
                   name="GCF Repo", line=dict(color="#3b82f6", width=2)),
         row=1, col=1
     )
     fig.add_trace(
-        go.Scatter(x=data["dates"], y=data["SOFR"], 
+        go.Scatter(x=data["dates"], y=data["SOFR_USD"], 
                   name="SOFR", line=dict(color="#8b5cf6", width=2)),
         row=1, col=1
     )
     fig.add_trace(
-        go.Scatter(x=data["dates"], y=data["ON_RRP"], 
+        go.Scatter(x=data["dates"], y=data["ON_RRP_USD"], 
                   name="ON RRP", line=dict(color="#ec4899", width=2)),
         row=1, col=1
     )
     
     # Calculate and plot spread
-    spread = [gcf - sofr for gcf, sofr in zip(data["GCF_Repo"], data["SOFR"])]
+    spread = [gcf - sofr for gcf, sofr in zip(data["GCF_Repo_USD"], data["SOFR_USD"])]
     fig.add_trace(
         go.Scatter(x=data["dates"], y=spread, 
                   name="GCF-SOFR Spread", 
@@ -223,12 +286,52 @@ def get_repo_spreads(theme: str = "dark"):
                 }
             ]
         }
-    }
+    },
+    "params": [
+        {
+            "paramName": "fail_threshold",
+            "value": 1.0,
+            "label": "Min Fail Rate (%)",
+            "type": "number"
+        },
+        {
+            "paramName": "maturity_range",
+            "value": "All",
+            "label": "Maturity Range",
+            "type": "text",
+            "options": [
+                {"label": "All Maturities", "value": "All"},
+                {"label": "0-1 Year", "value": "0-1Y"},
+                {"label": "1-3 Years", "value": "1-3Y"},
+                {"label": "3-7 Years", "value": "3-7Y"},
+                {"label": "7-10 Years", "value": "7-10Y"},
+                {"label": "10+ Years", "value": "10Y+"}
+            ]
+        },
+        {
+            "paramName": "security_type",
+            "value": "All",
+            "label": "Security Type",
+            "type": "text",
+            "options": [
+                {"label": "All Securities", "value": "All"},
+                {"label": "Treasury Bills", "value": "Treasury Bills"},
+                {"label": "Treasury Notes", "value": "Treasury Notes"},
+                {"label": "Treasury Bonds", "value": "Treasury Bonds"},
+                {"label": "Agency Securities", "value": "Agency"},
+                {"label": "Corporate Bonds", "value": "Corporate"}
+            ]
+        }
+    ]
 })
 @router.get("/fails_to_deliver")
-def get_fails_to_deliver():
+def get_fails_to_deliver(fail_threshold: float = 1.0, security_types: List[str] = Query(default=["Treasury", "Agency"]), maturity_range: str = "All", aging_filter: str = "All", settlement_mode: str = "All"):
     """Get fails-to-deliver data."""
-    return generate_settlement_fails()
+    return generate_settlement_fails(fail_threshold=fail_threshold,
+                                   security_types=security_types,
+                                   maturity_range=maturity_range,
+                                   aging_filter=aging_filter,
+                                   settlement_mode=settlement_mode)
 
 # 4. Dealer Activity Leaderboard
 @register_widget({
@@ -287,10 +390,41 @@ def get_fails_to_deliver():
                 }
             ]
         }
-    }
+    },
+    "params": [
+        {
+            "paramName": "dealer_tier",
+            "value": "All",
+            "label": "Dealer Tier",
+            "type": "text",
+            "options": [
+                {"label": "All Dealers", "value": "All"},
+                {"label": "Tier 1 (Primary)", "value": "Tier1"},
+                {"label": "Tier 2 (Regional)", "value": "Tier2"},
+                {"label": "Tier 3 (Specialist)", "value": "Tier3"}
+            ]
+        },
+        {
+            "paramName": "min_volume_threshold",
+            "value": 10,
+            "label": "Min Volume ($B)",
+            "type": "number"
+        },
+        {
+            "paramName": "activity_type",
+            "value": "Both",
+            "label": "Activity Type",
+            "type": "text",
+            "options": [
+                {"label": "Both Lending & Borrowing", "value": "Both"},
+                {"label": "Lending Only", "value": "Lending"},
+                {"label": "Borrowing Only", "value": "Borrowing"}
+            ]
+        }
+    ]
 })
 @router.get("/dealer_activity")
-def get_dealer_activity():
+def get_dealer_activity(dealer_tier: str = "All", activity_type: str = "Both", repo_segment: str = "All", time_window: str = "1M", min_volume_threshold: int = 10):
     """Get dealer activity leaderboard."""
     return generate_dealer_activity()
 

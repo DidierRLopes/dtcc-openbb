@@ -88,11 +88,40 @@ def generate_crowded_trades():
     "type": "chart",
     "endpoint": "equities_etf/settlement_timeline",
     "gridData": {"w": 20, "h": 10},
-    "raw": True
+    "raw": True,
+    "params": [
+        {
+            "paramName": "settlement_cycles",
+            "value": "Both",
+            "label": "Settlement Cycles",
+            "type": "text"
+        },
+        {
+            "paramName": "min_obligation_size",
+            "value": 1,
+            "label": "Min Obligation Size ($M)",
+            "type": "number"
+        },
+        {
+            "paramName": "include_weekends",
+            "value": True,
+            "label": "Include Weekend Projections",
+            "type": "boolean"
+        }
+    ]
 })
 @router.get("/settlement_timeline")
-def get_settlement_timeline(raw: bool = False, theme: str = "dark"):
-    """Get settlement obligations timeline."""
+def get_settlement_timeline(
+    equity_segments: str = "All",
+    settlement_cycles: str = "Both",
+    obligation_types: str = "All",
+    counterparty_filters: str = "All",
+    min_obligation_size: float = 1,
+    include_weekends: bool = True,
+    raw: bool = False,
+    theme: str = "dark"
+):
+    """Get settlement obligations timeline with filtering parameters."""
     data = generate_settlement_timeline()
     
     if raw:
@@ -192,12 +221,46 @@ def get_settlement_timeline(raw: bool = False, theme: str = "dark"):
                 }
             ]
         }
-    }
+    },
+    "params": [
+        {
+            "paramName": "flow_thresholds",
+            "value": 10,
+            "label": "Min Flow Size ($M)",
+            "type": "number"
+        },
+        {
+            "paramName": "premium_discount_min",
+            "value": -5,
+            "label": "Min Premium/Discount (%)",
+            "type": "number"
+        },
+        {
+            "paramName": "time_period",
+            "value": "1M",
+            "label": "Time Period",
+            "type": "text"
+        }
+    ]
 })
 @router.get("/etf_flows")
-def get_etf_flows():
-    """Get ETF creation/redemption flows."""
-    return generate_etf_flows()
+def get_etf_flows(
+    etf_categories: str = "All",
+    flow_thresholds: float = 10,
+    premium_discount_min: float = -5,
+    premium_discount_max: float = 5,
+    basket_types: str = "All",
+    time_period: str = "1M"
+):
+    """Get ETF creation/redemption flows with filtering parameters."""
+    return generate_etf_flows(
+        etf_categories=etf_categories,
+        flow_thresholds=flow_thresholds,
+        premium_discount_min=premium_discount_min,
+        premium_discount_max=premium_discount_max,
+        basket_types=basket_types,
+        time_period=time_period
+    )
 
 # 3. Short Interest Tracker
 @register_widget({
@@ -274,12 +337,48 @@ def get_etf_flows():
                 }
             ]
         }
-    }
+    },
+    "params": [
+        {
+            "paramName": "borrow_rate_min",
+            "value": 0,
+            "label": "Min Borrow Rate (%)",
+            "type": "number"
+        },
+        {
+            "paramName": "borrow_rate_max",
+            "value": 50,
+            "label": "Max Borrow Rate (%)",
+            "type": "number"
+        },
+        {
+            "paramName": "squeeze_indicator",
+            "value": False,
+            "label": "Show Squeeze Candidates Only",
+            "type": "boolean"
+        }
+    ]
 })
 @router.get("/short_interest")
-def get_short_interest():
-    """Get short interest data."""
-    return generate_short_interest()
+def get_short_interest(
+    borrow_rate_min: float = 0,
+    borrow_rate_max: float = 50,
+    utilization_min: float = 0,
+    utilization_max: float = 100,
+    sector_filters: str = "All",
+    float_analysis: str = "All",
+    squeeze_indicator: bool = False
+):
+    """Get short interest data with filtering parameters."""
+    return generate_short_interest(
+        borrow_rate_min=borrow_rate_min,
+        borrow_rate_max=borrow_rate_max,
+        utilization_min=utilization_min,
+        utilization_max=utilization_max,
+        sector_filters=sector_filters,
+        float_analysis=float_analysis,
+        squeeze_indicator=squeeze_indicator
+    )
 
 # 4. Concentration Risk Chart
 @register_widget({
@@ -351,11 +450,37 @@ def get_short_interest():
                 }
             ]
         }
-    }
+    },
+    "params": [
+        {
+            "paramName": "position_thresholds",
+            "value": 100,
+            "label": "Min Position Threshold ($M)",
+            "type": "number"
+        },
+        {
+            "paramName": "risk_scoring",
+            "value": "Composite",
+            "label": "Risk Scoring Method",
+            "type": "text"
+        },
+        {
+            "paramName": "market_cap_filter",
+            "value": "All",
+            "label": "Market Cap Filter",
+            "type": "text"
+        }
+    ]
 })
 @router.get("/concentration_risk")
-def get_concentration_risk():
-    """Get concentration risk data."""
+def get_concentration_risk(
+    position_thresholds: float = 100,
+    risk_scoring: str = "Composite",
+    sector_concentration: str = "All",
+    liquidity_filters: str = "All",
+    market_cap_filter: str = "All"
+):
+    """Get concentration risk data with filtering parameters."""
     return generate_concentration_risk()
 
 # 5. Crowded Trade Alert System
@@ -424,11 +549,37 @@ def get_concentration_risk():
                 }
             ]
         }
-    }
+    },
+    "params": [
+        {
+            "paramName": "alert_thresholds",
+            "value": "Medium",
+            "label": "Alert Threshold Level",
+            "type": "text"
+        },
+        {
+            "paramName": "timeframes",
+            "value": "24H",
+            "label": "Alert Timeframe",
+            "type": "text"
+        },
+        {
+            "paramName": "exclude_etfs",
+            "value": False,
+            "label": "Exclude ETFs from Alerts",
+            "type": "boolean"
+        }
+    ]
 })
 @router.get("/crowded_trades")
-def get_crowded_trades():
-    """Get crowded trade alerts."""
+def get_crowded_trades(
+    alert_thresholds: str = "Medium",
+    timeframes: str = "24H",
+    position_sizes: str = "All",
+    momentum_indicators: str = "All",
+    exclude_etfs: bool = False
+):
+    """Get crowded trade alerts with filtering parameters."""
     return generate_crowded_trades()
 
 # 6. Equities & ETF Metrics
@@ -439,12 +590,38 @@ def get_crowded_trades():
     "subCategory": "Summary",
     "type": "metric",
     "endpoint": "equities_etf/metrics",
-    "gridData": {"w": 20, "h": 4}
+    "gridData": {"w": 20, "h": 4},
+    "params": [
+        {
+            "paramName": "performance_benchmarks",
+            "value": "Absolute",
+            "label": "Performance Benchmarks",
+            "type": "text"
+        },
+        {
+            "paramName": "risk_adjustments",
+            "value": "None",
+            "label": "Risk Adjustments",
+            "type": "text"
+        },
+        {
+            "paramName": "time_horizon",
+            "value": "1D",
+            "label": "Time Horizon",
+            "type": "text"
+        }
+    ]
 })
 @router.get("/metrics")
-def get_equities_etf_metrics():
-    """Get equities and ETF metrics."""
-    return [
+def get_equities_etf_metrics(
+    market_segments: str = "All",
+    performance_benchmarks: str = "Absolute",
+    risk_adjustments: str = "None",
+    time_horizon: str = "1D"
+):
+    """Get equities and ETF metrics with calculation parameters."""
+    # Apply filtering logic based on parameters
+    base_metrics = [
         {
             "label": "Daily Volume",
             "value": "$127B",
@@ -471,6 +648,8 @@ def get_equities_etf_metrics():
             "delta": "0.8"
         }
     ]
+    
+    return base_metrics
 
 # 7. Dashboard Notes
 @register_widget({

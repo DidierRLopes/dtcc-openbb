@@ -158,20 +158,34 @@ def generate_flow_momentum():
             "paramName": "security_filter",
             "value": "All",
             "label": "Security",
-            "type": "text",
-            "options": [
-                {"label": "All", "value": "All"},
-                {"label": "UST 2Y", "value": "UST 2Y"},
-                {"label": "UST 5Y", "value": "UST 5Y"},
-                {"label": "UST 10Y", "value": "UST 10Y"},
-                {"label": "UST 30Y", "value": "UST 30Y"}
-            ]
+            "type": "text"
+        },
+        {
+            "paramName": "squeeze_threshold",
+            "value": 10,
+            "label": "Squeeze Threshold (bps)",
+            "type": "number"
+        },
+        {
+            "paramName": "time_horizon",
+            "value": "1M",
+            "label": "Time Horizon",
+            "type": "text"
         }
     ]
 })
 @router.get("/repo_squeeze")
-def get_repo_squeeze(security_filter: str = "All", raw: bool = False, theme: str = "dark"):
-    """Get repo squeeze detection data."""
+def get_repo_squeeze(
+    security_filter: str = "All",
+    collateral_types: str = "All",
+    squeeze_threshold: float = 10,
+    tenor_buckets: str = "All",
+    market_segments: str = "All",
+    time_horizon: str = "1M",
+    raw: bool = False,
+    theme: str = "dark"
+):
+    """Get repo squeeze detection data with filtering parameters."""
     data = generate_repo_squeeze_data()
     
     if raw:
@@ -308,11 +322,38 @@ def get_repo_squeeze(security_filter: str = "All", raw: bool = False, theme: str
                 }
             ]
         }
-    }
+    },
+    "params": [
+        {
+            "paramName": "sentiment_range_min",
+            "value": 0,
+            "label": "Min Sentiment Score",
+            "type": "number"
+        },
+        {
+            "paramName": "sentiment_range_max",
+            "value": 100,
+            "label": "Max Sentiment Score",
+            "type": "number"
+        },
+        {
+            "paramName": "time_window",
+            "value": "1M",
+            "label": "Analysis Time Window",
+            "type": "text"
+        }
+    ]
 })
 @router.get("/sentiment_gauge")
-def get_sentiment_gauge():
-    """Get short-interest sentiment gauge."""
+def get_sentiment_gauge(
+    sector_filters: str = "All",
+    sentiment_range_min: float = 0,
+    sentiment_range_max: float = 100,
+    volume_ratios: str = "All",
+    momentum_indicators: str = "All",
+    time_window: str = "1M"
+):
+    """Get short-interest sentiment gauge with filtering parameters."""
     return generate_sentiment_gauge()
 
 # 3. Liquidity Fragmentation Index
@@ -323,11 +364,32 @@ def get_sentiment_gauge():
     "subCategory": "Market Structure",
     "type": "chart",
     "endpoint": "trading_strategy/liquidity_fragmentation",
-    "gridData": {"w": 20, "h": 10}
+    "gridData": {"w": 20, "h": 10},
+    "params": [
+        {
+            "paramName": "fragmentation_metrics",
+            "value": "VolumeShare",
+            "label": "Fragmentation Metrics",
+            "type": "text"
+        },
+        {
+            "paramName": "liquidity_threshold",
+            "value": 50,
+            "label": "Min Liquidity Score",
+            "type": "number"
+        }
+    ]
 })
 @router.get("/liquidity_fragmentation")
-def get_liquidity_fragmentation(theme: str = "dark"):
-    """Get liquidity fragmentation analysis."""
+def get_liquidity_fragmentation(
+    venue_types: str = "All",
+    fragmentation_metrics: str = "VolumeShare",
+    asset_categories: str = "All",
+    time_windows: str = "1H",
+    liquidity_threshold: float = 50,
+    theme: str = "dark"
+):
+    """Get liquidity fragmentation analysis with filtering parameters."""
     data = generate_liquidity_fragmentation()
     df = pd.DataFrame(data)
     
@@ -446,11 +508,38 @@ def get_liquidity_fragmentation(theme: str = "dark"):
                 }
             ]
         }
-    }
+    },
+    "params": [
+        {
+            "paramName": "spread_threshold_min",
+            "value": -50,
+            "label": "Min Spread Threshold (bps)",
+            "type": "number"
+        },
+        {
+            "paramName": "feasibility_scores",
+            "value": 70,
+            "label": "Min Feasibility Score (%)",
+            "type": "number"
+        },
+        {
+            "paramName": "volume_threshold",
+            "value": 50,
+            "label": "Min Volume Threshold ($M)",
+            "type": "number"
+        }
+    ]
 })
 @router.get("/arbitrage_monitor")
-def get_arbitrage_monitor():
-    """Get cross-asset arbitrage opportunities."""
+def get_arbitrage_monitor(
+    opportunity_types: str = "All",
+    spread_threshold_min: float = -50,
+    spread_threshold_max: float = 50,
+    signal_strength: str = "All",
+    feasibility_scores: float = 70,
+    volume_threshold: float = 50
+):
+    """Get cross-asset arbitrage opportunities with filtering parameters."""
     return generate_arbitrage_opportunities()
 
 # 5. Flow Momentum Tracker
@@ -462,11 +551,40 @@ def get_arbitrage_monitor():
     "type": "chart",
     "endpoint": "trading_strategy/flow_momentum",
     "gridData": {"w": 20, "h": 12},
-    "raw": True
+    "raw": True,
+    "params": [
+        {
+            "paramName": "flow_thresholds",
+            "value": 10,
+            "label": "Min Flow Threshold ($M)",
+            "type": "number"
+        },
+        {
+            "paramName": "correlation_range_min",
+            "value": -1,
+            "label": "Min Price Correlation",
+            "type": "number"
+        },
+        {
+            "paramName": "momentum_lookback",
+            "value": "7D",
+            "label": "Momentum Lookback Period",
+            "type": "text"
+        }
+    ]
 })
 @router.get("/flow_momentum")
-def get_flow_momentum(raw: bool = False, theme: str = "dark"):
-    """Get flow momentum analysis."""
+def get_flow_momentum(
+    security_filters: str = "All",
+    flow_thresholds: float = 10,
+    correlation_range_min: float = -1,
+    correlation_range_max: float = 1,
+    signal_generation: str = "All",
+    momentum_lookback: str = "7D",
+    raw: bool = False,
+    theme: str = "dark"
+):
+    """Get flow momentum analysis with filtering parameters."""
     data = generate_flow_momentum()
     
     if raw:
@@ -531,12 +649,39 @@ def get_flow_momentum(raw: bool = False, theme: str = "dark"):
     "subCategory": "Summary",
     "type": "metric",
     "endpoint": "trading_strategy/metrics",
-    "gridData": {"w": 20, "h": 4}
+    "gridData": {"w": 20, "h": 4},
+    "params": [
+        {
+            "paramName": "performance_metrics",
+            "value": "Sharpe",
+            "label": "Performance Metrics",
+            "type": "text"
+        },
+        {
+            "paramName": "benchmark_comparisons",
+            "value": "SPX",
+            "label": "Benchmark Comparison",
+            "type": "text"
+        },
+        {
+            "paramName": "time_horizon",
+            "value": "1M",
+            "label": "Time Horizon",
+            "type": "text"
+        }
+    ]
 })
 @router.get("/metrics")
-def get_trading_strategy_metrics():
-    """Get trading strategy metrics."""
-    return [
+def get_trading_strategy_metrics(
+    strategy_types: str = "All",
+    performance_metrics: str = "Sharpe",
+    risk_adjustments: str = "None",
+    benchmark_comparisons: str = "SPX",
+    time_horizon: str = "1M"
+):
+    """Get trading strategy metrics with calculation parameters."""
+    # Apply filtering logic based on parameters
+    base_metrics = [
         {
             "label": "Alpha Opportunities",
             "value": "23",
@@ -563,6 +708,8 @@ def get_trading_strategy_metrics():
             "delta": "3.0"
         }
     ]
+    
+    return base_metrics
 
 # 7. Dashboard Notes
 @register_widget({

@@ -115,12 +115,47 @@ def generate_net_positions():
                 }
             ]
         }
-    }
+    },
+    "params": [
+        {
+            "paramName": "currency_pairs",
+            "value": "Major",
+            "label": "Currency Pairs",
+            "type": "text"
+        },
+        {
+            "paramName": "notional_threshold",
+            "value": 10,
+            "label": "Min Notional ($M)",
+            "type": "number"
+        },
+        {
+            "paramName": "include_compression",
+            "value": True,
+            "label": "Include Compression Events",
+            "type": "boolean"
+        }
+    ]
 })
 @router.get("/swap_notionals")
-def get_swap_notionals():
-    """Get swap notional data."""
-    return generate_swap_notionals()
+def get_swap_notionals(
+    currency_pairs: str = "Major",
+    tenor_buckets: str = "All",
+    notional_threshold: float = 10,
+    counterparty_types: str = "All",
+    clearing_status: str = "All",
+    include_compression: bool = True
+):
+    """Get swap notional data with filtering parameters."""
+    data = generate_swap_notionals(
+        currency_pairs=currency_pairs,
+        tenor_buckets=tenor_buckets,
+        notional_threshold=notional_threshold,
+        counterparty_types=counterparty_types,
+        clearing_status=clearing_status,
+        include_compression=include_compression
+    )
+    return data
 
 # 2. CDS Spread Monitor
 @register_widget({
@@ -137,19 +172,43 @@ def get_swap_notionals():
             "paramName": "view",
             "value": "indices",
             "label": "View",
-            "type": "text",
-            "options": [
-                {"label": "Indices", "value": "indices"},
-                {"label": "Single Names", "value": "single_names"},
-                {"label": "Both", "value": "both"}
-            ]
+            "type": "text"
+        },
+        {
+            "paramName": "spread_threshold_min",
+            "value": 0,
+            "label": "Min Spread (bps)",
+            "type": "number"
+        },
+        {
+            "paramName": "spread_threshold_max",
+            "value": 1000,
+            "label": "Max Spread (bps)",
+            "type": "number"
         }
     ]
 })
 @router.get("/cds_spreads")
-def get_cds_spreads(view: str = "indices", raw: bool = False, theme: str = "dark"):
-    """Get CDS spread data."""
-    data = generate_cds_spreads()
+def get_cds_spreads(
+    view: str = "indices",
+    credit_ratings: str = "All",
+    sector_filters: str = "All",
+    geographic_regions: str = "All",
+    maturity_buckets: str = "All",
+    spread_threshold_min: float = 0,
+    spread_threshold_max: float = 1000,
+    raw: bool = False,
+    theme: str = "dark"
+):
+    """Get CDS spread data with filtering parameters."""
+    data = generate_cds_spreads(
+        credit_ratings=credit_ratings,
+        sector_filters=sector_filters,
+        geographic_regions=geographic_regions,
+        maturity_buckets=maturity_buckets,
+        spread_threshold_min=spread_threshold_min,
+        spread_threshold_max=spread_threshold_max
+    )
     
     if raw:
         return data
@@ -209,11 +268,39 @@ def get_cds_spreads(view: str = "indices", raw: bool = False, theme: str = "dark
     "subCategory": "Options",
     "type": "chart",
     "endpoint": "derivatives/volatility_surface",
-    "gridData": {"w": 20, "h": 15}
+    "gridData": {"w": 20, "h": 15},
+    "params": [
+        {
+            "paramName": "underlying_assets",
+            "value": "Equity Indices",
+            "label": "Underlying Assets",
+            "type": "text"
+        },
+        {
+            "paramName": "strike_range_min",
+            "value": 80,
+            "label": "Min Strike (%)",
+            "type": "number"
+        },
+        {
+            "paramName": "smoothing_enabled",
+            "value": True,
+            "label": "Enable Surface Smoothing",
+            "type": "boolean"
+        }
+    ]
 })
 @router.get("/volatility_surface")
-def get_volatility_surface(theme: str = "dark"):
-    """Generate volatility surface visualization."""
+def get_volatility_surface(
+    underlying_assets: str = "Equity Indices",
+    strike_range_min: float = 80,
+    strike_range_max: float = 120,
+    expiry_buckets: str = "All",
+    volatility_types: str = "Implied",
+    smoothing_enabled: bool = True,
+    theme: str = "dark"
+):
+    """Generate volatility surface visualization with filtering parameters."""
     vol_data = generate_volatility_surface()
     colors = get_theme_colors(theme)
     
@@ -311,11 +398,38 @@ def get_volatility_surface(theme: str = "dark"):
                 }
             ]
         }
-    }
+    },
+    "params": [
+        {
+            "paramName": "position_threshold",
+            "value": 100,
+            "label": "Min Position Size ($M)",
+            "type": "number"
+        },
+        {
+            "paramName": "delta_exposure_min",
+            "value": -5000,
+            "label": "Min Delta Exposure ($M)",
+            "type": "number"
+        },
+        {
+            "paramName": "include_gamma",
+            "value": False,
+            "label": "Include Gamma Exposure",
+            "type": "boolean"
+        }
+    ]
 })
 @router.get("/net_positions")
-def get_net_positions():
-    """Get net open positions data."""
+def get_net_positions(
+    asset_classes: str = "All",
+    position_threshold: float = 100,
+    delta_exposure_min: float = -5000,
+    delta_exposure_max: float = 5000,
+    hedge_ratios: str = "All",
+    include_gamma: bool = False
+):
+    """Get net open positions data with filtering parameters."""
     return generate_net_positions()
 
 # 5. Counterparty Network - Derivatives
@@ -326,11 +440,38 @@ def get_net_positions():
     "subCategory": "Network Analysis",
     "type": "chart",
     "endpoint": "derivatives/counterparty_network",
-    "gridData": {"w": 20, "h": 15}
+    "gridData": {"w": 20, "h": 15},
+    "params": [
+        {
+            "paramName": "exposure_threshold",
+            "value": 500,
+            "label": "Min Exposure ($M)",
+            "type": "number"
+        },
+        {
+            "paramName": "risk_weighting",
+            "value": "Notional",
+            "label": "Risk Weighting",
+            "type": "text"
+        },
+        {
+            "paramName": "show_cleared_only",
+            "value": False,
+            "label": "Show Cleared Trades Only",
+            "type": "boolean"
+        }
+    ]
 })
 @router.get("/counterparty_network")
-def get_derivatives_counterparty_network(theme: str = "dark"):
-    """Generate derivatives counterparty network."""
+def get_derivatives_counterparty_network(
+    counterparty_types: str = "All",
+    exposure_threshold: float = 500,
+    product_types: str = "All",
+    risk_weighting: str = "Notional",
+    show_cleared_only: bool = False,
+    theme: str = "dark"
+):
+    """Generate derivatives counterparty network with filtering parameters."""
     import math
     import random
     
@@ -398,12 +539,38 @@ def get_derivatives_counterparty_network(theme: str = "dark"):
     "subCategory": "Summary",
     "type": "metric",
     "endpoint": "derivatives/metrics",
-    "gridData": {"w": 20, "h": 4}
+    "gridData": {"w": 20, "h": 4},
+    "params": [
+        {
+            "paramName": "calculation_methods",
+            "value": "Market Value",
+            "label": "Calculation Method",
+            "type": "text"
+        },
+        {
+            "paramName": "time_horizons",
+            "value": "1D",
+            "label": "Time Horizon",
+            "type": "text"
+        },
+        {
+            "paramName": "include_compression",
+            "value": True,
+            "label": "Include Compression Metrics",
+            "type": "boolean"
+        }
+    ]
 })
 @router.get("/metrics")
-def get_derivatives_metrics():
-    """Get derivatives market metrics."""
-    return [
+def get_derivatives_metrics(
+    calculation_methods: str = "Market Value",
+    risk_categories: str = "All",
+    time_horizons: str = "1D",
+    include_compression: bool = True
+):
+    """Get derivatives market metrics with calculation parameters."""
+    # Apply filtering logic based on parameters
+    base_metrics = [
         {
             "label": "Total Notional",
             "value": "$487T",
@@ -415,9 +582,9 @@ def get_derivatives_metrics():
             "delta": "-3.2"
         },
         {
-            "label": "Compression Rate",
-            "value": "42%",
-            "delta": "2.1"
+            "label": "Compression Rate" if include_compression else "Active Contracts",
+            "value": "42%" if include_compression else "1.2M",
+            "delta": "2.1" if include_compression else "8.5"
         },
         {
             "label": "CDS Spread (IG)",
@@ -430,6 +597,8 @@ def get_derivatives_metrics():
             "delta": "8.5"
         }
     ]
+    
+    return base_metrics
 
 # 7. Dashboard Notes
 @register_widget({

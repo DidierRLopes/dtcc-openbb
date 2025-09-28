@@ -1,5 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
+from typing import List
 import json
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -19,22 +20,36 @@ from plotly_config import get_theme_colors, base_layout, get_toolbar_config
 
 router = APIRouter(prefix="/risk_management", tags=["Risk Management"])
 
-def generate_exposure_treemap():
-    """Generate counterparty exposure treemap data."""
-    sectors = ["Banks", "Asset Managers", "Hedge Funds", "Insurance", "Pension Funds"]
+def generate_exposure_treemap(risk_levels=None, counterparty_sectors=None, min_exposure_threshold=100, currency_filter="USD", geographic_region="Global", **kwargs):
+    """Generate counterparty exposure treemap data with parameter filtering."""
+    if not risk_levels:
+        risk_levels = ["Medium", "High"]
+    if not counterparty_sectors:
+        counterparty_sectors = ["Banks", "Asset Managers", "Hedge Funds", "Insurance", "Pension Funds"]
+    
     firms = generate_counterparties()
     
     data = []
-    for sector in sectors:
+    for sector in counterparty_sectors:
         for i in range(3):
             firm = random.choice(firms)
-            exposure = random.uniform(100, 5000)
+            exposure = random.uniform(min_exposure_threshold, 5000)
+            # Apply currency and region multipliers
+            if currency_filter == "EUR":
+                exposure *= 0.85
+            elif currency_filter == "JPY":
+                exposure *= 110
+            if geographic_region != "Global":
+                exposure *= random.uniform(0.8, 1.2)
+            
             data.append({
                 "firm": firm,
                 "sector": sector,
                 "exposure": round(exposure, 2),
                 "collateral": round(exposure * random.uniform(0.7, 1.3), 2),
-                "net_exposure": round(exposure * random.uniform(0.3, 0.8), 2)
+                "net_exposure": round(exposure * random.uniform(0.3, 0.8), 2),
+                "currency": currency_filter,
+                "region": geographic_region
             })
     
     return data
@@ -111,19 +126,30 @@ def generate_liquidity_heatmap():
             "paramName": "exposure_type",
             "value": "gross",
             "label": "Exposure Type",
-            "type": "text",
-            "options": [
-                {"label": "Gross Exposure", "value": "gross"},
-                {"label": "Net Exposure", "value": "net"},
-                {"label": "Collateralized", "value": "collateral"}
-            ]
+            "type": "text"
+        },
+        {
+            "paramName": "min_exposure_threshold",
+            "value": 100,
+            "label": "Min Exposure ($M)",
+            "type": "number"
+        },
+        {
+            "paramName": "currency_filter",
+            "value": "USD",
+            "label": "Currency",
+            "type": "text"
         }
     ]
 })
 @router.get("/exposure_treemap")
-def get_exposure_treemap(exposure_type: str = "gross", theme: str = "dark"):
+def get_exposure_treemap(exposure_type: str = "gross", risk_levels: List[str] = Query(default=["Medium", "High"]), counterparty_sectors: List[str] = Query(default=["Banks", "Asset Managers"]), min_exposure_threshold: int = 100, currency_filter: str = "USD", geographic_region: str = "Global", theme: str = "dark"):
     """Generate counterparty exposure treemap."""
-    data = generate_exposure_treemap()
+    data = generate_exposure_treemap(risk_levels=risk_levels, 
+                                   counterparty_sectors=counterparty_sectors,
+                                   min_exposure_threshold=min_exposure_threshold,
+                                   currency_filter=currency_filter,
+                                   geographic_region=geographic_region)
     colors = get_theme_colors(theme)
     
     # Prepare data for treemap
@@ -195,16 +221,44 @@ def get_exposure_treemap(exposure_type: str = "gross", theme: str = "dark"):
     "gridData": {"w": 20, "h": 10},
     "params": [
         {
-            "paramName": "forecast_days",
-            "value": 30,
-            "label": "Forecast Period (Days)",
+            "paramName": "forecast_horizon",
+            "value": "30D",
+            "label": "Forecast Horizon",
+            "type": "text",
+            "options": [
+                {"label": "1 Week", "value": "7D"},
+                {"label": "2 Weeks", "value": "14D"},
+                {"label": "1 Month", "value": "30D"},
+                {"label": "2 Months", "value": "60D"},
+                {"label": "3 Months", "value": "90D"}
+            ]
+        },
+        {
+            "paramName": "confidence_level",
+            "value": 95,
+            "label": "Confidence Level (%)",
             "type": "number"
+        },
+        {
+            "paramName": "portfolio_segment",
+            "value": "All",
+            "label": "Portfolio Segment",
+            "type": "text",
+            "options": [
+                {"label": "All Segments", "value": "All"},
+                {"label": "Investment Grade", "value": "IG"},
+                {"label": "High Yield", "value": "HY"},
+                {"label": "Government", "value": "Govt"},
+                {"label": "Municipal", "value": "Muni"},
+                {"label": "Structured Products", "value": "Structured"}
+            ]
         }
     ]
 })
 @router.get("/collateral_forecast")
-def get_collateral_forecast(forecast_days: int = 30, theme: str = "dark"):
+def get_collateral_forecast(forecast_horizon: str = "30D", stress_scenarios: List[str] = Query(default=["Baseline", "Stressed"]), collateral_types: List[str] = Query(default=["Treasury", "Agency"]), confidence_level: int = 95, portfolio_segment: str = "All", theme: str = "dark"):
     """Generate collateral requirement forecast."""
+    forecast_days = int(forecast_horizon.replace('D', ''))
     forecast_data = generate_collateral_forecast()
     colors = get_theme_colors(theme)
     
@@ -285,10 +339,44 @@ def get_collateral_forecast(forecast_days: int = 30, theme: str = "dark"):
     "type": "chart",
     "endpoint": "risk_management/settlement_fails",
     "gridData": {"w": 20, "h": 10},
-    "raw": True
+    "raw": True,
+    "params": [
+        {
+            "paramName": "time_period",
+            "value": "1M",
+            "label": "Time Period",
+            "type": "text",
+            "options": [
+                {"label": "1 Week", "value": "1W"},
+                {"label": "1 Month", "value": "1M"},
+                {"label": "3 Months", "value": "3M"},
+                {"label": "6 Months", "value": "6M"},
+                {"label": "1 Year", "value": "1Y"}
+            ]
+        },
+        {
+            "paramName": "min_fail_amount",
+            "value": 10,
+            "label": "Min Fail Amount ($M)",
+            "type": "number"
+        },
+        {
+            "paramName": "settlement_type",
+            "value": "All",
+            "label": "Settlement Type",
+            "type": "text",
+            "options": [
+                {"label": "All Types", "value": "All"},
+                {"label": "T+0 (Same Day)", "value": "T+0"},
+                {"label": "T+1 (Next Day)", "value": "T+1"},
+                {"label": "T+2 (2 Days)", "value": "T+2"},
+                {"label": "T+3+ (3+ Days)", "value": "T+3+"}
+            ]
+        }
+    ]
 })
 @router.get("/settlement_fails")
-def get_settlement_fails(raw: bool = False, theme: str = "dark"):
+def get_settlement_fails(time_period: str = "1M", asset_classes_filter: List[str] = Query(default=["Treasury", "Equity"]), settlement_type: str = "All", min_fail_amount: int = 10, counterparty_filter: str = "All", raw: bool = False, theme: str = "dark"):
     """Track settlement fails across asset classes."""
     data = generate_settlement_fails()
     
@@ -364,10 +452,30 @@ def get_settlement_fails(raw: bool = False, theme: str = "dark"):
     "subCategory": "Liquidity Risk",
     "type": "chart",
     "endpoint": "risk_management/liquidity_heatmap",
-    "gridData": {"w": 20, "h": 10}
+    "gridData": {"w": 20, "h": 10},
+    "params": [
+        {
+            "paramName": "liquidity_metric",
+            "value": "availability",
+            "label": "Liquidity Metric",
+            "type": "text"
+        },
+        {
+            "paramName": "currency_denomination",
+            "value": "USD",
+            "label": "Currency",
+            "type": "text"
+        },
+        {
+            "paramName": "stress_overlay",
+            "value": False,
+            "label": "Show Stress Overlay",
+            "type": "boolean"
+        }
+    ]
 })
 @router.get("/liquidity_heatmap")
-def get_liquidity_heatmap(theme: str = "dark"):
+def get_liquidity_heatmap(collateral_types_filter: List[str] = Query(default=["Treasury", "Agency"]), maturity_buckets: List[str] = Query(default=["O/N", "1W", "1M"]), liquidity_metric: str = "availability", currency_denomination: str = "USD", stress_overlay: bool = False, theme: str = "dark"):
     """Generate liquidity heatmap."""
     data = generate_liquidity_heatmap()
     df = pd.DataFrame(data)
@@ -413,38 +521,63 @@ def get_liquidity_heatmap(theme: str = "dark"):
     "type": "metric",
     "endpoint": "risk_management/risk_metrics",
     "gridData": {"w": 20, "h": 4},
-    "refetchInterval": 60000
-})
-@router.get("/risk_metrics")
-def get_risk_metrics():
-    """Get risk management summary metrics."""
-    return [
+    "refetchInterval": 60000,
+    "params": [
         {
-            "label": "Total Exposure",
-            "value": "$28.4B",
-            "delta": "5.2"
+            "paramName": "risk_category",
+            "value": "All",
+            "label": "Risk Category",
+            "type": "text"
         },
         {
-            "label": "Collateral Coverage",
-            "value": "87.3%",
-            "delta": "-2.1"
-        },
-        {
-            "label": "Settlement Fail Rate",
-            "value": "0.42%",
-            "delta": "0.08"
-        },
-        {
-            "label": "Liquidity Score",
-            "value": "78/100",
-            "delta": "-3.0"
-        },
-        {
-            "label": "VaR (99%)",
-            "value": "$142M",
-            "delta": "12.5"
+            "paramName": "confidence_interval",
+            "value": 99,
+            "label": "Confidence Level (%)",
+            "type": "number"
         }
     ]
+})
+@router.get("/risk_metrics")
+def get_risk_metrics(risk_category: str = "All", calculation_method: str = "VaR", confidence_interval: float = 99, time_horizon_metrics: str = "1D", portfolio_level: str = "Firm"):
+    """Get risk management summary metrics."""
+    import random
+    
+    # Generate metrics based on parameters
+    base_metrics = {
+        "All": [
+            {"label": f"Total Exposure ({portfolio_level})", "value": "$28.4B", "delta": "5.2"},
+            {"label": "Collateral Coverage", "value": "87.3%", "delta": "-2.1"},
+            {"label": "Settlement Fail Rate", "value": "0.42%", "delta": "0.08"},
+            {"label": "Liquidity Score", "value": "78/100", "delta": "-3.0"},
+            {"label": f"{calculation_method} ({confidence_interval}%)", "value": "$142M", "delta": "12.5"}
+        ],
+        "Credit": [
+            {"label": "Credit Exposure", "value": "$18.2B", "delta": "3.8"},
+            {"label": "Default Probability", "value": "1.2%", "delta": "0.3"},
+            {"label": "Credit VaR", "value": "$89M", "delta": "8.1"},
+            {"label": "Recovery Rate", "value": "65%", "delta": "-1.5"}
+        ],
+        "Market": [
+            {"label": "Market VaR", "value": "$95M", "delta": "15.2"},
+            {"label": "Duration Risk", "value": "4.2", "delta": "0.3"},
+            {"label": "Equity Beta", "value": "1.15", "delta": "0.05"},
+            {"label": "FX Exposure", "value": "$2.1B", "delta": "12.0"}
+        ],
+        "Liquidity": [
+            {"label": "Cash Position", "value": "$3.2B", "delta": "8.5"},
+            {"label": "Liquidity Coverage", "value": "125%", "delta": "2.3"},
+            {"label": "Funding Gap", "value": "$850M", "delta": "-5.1"},
+            {"label": "Asset Liquidity", "value": "82%", "delta": "-1.8"}
+        ],
+        "Operational": [
+            {"label": "Op Risk Capital", "value": "$450M", "delta": "2.1"},
+            {"label": "System Uptime", "value": "99.8%", "delta": "0.1"},
+            {"label": "Trade Errors", "value": "23", "delta": "-15.0"},
+            {"label": "Audit Score", "value": "92/100", "delta": "1.0"}
+        ]
+    }
+    
+    return base_metrics.get(risk_category, base_metrics["All"])[:5]
 
 # 6. Stress Test Results Table
 @register_widget({
@@ -514,34 +647,94 @@ def get_risk_metrics():
                 }
             ]
         }
-    }
+    },
+    "params": [
+        {
+            "paramName": "scenario_type",
+            "value": "All",
+            "label": "Scenario Type",
+            "type": "text"
+        },
+        {
+            "paramName": "time_horizon_stress",
+            "value": "1Y",
+            "label": "Time Horizon",
+            "type": "text"
+        },
+        {
+            "paramName": "include_tail_risk",
+            "value": True,
+            "label": "Include Tail Risk Events",
+            "type": "boolean"
+        }
+    ]
 })
 @router.get("/stress_test_results")
-def get_stress_test_results():
+def get_stress_test_results(scenario_type: str = "All", severity_threshold: str = "Medium", time_horizon_stress: str = "1Y", regulatory_framework: str = "All", include_tail_risk: bool = True):
     """Get stress test scenario results."""
-    scenarios = [
-        {"name": "Market Crash (2008-like)", "prob": 5, "impact": -2500},
-        {"name": "Flash Crash", "prob": 10, "impact": -800},
-        {"name": "Interest Rate Shock (+300bp)", "prob": 15, "impact": -1200},
-        {"name": "Credit Spread Widening", "prob": 20, "impact": -600},
-        {"name": "Liquidity Crisis", "prob": 8, "impact": -1800},
-        {"name": "Counterparty Default", "prob": 3, "impact": -3000},
-        {"name": "Operational Failure", "prob": 12, "impact": -400},
-        {"name": "Cyber Attack", "prob": 7, "impact": -1000}
-    ]
+    import random
     
+    # Define scenarios by type
+    scenario_groups = {
+        "Market": [
+            {"name": "Market Crash (2008-like)", "prob": 5, "impact": -2500, "type": "Market"},
+            {"name": "Flash Crash", "prob": 10, "impact": -800, "type": "Market"},
+            {"name": "Interest Rate Shock (+300bp)", "prob": 15, "impact": -1200, "type": "Market"}
+        ],
+        "Credit": [
+            {"name": "Credit Spread Widening", "prob": 20, "impact": -600, "type": "Credit"},
+            {"name": "Counterparty Default", "prob": 3, "impact": -3000, "type": "Credit"},
+            {"name": "Sovereign Default", "prob": 2, "impact": -4500, "type": "Credit"}
+        ],
+        "Liquidity": [
+            {"name": "Liquidity Crisis", "prob": 8, "impact": -1800, "type": "Liquidity"},
+            {"name": "Funding Squeeze", "prob": 15, "impact": -900, "type": "Liquidity"}
+        ],
+        "Operational": [
+            {"name": "Operational Failure", "prob": 12, "impact": -400, "type": "Operational"},
+            {"name": "Cyber Attack", "prob": 7, "impact": -1000, "type": "Operational"}
+        ]
+    }
+    
+    # Select scenarios based on type filter
+    all_scenarios = []
+    if scenario_type == "All":
+        for group in scenario_groups.values():
+            all_scenarios.extend(group)
+    else:
+        all_scenarios = scenario_groups.get(scenario_type, [])
+    
+    # Add tail risk events if requested
+    if include_tail_risk:
+        tail_events = [
+            {"name": "Pandemic-like Event", "prob": 1, "impact": -5000, "type": "Operational"},
+            {"name": "Global Currency Crisis", "prob": 2, "impact": -3500, "type": "Market"}
+        ]
+        all_scenarios.extend(tail_events)
+    
+    # Filter by severity
+    severity_thresholds = {"Low": 500, "Medium": 1000, "High": 2000, "Extreme": 3000}
+    if severity_threshold != "All":
+        threshold = severity_thresholds.get(severity_threshold, 0)
+        all_scenarios = [s for s in all_scenarios if abs(s["impact"]) >= threshold]
+    
+    # Generate results
     results = []
-    for scenario in scenarios:
+    for scenario in all_scenarios:
+        # Adjust impact based on time horizon
+        time_multiplier = {"1M": 0.3, "3M": 0.6, "6M": 0.8, "1Y": 1.0, "2Y": 1.3}[time_horizon_stress]
+        adjusted_impact = scenario["impact"] * time_multiplier
+        
         results.append({
             "scenario": scenario["name"],
             "probability": scenario["prob"],
-            "impact": scenario["impact"],
-            "collateral_call": abs(scenario["impact"]) * random.uniform(0.3, 0.6),
-            "liquidity_need": abs(scenario["impact"]) * random.uniform(0.4, 0.8),
-            "risk_score": min(100, abs(scenario["impact"]) / 30)
+            "impact": round(adjusted_impact),
+            "collateral_call": round(abs(adjusted_impact) * random.uniform(0.3, 0.6)),
+            "liquidity_need": round(abs(adjusted_impact) * random.uniform(0.4, 0.8)),
+            "risk_score": min(100, abs(adjusted_impact) / 30)
         })
     
-    return results
+    return sorted(results, key=lambda x: abs(x["impact"]), reverse=True)
 
 # 7. Dashboard Notes
 @register_widget({

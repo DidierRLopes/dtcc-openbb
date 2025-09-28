@@ -1,5 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
+from typing import List
 import json
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -31,26 +32,51 @@ router = APIRouter(prefix="/market_surveillance", tags=["Market Surveillance"])
     "gridData": {"w": 20, "h": 12},
     "params": [
         {
-            "paramName": "date_range",
-            "value": "7d",
-            "label": "Date Range",
+            "paramName": "time_period",
+            "value": "1M",
+            "label": "Time Period",
             "type": "text",
             "options": [
-                {"label": "24 Hours", "value": "1d"},
-                {"label": "7 Days", "value": "7d"},
-                {"label": "30 Days", "value": "30d"}
+                {"label": "1 Day", "value": "1D"},
+                {"label": "1 Week", "value": "1W"},
+                {"label": "1 Month", "value": "1M"},
+                {"label": "3 Months", "value": "3M"},
+                {"label": "1 Year", "value": "1Y"}
+            ]
+        },
+        {
+            "paramName": "min_volume",
+            "value": 1000,
+            "label": "Min Volume (USD M)",
+            "type": "number"
+        },
+        {
+            "paramName": "region",
+            "value": "US",
+            "label": "Region",
+            "type": "text",
+            "options": [
+                {"label": "United States", "value": "US"},
+                {"label": "Europe", "value": "Europe"},
+                {"label": "Asia Pacific", "value": "APAC"},
+                {"label": "Americas", "value": "Americas"},
+                {"label": "Global", "value": "Global"}
             ]
         }
     ]
 })
 @router.get("/trade_volume_heatmap")
-def get_trade_volume_heatmap(date_range: str = "7d", theme: str = "dark"):
+def get_trade_volume_heatmap(time_period: str = "1M", asset_classes: List[str] = Query(default=["Equities", "Fixed Income"]), min_volume: int = 1000, region: str = "US", currency: str = "USD", theme: str = "dark"):
     """Generate trade volume heatmap by asset class."""
-    data = generate_trade_volumes()
+    # Apply parameter filtering logic
+    data = generate_trade_volumes(time_period=time_period, asset_classes=asset_classes, 
+                                min_volume=min_volume, region=region, currency=currency)
     
     # Transform data for heatmap
     df = pd.DataFrame(data)
-    pivot = df.pivot_table(values='volume', index='asset_class', columns='hour')
+    # Determine time column based on period
+    time_column = 'hour' if time_period == "1D" else ('day' if time_period == "1W" else 'week')
+    pivot = df.pivot_table(values='volume', index='asset_class', columns=time_column)
     
     colors = get_theme_colors(theme)
     
@@ -62,7 +88,7 @@ def get_trade_volume_heatmap(date_range: str = "7d", theme: str = "dark"):
         text=[[f'{val:.0f}' for val in row] for row in pivot.values],
         texttemplate='%{text}',
         textfont={"size": 10},
-        hovertemplate='Asset: %{y}<br>Hour: %{x}<br>Volume: %{z:.2f}M<extra></extra>'
+        hovertemplate=f'Asset: %{{y}}<br>{time_column.title()}: %{{x}}<br>Volume: %{{z:.2f}}M<extra></extra>'
     ))
     
     layout_config = base_layout(theme=theme)
@@ -72,7 +98,7 @@ def get_trade_volume_heatmap(date_range: str = "7d", theme: str = "dark"):
         #     'x': 0.5,
         #     'xanchor': 'center'
         # },
-        'xaxis_title': "Hour (UTC)",
+        'xaxis_title': f"{time_column.title()} (UTC)",
         'yaxis_title': "Asset Class",
         'height': 500
     })
@@ -166,25 +192,55 @@ def get_trade_volume_heatmap(date_range: str = "7d", theme: str = "dark"):
         {
             "paramName": "severity_filter",
             "value": "All",
-            "label": "Severity",
+            "label": "Severity Level",
             "type": "text",
             "options": [
-                {"label": "All", "value": "All"},
+                {"label": "All Severities", "value": "All"},
                 {"label": "Critical", "value": "Critical"},
                 {"label": "High", "value": "High"},
                 {"label": "Medium", "value": "Medium"},
                 {"label": "Low", "value": "Low"}
             ]
+        },
+        {
+            "paramName": "min_value",
+            "value": 0,
+            "label": "Min Value (USD M)",
+            "type": "number"
+        },
+        {
+            "paramName": "time_range",
+            "value": "24H",
+            "label": "Time Range",
+            "type": "text",
+            "options": [
+                {"label": "Last 1 Hour", "value": "1H"},
+                {"label": "Last 6 Hours", "value": "6H"},
+                {"label": "Last 24 Hours", "value": "24H"},
+                {"label": "Last 3 Days", "value": "3D"},
+                {"label": "Last Week", "value": "1W"}
+            ]
         }
     ]
 })
 @router.get("/anomaly_detector")
-def get_anomaly_detector(severity_filter: str = "All"):
+def get_anomaly_detector(severity_filter: str = "All", asset_class_filter: str = "All", counterparty_type: str = "All", min_value: int = 0, time_range: str = "24H"):
     """Get anomaly detection data."""
-    anomalies = generate_anomalies()
+    anomalies = generate_anomalies(time_range=time_range, asset_class_filter=asset_class_filter, 
+                                  counterparty_type=counterparty_type)
     
+    # Apply filters
     if severity_filter != "All":
         anomalies = [a for a in anomalies if a["severity"] == severity_filter]
+    
+    if asset_class_filter != "All":
+        anomalies = [a for a in anomalies if a["asset"] == asset_class_filter]
+    
+    if counterparty_type != "All":
+        anomalies = [a for a in anomalies if a.get("counterparty_type") == counterparty_type]
+    
+    if min_value > 0:
+        anomalies = [a for a in anomalies if a["value"] >= min_value * 1000000]  # Convert to actual USD
     
     return anomalies
 
@@ -203,13 +259,47 @@ def get_anomaly_detector(severity_filter: str = "All"):
             "value": 50,
             "label": "Min Exposure ($M)",
             "type": "number"
+        },
+        {
+            "paramName": "risk_threshold",
+            "value": "Medium",
+            "label": "Risk Threshold",
+            "type": "text",
+            "options": [
+                {"label": "Low Risk", "value": "Low"},
+                {"label": "Medium Risk", "value": "Medium"},
+                {"label": "High Risk", "value": "High"},
+                {"label": "Critical Risk", "value": "Critical"}
+            ]
+        },
+        {
+            "paramName": "network_depth",
+            "value": 2,
+            "label": "Network Depth (Hops)",
+            "type": "number"
+        },
+        {
+            "paramName": "geographic_region",
+            "value": "Global",
+            "label": "Geographic Region",
+            "type": "text",
+            "options": [
+                {"label": "Global", "value": "Global"},
+                {"label": "North America", "value": "US"},
+                {"label": "Europe", "value": "Europe"},
+                {"label": "Asia Pacific", "value": "APAC"}
+            ]
         }
     ]
 })
 @router.get("/counterparty_network")
-def get_counterparty_network(min_exposure: float = 50, theme: str = "dark"):
+def get_counterparty_network(min_exposure: float = 50, counterparty_types: List[str] = Query(default=["Banks", "Asset Managers"]), risk_threshold: str = "Medium", geographic_region: str = "Global", network_depth: int = 2, theme: str = "dark"):
     """Generate counterparty exposure network visualization."""
-    network_data = generate_counterparty_exposures()
+    network_data = generate_counterparty_exposures(min_exposure=min_exposure, 
+                                                  counterparty_types=counterparty_types,
+                                                  risk_threshold=risk_threshold,
+                                                  geographic_region=geographic_region,
+                                                  network_depth=network_depth)
     colors = get_theme_colors(theme)
     
     # Create network graph using plotly
@@ -354,12 +444,69 @@ def get_counterparty_network(min_exposure: float = 50, theme: str = "dark"):
                 }
             ]
         }
-    }
+    },
+    "params": [
+        {
+            "paramName": "regulation_scope",
+            "value": "All",
+            "label": "Regulatory Scope",
+            "type": "text",
+            "options": [
+                {"label": "All Regulations", "value": "All"},
+                {"label": "Dodd-Frank", "value": "Dodd-Frank"},
+                {"label": "MiFID II", "value": "MiFID II"},
+                {"label": "EMIR", "value": "EMIR"},
+                {"label": "Basel III", "value": "Basel III"},
+                {"label": "CFTC Rules", "value": "CFTC"}
+            ]
+        },
+        {
+            "paramName": "alert_severity",
+            "value": "All",
+            "label": "Alert Severity",
+            "type": "text",
+            "options": [
+                {"label": "All Severities", "value": "All"},
+                {"label": "Critical", "value": "Critical"},
+                {"label": "High", "value": "High"},
+                {"label": "Medium", "value": "Medium"},
+                {"label": "Low", "value": "Low"},
+                {"label": "Info", "value": "Info"}
+            ]
+        },
+        {
+            "paramName": "entity_type",
+            "value": "All",
+            "label": "Entity Type",
+            "type": "text",
+            "options": [
+                {"label": "All Entity Types", "value": "All"},
+                {"label": "Investment Bank", "value": "Investment Bank"},
+                {"label": "Commercial Bank", "value": "Commercial Bank"},
+                {"label": "Hedge Fund", "value": "Hedge Fund"},
+                {"label": "Asset Manager", "value": "Asset Manager"},
+                {"label": "Insurance Company", "value": "Insurance Company"},
+                {"label": "Pension Fund", "value": "Pension Fund"}
+            ]
+        }
+    ]
 })
 @router.get("/compliance_ticker")
-def get_compliance_ticker():
+def get_compliance_ticker(regulation_scope: str = "All", alert_severity: str = "All", entity_type: str = "All", geographic_jurisdiction: str = "All"):
     """Get real-time compliance alerts."""
-    return generate_compliance_alerts()
+    alerts = generate_compliance_alerts(regulatory_scope=[regulation_scope] if regulation_scope != "All" else None, 
+                                       severity=[alert_severity] if alert_severity != "All" else None,
+                                       entity_type=[entity_type] if entity_type != "All" else None,
+                                       time_period="1W")
+    
+    # Apply additional filtering if needed
+    if regulation_scope != "All":
+        alerts = [a for a in alerts if a.get("regulation") == regulation_scope]
+    
+    if alert_severity != "All":
+        alerts = [a for a in alerts if a.get("severity") == alert_severity]
+    
+    return alerts
 
 # 5. Market Activity Summary Metrics
 @register_widget({
@@ -369,38 +516,90 @@ def get_compliance_ticker():
     "subCategory": "Summary",
     "type": "metric",
     "endpoint": "market_surveillance/activity_metrics",
-    "gridData": {"w": 20, "h": 4}
-})
-@router.get("/activity_metrics")
-def get_activity_metrics():
-    """Get market activity summary metrics."""
-    return [
+    "gridData": {"w": 20, "h": 4},
+    "params": [
         {
-            "label": "Total Trade Volume",
-            "value": "$4.7T",
-            "delta": "12.5"
+            "paramName": "time_horizon",
+            "value": "1D",
+            "label": "Time Horizon",
+            "type": "text",
+            "options": [
+                {"label": "1 Day", "value": "1D"},
+                {"label": "1 Week", "value": "1W"},
+                {"label": "1 Month", "value": "1M"},
+                {"label": "Year to Date", "value": "YTD"}
+            ]
         },
         {
-            "label": "Active Anomalies",
-            "value": "23",
-            "delta": "-8.0"
+            "paramName": "benchmark_comparison",
+            "value": True,
+            "label": "Show Benchmark Comparison",
+            "type": "boolean"
+        }
+    ]
+})
+@router.get("/activity_metrics")
+def get_activity_metrics(time_horizon: str = "1D", metric_category: str = "All", benchmark_comparison: bool = True):
+    """Get market activity summary metrics."""
+    import random
+    
+    # Base metrics adjusted for time horizon
+    time_multiplier = {"1D": 1, "1W": 7, "1M": 30, "YTD": 365}[time_horizon]
+    
+    all_metrics = [
+        {
+            "label": "Total Trade Volume",
+            "value": f"${4.7 * time_multiplier:.1f}T" if time_multiplier > 1 else "$4.7T",
+            "delta": str(round(random.uniform(8, 16), 1)),
+            "category": "Volume"
+        },
+        {
+            "label": "Active Anomalies", 
+            "value": str(int(23 * time_multiplier**0.5)),
+            "delta": str(round(random.uniform(-12, -4), 1)),
+            "category": "Risk"
         },
         {
             "label": "Settlement Fails",
-            "value": "$892M",
-            "delta": "15.3"
+            "value": f"${int(892 * time_multiplier**0.7)}M",
+            "delta": str(round(random.uniform(10, 20), 1)),
+            "category": "Risk"
         },
         {
             "label": "Compliance Alerts",
-            "value": "47",
-            "delta": "5.0"
+            "value": str(int(47 * time_multiplier**0.6)),
+            "delta": str(round(random.uniform(2, 8), 1)),
+            "category": "Compliance"
         },
         {
             "label": "System Health",
             "value": "98.7%",
-            "delta": "0.2"
+            "delta": str(round(random.uniform(-0.5, 0.5), 1)),
+            "category": "System"
+        },
+        {
+            "label": "Market Concentration",
+            "value": "72.3%",
+            "delta": str(round(random.uniform(-2, 2), 1)),
+            "category": "Risk"
+        },
+        {
+            "label": "Cross-Border Volume",
+            "value": f"${1.2 * time_multiplier:.1f}T" if time_multiplier > 1 else "$1.2T",
+            "delta": str(round(random.uniform(5, 15), 1)),
+            "category": "Volume"
         }
     ]
+    
+    # Filter by category if specified
+    if metric_category != "All":
+        all_metrics = [m for m in all_metrics if m["category"] == metric_category]
+    
+    # Remove category field from output
+    for metric in all_metrics:
+        del metric["category"]
+    
+    return all_metrics[:5]  # Return top 5 metrics
 
 # 7. Dashboard Notes
 @register_widget({
