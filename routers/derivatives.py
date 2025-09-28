@@ -121,18 +121,27 @@ def generate_net_positions():
             "paramName": "currency_pairs",
             "value": "Major",
             "label": "Currency Pairs",
-            "type": "text"
+            "description": "Filter foreign exchange derivatives by currency pair categories. Valid values: 'Major' (USD/EUR/GBP/JPY pairs), 'Minor' (cross-currency pairs), 'Exotic' (emerging market currencies), 'All' (all currency pairs). Determines which FX derivatives are included in the volume analysis.",
+            "type": "text",
+            "options": [
+                {"label": "Major Pairs", "value": "Major"},
+                {"label": "Minor Pairs", "value": "Minor"},
+                {"label": "Exotic Pairs", "value": "Exotic"},
+                {"label": "All Pairs", "value": "All"}
+            ]
         },
         {
             "paramName": "notional_threshold",
             "value": 10,
             "label": "Min Notional ($M)",
+            "description": "Minimum notional amount in millions of USD for derivative transactions to include. Only trades with notional values above this threshold will be displayed. Range: 1-10000. Example: 50 shows derivatives with >$50M notional.",
             "type": "number"
         },
         {
             "paramName": "include_compression",
             "value": True,
             "label": "Include Compression Events",
+            "description": "Include portfolio compression events in the volume analysis. When enabled, shows volume reductions from trade compression cycles. When disabled, shows gross trading volumes only without compression adjustments.",
             "type": "boolean"
         }
     ]
@@ -172,18 +181,27 @@ def get_swap_notionals(
             "paramName": "view",
             "value": "indices",
             "label": "View",
-            "type": "text"
+            "description": "Type of CDS spread analysis to display. Valid values: 'indices' (CDS index spreads like CDX/iTraxx), 'single_names' (individual corporate CDS), 'sovereigns' (government CDS), 'sectors' (industry sector analysis). Determines the scope of credit risk analysis.",
+            "type": "text",
+            "options": [
+                {"label": "CDS Indices", "value": "indices"},
+                {"label": "Single Names", "value": "single_names"},
+                {"label": "Sovereigns", "value": "sovereigns"},
+                {"label": "Sectors", "value": "sectors"}
+            ]
         },
         {
             "paramName": "spread_threshold_min",
             "value": 0,
             "label": "Min Spread (bps)",
+            "description": "Minimum CDS spread in basis points to include in analysis. Only entities with spreads above this level will be displayed. Range: 0-5000. Example: 100 shows CDS with spreads >100bps (higher credit risk).",
             "type": "number"
         },
         {
             "paramName": "spread_threshold_max",
             "value": 1000,
             "label": "Max Spread (bps)",
+            "description": "Maximum CDS spread in basis points to include in analysis. Only entities with spreads below this level will be displayed. Range: 1-5000. Example: 500 shows CDS with spreads <500bps (moderate credit risk).",
             "type": "number"
         }
     ]
@@ -274,18 +292,28 @@ def get_cds_spreads(
             "paramName": "underlying_assets",
             "value": "Equity Indices",
             "label": "Underlying Assets",
-            "type": "text"
+            "description": "Type of underlying assets for volatility surface analysis. Valid values: 'Equity Indices' (S&P 500, VIX, etc.), 'Individual Stocks' (single name equities), 'FX' (currency pairs), 'Commodities' (gold, oil, etc.), 'Interest Rates' (swaptions, caps/floors). Determines the asset class for implied volatility analysis.",
+            "type": "text",
+            "options": [
+                {"label": "Equity Indices", "value": "Equity Indices"},
+                {"label": "Individual Stocks", "value": "Individual Stocks"},
+                {"label": "FX", "value": "FX"},
+                {"label": "Commodities", "value": "Commodities"},
+                {"label": "Interest Rates", "value": "Interest Rates"}
+            ]
         },
         {
             "paramName": "strike_range_min",
             "value": 80,
             "label": "Min Strike (%)",
+            "description": "Minimum strike price as percentage of spot price for volatility surface. Range: 50-100. Example: 80 shows options with strikes from 80% of current price (out-of-the-money puts). Lower values include more out-of-the-money options.",
             "type": "number"
         },
         {
             "paramName": "smoothing_enabled",
             "value": True,
             "label": "Enable Surface Smoothing",
+            "description": "Apply mathematical smoothing to the volatility surface to remove noise and interpolate between data points. When enabled, creates smoother surface visualization. When disabled, shows raw market data which may appear more jagged.",
             "type": "boolean"
         }
     ]
@@ -404,18 +432,21 @@ def get_volatility_surface(
             "paramName": "position_threshold",
             "value": 100,
             "label": "Min Position Size ($M)",
+            "description": "Minimum net position size in millions of USD to include in the analysis. Only firms with positions above this threshold will be displayed. Range: 1-10000. Example: 500 shows firms with >$500M net derivatives positions.",
             "type": "number"
         },
         {
             "paramName": "delta_exposure_min",
             "value": -5000,
             "label": "Min Delta Exposure ($M)",
+            "description": "Minimum delta exposure in millions of USD (can be negative). Delta measures price sensitivity to underlying asset movements. Range: -10000 to 10000. Example: -1000 shows positions with delta exposure below -$1B (short exposure).",
             "type": "number"
         },
         {
             "paramName": "include_gamma",
             "value": False,
             "label": "Include Gamma Exposure",
+            "description": "Include gamma exposure calculations in the position analysis. Gamma measures the rate of change of delta (second-order price sensitivity). When enabled, shows gamma risk alongside delta. When disabled, focuses on delta exposure only.",
             "type": "boolean"
         }
     ]
@@ -446,18 +477,27 @@ def get_net_positions(
             "paramName": "exposure_threshold",
             "value": 500,
             "label": "Min Exposure ($M)",
+            "description": "Minimum counterparty exposure in millions of USD to include in the network visualization. Only relationships above this threshold will be displayed. Range: 10-50000. Example: 1000 shows exposures above $1B between counterparties.",
             "type": "number"
         },
         {
             "paramName": "risk_weighting",
             "value": "Notional",
             "label": "Risk Weighting",
-            "type": "text"
+            "description": "Method for calculating risk-weighted exposures in the network. Valid values: 'Notional' (gross notional amounts), 'Market Value' (current market value), 'Potential Future Exposure' (PFE-adjusted), 'CVA' (credit value adjustment weighted). Determines how connection thickness is calculated.",
+            "type": "text",
+            "options": [
+                {"label": "Notional Amount", "value": "Notional"},
+                {"label": "Market Value", "value": "Market Value"},
+                {"label": "Potential Future Exposure", "value": "PFE"},
+                {"label": "CVA Weighted", "value": "CVA"}
+            ]
         },
         {
             "paramName": "show_cleared_only",
             "value": False,
             "label": "Show Cleared Trades Only",
+            "description": "Filter to show only centrally cleared derivatives transactions. When enabled, excludes bilateral OTC trades and shows only CCP-cleared exposures. When disabled, includes both cleared and uncleared derivatives.",
             "type": "boolean"
         }
     ]
@@ -545,18 +585,34 @@ def get_derivatives_counterparty_network(
             "paramName": "calculation_methods",
             "value": "Market Value",
             "label": "Calculation Method",
-            "type": "text"
+            "description": "Method for calculating derivatives metrics. Valid values: 'Market Value' (current market valuation), 'Notional' (face value amounts), 'Risk-Adjusted' (risk-weighted values), 'Credit Adjusted' (CVA/DVA adjusted). Determines the basis for metric calculations.",
+            "type": "text",
+            "options": [
+                {"label": "Market Value", "value": "Market Value"},
+                {"label": "Notional Amount", "value": "Notional"},
+                {"label": "Risk-Adjusted", "value": "Risk-Adjusted"},
+                {"label": "Credit Adjusted", "value": "Credit Adjusted"}
+            ]
         },
         {
             "paramName": "time_horizons",
             "value": "1D",
             "label": "Time Horizon",
-            "type": "text"
+            "description": "Time period for derivatives metrics calculation. Valid formats: 1D (daily), 1W (weekly), 1M (monthly), 3M (quarterly), 1Y (annual). Affects the timeframe for volume, risk, and performance metrics.",
+            "type": "text",
+            "options": [
+                {"label": "1 Day", "value": "1D"},
+                {"label": "1 Week", "value": "1W"},
+                {"label": "1 Month", "value": "1M"},
+                {"label": "3 Months", "value": "3M"},
+                {"label": "1 Year", "value": "1Y"}
+            ]
         },
         {
             "paramName": "include_compression",
             "value": True,
             "label": "Include Compression Metrics",
+            "description": "Include portfolio compression cycle metrics in the summary. When enabled, shows compression ratios, notional reductions, and operational savings. When disabled, focuses on gross trading metrics without compression adjustments.",
             "type": "boolean"
         }
     ]

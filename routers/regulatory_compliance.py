@@ -145,18 +145,29 @@ def generate_compliance_alerts():
             "paramName": "compliance_frameworks",
             "value": "All",
             "label": "Compliance Frameworks",
-            "type": "text"
+            "description": "Filter by regulatory compliance framework. Valid values: 'All' (all frameworks), 'Dodd-Frank' (US financial reform), 'MiFID II' (EU investment services), 'EMIR' (EU derivatives regulation), 'Basel III' (banking regulation), 'CFTC' (US commodities). Determines which regulatory requirements are displayed in the heatmap.",
+            "type": "text",
+            "options": [
+                {"label": "All Frameworks", "value": "All"},
+                {"label": "Dodd-Frank", "value": "Dodd-Frank"},
+                {"label": "MiFID II", "value": "MiFID II"},
+                {"label": "EMIR", "value": "EMIR"},
+                {"label": "Basel III", "value": "Basel III"},
+                {"label": "CFTC Rules", "value": "CFTC"}
+            ]
         },
         {
             "paramName": "compliance_threshold",
             "value": 90,
             "label": "Min Compliance Rate (%)",
+            "description": "Minimum compliance rate percentage to highlight in the heatmap. Only entities with compliance rates above this threshold will be color-coded as acceptable. Range: 0-100. Example: 95 highlights only entities with >95% compliance.",
             "type": "number"
         },
         {
             "paramName": "include_pending",
             "value": True,
             "label": "Include Pending Obligations",
+            "description": "Include pending regulatory obligations in compliance calculations. When enabled, factors in upcoming deadlines and pending submissions. When disabled, shows only completed compliance actions for current state assessment.",
             "type": "boolean"
         }
     ]
@@ -283,18 +294,28 @@ def get_regulation_heatmap(
             "paramName": "trade_filter",
             "value": "All",
             "label": "Filter by Status",
-            "type": "text"
+            "description": "Filter audit trail entries by trade status. Valid values: 'All' (all trades), 'Matched' (successfully matched), 'Unmatched' (pending matching), 'Rejected' (failed validation), 'Amended' (modified trades). Determines which trade states are included in the audit trail.",
+            "type": "text",
+            "options": [
+                {"label": "All Statuses", "value": "All"},
+                {"label": "Matched", "value": "Matched"},
+                {"label": "Unmatched", "value": "Unmatched"},
+                {"label": "Rejected", "value": "Rejected"},
+                {"label": "Amended", "value": "Amended"}
+            ]
         },
         {
             "paramName": "sla_thresholds",
             "value": 60,
             "label": "SLA Threshold (minutes)",
+            "description": "Service Level Agreement threshold in minutes for trade reporting compliance. Trades reported beyond this timeframe are flagged as SLA violations. Range: 15-1440. Example: 30 flags trades reported more than 30 minutes after execution.",
             "type": "number"
         },
         {
             "paramName": "include_amendments",
             "value": False,
             "label": "Include Trade Amendments",
+            "description": "Include trade amendment entries in the audit trail. When enabled, shows modification history and corrected trades. When disabled, focuses on original trade entries only for cleaner audit trail view.",
             "type": "boolean"
         }
     ]
@@ -396,18 +417,28 @@ def get_audit_trail(
             "paramName": "severity_levels",
             "value": "All",
             "label": "Severity Levels",
-            "type": "text"
+            "description": "Filter exceptions by severity level. Valid values: 'All' (all severities), 'Critical' (immediate action required), 'High' (urgent attention needed), 'Medium' (moderate priority), 'Low' (minor issues). Determines which exception priorities are displayed.",
+            "type": "text",
+            "options": [
+                {"label": "All Severities", "value": "All"},
+                {"label": "Critical", "value": "Critical"},
+                {"label": "High", "value": "High"},
+                {"label": "Medium", "value": "Medium"},
+                {"label": "Low", "value": "Low"}
+            ]
         },
         {
             "paramName": "age_threshold",
             "value": 30,
             "label": "Max Age (days)",
+            "description": "Maximum age in days for exceptions to include in analysis. Only exceptions newer than this threshold will be displayed. Range: 1-365. Example: 14 shows exceptions from the last 2 weeks for current issue focus.",
             "type": "number"
         },
         {
             "paramName": "auto_assigned_only",
             "value": False,
             "label": "Show Auto-Assigned Only",
+            "description": "Filter to show only automatically assigned exceptions. When enabled, displays exceptions assigned by automated systems. When disabled, includes both manually and automatically assigned exceptions for comprehensive view.",
             "type": "boolean"
         }
     ]
@@ -512,18 +543,29 @@ def get_exceptions(
             "paramName": "risk_categories",
             "value": "All",
             "label": "Risk Categories",
-            "type": "text"
+            "description": "Filter by AML/KYC risk category. Valid values: 'All' (all risk levels), 'High Risk' (high-risk entities), 'Medium Risk' (moderate risk), 'Low Risk' (standard risk), 'PEP' (Politically Exposed Persons), 'Sanctions' (sanctions screening). Determines which risk classifications are included.",
+            "type": "text",
+            "options": [
+                {"label": "All Risk Categories", "value": "All"},
+                {"label": "High Risk", "value": "High Risk"},
+                {"label": "Medium Risk", "value": "Medium Risk"},
+                {"label": "Low Risk", "value": "Low Risk"},
+                {"label": "PEP (Politically Exposed)", "value": "PEP"},
+                {"label": "Sanctions Screening", "value": "Sanctions"}
+            ]
         },
         {
             "paramName": "risk_score_min",
             "value": 70,
             "label": "Min Risk Score",
+            "description": "Minimum risk score to include in KYC/AML flag analysis. Only entities with risk scores above this threshold will be displayed. Range: 0-100. Example: 80 shows high-risk entities requiring enhanced due diligence.",
             "type": "number"
         },
         {
             "paramName": "trade_volume_threshold",
             "value": 10,
             "label": "Min Trade Volume ($M)",
+            "description": "Minimum trade volume in millions of USD for entities to include in KYC/AML analysis. Only entities with trading activity above this level will be flagged. Range: 1-10000. Example: 50 focuses on entities with >$50M volume.",
             "type": "number"
         }
     ]
@@ -606,18 +648,37 @@ def get_kyc_aml_flags(
             "paramName": "alert_types",
             "value": "All",
             "label": "Alert Types",
-            "type": "text"
+            "description": "Filter by compliance alert type. Valid values: 'All' (all alert types), 'Trade Reporting' (reporting violations), 'Position Limits' (position limit breaches), 'Market Abuse' (suspicious trading), 'Settlement' (settlement failures), 'Margin' (margin requirements). Determines which alert categories are displayed.",
+            "type": "text",
+            "options": [
+                {"label": "All Alert Types", "value": "All"},
+                {"label": "Trade Reporting", "value": "Trade Reporting"},
+                {"label": "Position Limits", "value": "Position Limits"},
+                {"label": "Market Abuse", "value": "Market Abuse"},
+                {"label": "Settlement", "value": "Settlement"},
+                {"label": "Margin Requirements", "value": "Margin"}
+            ]
         },
         {
             "paramName": "resolution_timeframes",
             "value": "All",
             "label": "Resolution Timeframes",
-            "type": "text"
+            "description": "Filter by alert resolution timeframe. Valid values: 'All' (all timeframes), 'Immediate' (<1 hour), 'Same Day' (<24 hours), 'Next Day' (24-48 hours), 'Weekly' (2-7 days), 'Overdue' (>7 days). Shows alerts based on resolution speed requirements.",
+            "type": "text",
+            "options": [
+                {"label": "All Timeframes", "value": "All"},
+                {"label": "Immediate (<1 hour)", "value": "Immediate"},
+                {"label": "Same Day (<24 hours)", "value": "Same Day"},
+                {"label": "Next Day (24-48 hours)", "value": "Next Day"},
+                {"label": "Weekly (2-7 days)", "value": "Weekly"},
+                {"label": "Overdue (>7 days)", "value": "Overdue"}
+            ]
         },
         {
             "paramName": "auto_resolve_excluded",
             "value": False,
             "label": "Exclude Auto-Resolved Alerts",
+            "description": "Exclude alerts that were automatically resolved by system processes. When enabled, shows only manually resolved alerts requiring human intervention. When disabled, includes all alerts for comprehensive compliance tracking.",
             "type": "boolean"
         }
     ]
@@ -649,19 +710,43 @@ def get_alerts_ticker(
             "paramName": "measurement_periods",
             "value": "MTD",
             "label": "Measurement Period",
-            "type": "text"
+            "description": "Time period for compliance metrics calculation. Valid values: 'MTD' (month-to-date), 'QTD' (quarter-to-date), 'YTD' (year-to-date), 'Last 30D' (rolling 30 days), 'Last 90D' (rolling 90 days). Determines the timeframe for compliance performance measurement.",
+            "type": "text",
+            "options": [
+                {"label": "Month-to-Date", "value": "MTD"},
+                {"label": "Quarter-to-Date", "value": "QTD"},
+                {"label": "Year-to-Date", "value": "YTD"},
+                {"label": "Last 30 Days", "value": "Last 30D"},
+                {"label": "Last 90 Days", "value": "Last 90D"}
+            ]
         },
         {
             "paramName": "benchmark_comparisons",
             "value": "Industry",
             "label": "Benchmark Comparison",
-            "type": "text"
+            "description": "Benchmark for compliance metrics comparison. Valid values: 'Industry' (industry averages), 'Regulatory' (regulatory minimums), 'Peer Group' (similar institutions), 'Historical' (own historical performance), 'Best Practice' (industry best practices). Determines the baseline for performance evaluation.",
+            "type": "text",
+            "options": [
+                {"label": "Industry Average", "value": "Industry"},
+                {"label": "Regulatory Minimum", "value": "Regulatory"},
+                {"label": "Peer Group", "value": "Peer Group"},
+                {"label": "Historical Performance", "value": "Historical"},
+                {"label": "Best Practice", "value": "Best Practice"}
+            ]
         },
         {
             "paramName": "jurisdiction_scope",
             "value": "Global",
             "label": "Jurisdiction Scope",
-            "type": "text"
+            "description": "Geographic scope for compliance metrics. Valid values: 'Global' (worldwide compliance), 'US' (US regulations only), 'EU' (European regulations), 'APAC' (Asia-Pacific), 'Multi-Jurisdictional' (cross-border compliance). Determines which regulatory jurisdictions are included.",
+            "type": "text",
+            "options": [
+                {"label": "Global", "value": "Global"},
+                {"label": "US Only", "value": "US"},
+                {"label": "European Union", "value": "EU"},
+                {"label": "Asia-Pacific", "value": "APAC"},
+                {"label": "Multi-Jurisdictional", "value": "Multi-Jurisdictional"}
+            ]
         }
     ]
 })

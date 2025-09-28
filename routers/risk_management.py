@@ -126,19 +126,34 @@ def generate_liquidity_heatmap():
             "paramName": "exposure_type",
             "value": "gross",
             "label": "Exposure Type",
-            "type": "text"
+            "description": "Type of exposure calculation to display. Valid values: 'gross' (total exposure before netting), 'net' (exposure after netting agreements), 'collateral' (collateralized exposure only). Determines the basis for treemap sizing and risk assessment.",
+            "type": "text",
+            "options": [
+                {"label": "Gross Exposure", "value": "gross"},
+                {"label": "Net Exposure", "value": "net"},
+                {"label": "Collateral Exposure", "value": "collateral"}
+            ]
         },
         {
             "paramName": "min_exposure_threshold",
             "value": 100,
             "label": "Min Exposure ($M)",
+            "description": "Minimum exposure amount in millions of USD to include in the treemap. Only counterparties with exposures above this threshold will be displayed. Range: 1-10000. Example: 500 shows exposures above $500M.",
             "type": "number"
         },
         {
             "paramName": "currency_filter",
             "value": "USD",
             "label": "Currency",
-            "type": "text"
+            "description": "Currency filter for exposure calculations. Valid ISO currency codes: USD, EUR, GBP, JPY, CHF, CAD, AUD. Only exposures denominated in the selected currency will be included in the analysis.",
+            "type": "text",
+            "options": [
+                {"label": "US Dollar (USD)", "value": "USD"},
+                {"label": "Euro (EUR)", "value": "EUR"},
+                {"label": "British Pound (GBP)", "value": "GBP"},
+                {"label": "Japanese Yen (JPY)", "value": "JPY"},
+                {"label": "Swiss Franc (CHF)", "value": "CHF"}
+            ]
         }
     ]
 })
@@ -224,6 +239,7 @@ def get_exposure_treemap(exposure_type: str = "gross", risk_levels: List[str] = 
             "paramName": "forecast_horizon",
             "value": "30D",
             "label": "Forecast Horizon",
+            "description": "Time period for collateral requirement projections. Valid formats: 7D (1 week), 14D (2 weeks), 30D (1 month), 60D (2 months), 90D (3 months). Determines the forecasting window for stress scenario analysis.",
             "type": "text",
             "options": [
                 {"label": "1 Week", "value": "7D"},
@@ -237,12 +253,14 @@ def get_exposure_treemap(exposure_type: str = "gross", risk_levels: List[str] = 
             "paramName": "confidence_level",
             "value": 95,
             "label": "Confidence Level (%)",
+            "description": "Statistical confidence level for collateral requirement estimates. Range: 90-99. Example: 95 means 95% confidence that actual requirements won't exceed the forecast. Higher values provide more conservative estimates.",
             "type": "number"
         },
         {
             "paramName": "portfolio_segment",
             "value": "All",
             "label": "Portfolio Segment",
+            "description": "Filter by portfolio credit quality segment. IG = Investment Grade bonds (high credit quality), HY = High Yield bonds (lower credit quality), Govt = Government securities, Muni = Municipal bonds, Structured = Asset-backed securities. Select 'All' to include all segments.",
             "type": "text",
             "options": [
                 {"label": "All Segments", "value": "All"},
@@ -345,6 +363,7 @@ def get_collateral_forecast(forecast_horizon: str = "30D", stress_scenarios: Lis
             "paramName": "time_period",
             "value": "1M",
             "label": "Time Period",
+            "description": "Time window for settlement fails analysis. 1W = weekly fails, 1M = monthly analysis, 3M = quarterly trends, 6M = semi-annual, 1Y = annual patterns. Determines the timeframe for fail tracking and trend analysis.",
             "type": "text",
             "options": [
                 {"label": "1 Week", "value": "1W"},
@@ -358,6 +377,7 @@ def get_collateral_forecast(forecast_horizon: str = "30D", stress_scenarios: Lis
             "paramName": "min_fail_amount",
             "value": 10,
             "label": "Min Fail Amount ($M)",
+            "description": "Minimum settlement fail amount in millions of USD to include in analysis. Only fails above this threshold will be displayed. Range: 1-1000. Example: 25 shows settlement fails above $25M.",
             "type": "number"
         },
         {
@@ -458,18 +478,34 @@ def get_settlement_fails(time_period: str = "1M", asset_classes_filter: List[str
             "paramName": "liquidity_metric",
             "value": "availability",
             "label": "Liquidity Metric",
-            "type": "text"
+            "description": "Type of liquidity measurement to display. Valid values: 'availability' (liquidity available), 'utilization' (liquidity being used), 'concentration' (liquidity concentration risk), 'velocity' (liquidity turnover rate). Determines the heatmap color scale and values.",
+            "type": "text",
+            "options": [
+                {"label": "Availability", "value": "availability"},
+                {"label": "Utilization", "value": "utilization"},
+                {"label": "Concentration", "value": "concentration"},
+                {"label": "Velocity", "value": "velocity"}
+            ]
         },
         {
             "paramName": "currency_denomination",
             "value": "USD",
             "label": "Currency",
-            "type": "text"
+            "description": "Currency denomination for liquidity analysis. Valid ISO codes: USD, EUR, GBP, JPY, CHF. Only liquidity in the selected currency will be included in the heatmap calculations.",
+            "type": "text",
+            "options": [
+                {"label": "US Dollar (USD)", "value": "USD"},
+                {"label": "Euro (EUR)", "value": "EUR"},
+                {"label": "British Pound (GBP)", "value": "GBP"},
+                {"label": "Japanese Yen (JPY)", "value": "JPY"},
+                {"label": "Swiss Franc (CHF)", "value": "CHF"}
+            ]
         },
         {
             "paramName": "stress_overlay",
             "value": False,
             "label": "Show Stress Overlay",
+            "description": "Enable stress scenario overlay on the liquidity heatmap. When enabled, displays projected liquidity conditions under stress scenarios. When disabled, shows current liquidity conditions only.",
             "type": "boolean"
         }
     ]
@@ -527,12 +563,21 @@ def get_liquidity_heatmap(collateral_types_filter: List[str] = Query(default=["T
             "paramName": "risk_category",
             "value": "All",
             "label": "Risk Category",
-            "type": "text"
+            "description": "Filter risk metrics by category. Valid values: 'All' (all risk types), 'Credit' (counterparty credit risk), 'Market' (market price risk), 'Liquidity' (liquidity risk), 'Operational' (operational risk). Determines which risk metrics are displayed.",
+            "type": "text",
+            "options": [
+                {"label": "All Categories", "value": "All"},
+                {"label": "Credit Risk", "value": "Credit"},
+                {"label": "Market Risk", "value": "Market"},
+                {"label": "Liquidity Risk", "value": "Liquidity"},
+                {"label": "Operational Risk", "value": "Operational"}
+            ]
         },
         {
             "paramName": "confidence_interval",
             "value": 99,
             "label": "Confidence Level (%)",
+            "description": "Statistical confidence level for risk calculations (VaR, CVaR). Range: 90-99.9. Example: 99 means 99% confidence that losses won't exceed the calculated value. Higher values provide more conservative risk estimates.",
             "type": "number"
         }
     ]
@@ -653,18 +698,34 @@ def get_risk_metrics(risk_category: str = "All", calculation_method: str = "VaR"
             "paramName": "scenario_type",
             "value": "All",
             "label": "Scenario Type",
-            "type": "text"
+            "description": "Type of stress test scenarios to display. Valid values: 'All' (all scenarios), 'Historical' (based on past crises), 'Hypothetical' (designed stress scenarios), 'Regulatory' (supervisory stress tests). Determines which stress test results are shown.",
+            "type": "text",
+            "options": [
+                {"label": "All Scenarios", "value": "All"},
+                {"label": "Historical", "value": "Historical"},
+                {"label": "Hypothetical", "value": "Hypothetical"},
+                {"label": "Regulatory", "value": "Regulatory"}
+            ]
         },
         {
             "paramName": "time_horizon_stress",
             "value": "1Y",
             "label": "Time Horizon",
-            "type": "text"
+            "description": "Time horizon for stress test projections. Valid formats: 1M (1 month), 3M (quarterly), 6M (semi-annual), 1Y (annual), 2Y (bi-annual). Determines the projection period for stress scenario analysis.",
+            "type": "text",
+            "options": [
+                {"label": "1 Month", "value": "1M"},
+                {"label": "3 Months", "value": "3M"},
+                {"label": "6 Months", "value": "6M"},
+                {"label": "1 Year", "value": "1Y"},
+                {"label": "2 Years", "value": "2Y"}
+            ]
         },
         {
             "paramName": "include_tail_risk",
             "value": True,
             "label": "Include Tail Risk Events",
+            "description": "Include extreme tail risk events in stress testing analysis. When enabled, considers low-probability, high-impact scenarios. When disabled, focuses on more likely stress scenarios only.",
             "type": "boolean"
         }
     ]

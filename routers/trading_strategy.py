@@ -158,19 +158,35 @@ def generate_flow_momentum():
             "paramName": "security_filter",
             "value": "All",
             "label": "Security",
-            "type": "text"
+            "description": "Filter repo squeeze analysis by security type. Valid values: 'All' (all securities), 'Treasury' (US Treasury securities), 'Agency' (government-sponsored enterprise securities), 'Corporate' (corporate bonds), 'Municipal' (municipal bonds). Determines which securities are analyzed for squeeze conditions.",
+            "type": "text",
+            "options": [
+                {"label": "All Securities", "value": "All"},
+                {"label": "Treasury Securities", "value": "Treasury"},
+                {"label": "Agency Securities", "value": "Agency"},
+                {"label": "Corporate Bonds", "value": "Corporate"},
+                {"label": "Municipal Bonds", "value": "Municipal"}
+            ]
         },
         {
             "paramName": "squeeze_threshold",
             "value": 10,
             "label": "Squeeze Threshold (bps)",
+            "description": "Minimum spread widening in basis points to identify as a repo squeeze event. Higher thresholds identify more severe squeezes. Range: 1-100. Example: 15 flags securities with >15bps spread widening indicating supply constraints.",
             "type": "number"
         },
         {
             "paramName": "time_horizon",
             "value": "1M",
             "label": "Time Horizon",
-            "type": "text"
+            "description": "Time period for repo squeeze analysis. Valid formats: 1D (daily squeeze events), 1W (weekly patterns), 1M (monthly analysis), 3M (quarterly trends). Determines the lookback period for squeeze detection and trend analysis.",
+            "type": "text",
+            "options": [
+                {"label": "1 Day", "value": "1D"},
+                {"label": "1 Week", "value": "1W"},
+                {"label": "1 Month", "value": "1M"},
+                {"label": "3 Months", "value": "3M"}
+            ]
         }
     ]
 })
@@ -328,19 +344,28 @@ def get_repo_squeeze(
             "paramName": "sentiment_range_min",
             "value": 0,
             "label": "Min Sentiment Score",
+            "description": "Minimum sentiment score to include in analysis. Sentiment scores range from 0 (extremely bearish) to 100 (extremely bullish). Range: 0-100. Example: 30 shows sectors with neutral to bullish sentiment only.",
             "type": "number"
         },
         {
             "paramName": "sentiment_range_max",
             "value": 100,
             "label": "Max Sentiment Score",
+            "description": "Maximum sentiment score to include in analysis. Sets upper bound for sentiment filtering. Range: 0-100. Example: 70 excludes extremely bullish sentiment readings to focus on moderate sentiment ranges.",
             "type": "number"
         },
         {
             "paramName": "time_window",
             "value": "1M",
             "label": "Analysis Time Window",
-            "type": "text"
+            "description": "Time period for sentiment gauge analysis. Valid formats: 1W (weekly sentiment), 1M (monthly sentiment trends), 3M (quarterly sentiment analysis), 6M (longer-term sentiment patterns). Determines the timeframe for sentiment measurement.",
+            "type": "text",
+            "options": [
+                {"label": "1 Week", "value": "1W"},
+                {"label": "1 Month", "value": "1M"},
+                {"label": "3 Months", "value": "3M"},
+                {"label": "6 Months", "value": "6M"}
+            ]
         }
     ]
 })
@@ -370,12 +395,20 @@ def get_sentiment_gauge(
             "paramName": "fragmentation_metrics",
             "value": "VolumeShare",
             "label": "Fragmentation Metrics",
-            "type": "text"
+            "description": "Method for measuring market fragmentation. Valid values: 'VolumeShare' (venue volume distribution), 'OrderCount' (order fragmentation), 'SpreadImpact' (liquidity impact), 'ConcentrationIndex' (market concentration). Determines how fragmentation is calculated and displayed.",
+            "type": "text",
+            "options": [
+                {"label": "Volume Share", "value": "VolumeShare"},
+                {"label": "Order Count", "value": "OrderCount"},
+                {"label": "Spread Impact", "value": "SpreadImpact"},
+                {"label": "Concentration Index", "value": "ConcentrationIndex"}
+            ]
         },
         {
             "paramName": "liquidity_threshold",
             "value": 50,
             "label": "Min Liquidity Score",
+            "description": "Minimum liquidity score to include venues in fragmentation analysis. Liquidity scores range from 0-100 based on depth and tightness. Range: 0-100. Example: 70 includes only high-liquidity venues in the fragmentation calculation.",
             "type": "number"
         }
     ]
@@ -514,18 +547,21 @@ def get_liquidity_fragmentation(
             "paramName": "spread_threshold_min",
             "value": -50,
             "label": "Min Spread Threshold (bps)",
+            "description": "Minimum spread in basis points for arbitrage opportunities. Negative values indicate profitable opportunities (asset underpriced). Range: -200 to 200. Example: -10 shows opportunities with >10bps profit potential.",
             "type": "number"
         },
         {
             "paramName": "feasibility_scores",
             "value": 70,
             "label": "Min Feasibility Score (%)",
+            "description": "Minimum feasibility score for arbitrage execution. Scores consider liquidity, transaction costs, and execution risk. Range: 0-100. Example: 80 shows only high-probability arbitrage opportunities with strong execution feasibility.",
             "type": "number"
         },
         {
             "paramName": "volume_threshold",
             "value": 50,
             "label": "Min Volume Threshold ($M)",
+            "description": "Minimum notional volume in millions of USD for arbitrage opportunities. Only opportunities above this size will be displayed. Range: 1-1000. Example: 100 shows arbitrage opportunities with >$100M potential volume.",
             "type": "number"
         }
     ]
@@ -557,19 +593,28 @@ def get_arbitrage_monitor(
             "paramName": "flow_thresholds",
             "value": 10,
             "label": "Min Flow Threshold ($M)",
+            "description": "Minimum money flow amount in millions of USD to include in momentum analysis. Only securities with flows above this threshold will be tracked. Range: 1-1000. Example: 25 focuses on securities with >$25M flow activity.",
             "type": "number"
         },
         {
             "paramName": "correlation_range_min",
             "value": -1,
             "label": "Min Price Correlation",
+            "description": "Minimum correlation coefficient between flow and price movements. Range: -1 to 1. Example: 0.3 shows securities where flows have positive correlation with price (flow follows price). -1 includes all correlations.",
             "type": "number"
         },
         {
             "paramName": "momentum_lookback",
             "value": "7D",
             "label": "Momentum Lookback Period",
-            "type": "text"
+            "description": "Time period for calculating flow momentum signals. Valid formats: 1D (daily momentum), 7D (weekly momentum), 1M (monthly momentum), 3M (quarterly trends). Determines the timeframe for momentum score calculation.",
+            "type": "text",
+            "options": [
+                {"label": "1 Day", "value": "1D"},
+                {"label": "7 Days", "value": "7D"},
+                {"label": "1 Month", "value": "1M"},
+                {"label": "3 Months", "value": "3M"}
+            ]
         }
     ]
 })
@@ -655,19 +700,44 @@ def get_flow_momentum(
             "paramName": "performance_metrics",
             "value": "Sharpe",
             "label": "Performance Metrics",
-            "type": "text"
+            "description": "Primary performance metric for strategy evaluation. Valid values: 'Sharpe' (risk-adjusted returns), 'Alpha' (excess returns vs benchmark), 'Return' (absolute returns), 'Volatility' (return volatility), 'MaxDrawdown' (maximum peak-to-trough decline). Determines the key performance measure displayed.",
+            "type": "text",
+            "options": [
+                {"label": "Sharpe Ratio", "value": "Sharpe"},
+                {"label": "Alpha (Excess Return)", "value": "Alpha"},
+                {"label": "Absolute Return", "value": "Return"},
+                {"label": "Volatility", "value": "Volatility"},
+                {"label": "Max Drawdown", "value": "MaxDrawdown"}
+            ]
         },
         {
             "paramName": "benchmark_comparisons",
             "value": "SPX",
             "label": "Benchmark Comparison",
-            "type": "text"
+            "description": "Benchmark index for performance comparison. Valid values: 'SPX' (S&P 500), 'VIX' (volatility index), 'BND' (bond index), 'GLD' (gold), 'DXY' (dollar index), 'Custom' (custom benchmark). Determines the baseline for relative performance measurement.",
+            "type": "text",
+            "options": [
+                {"label": "S&P 500 (SPX)", "value": "SPX"},
+                {"label": "VIX (Volatility)", "value": "VIX"},
+                {"label": "Bond Index (BND)", "value": "BND"},
+                {"label": "Gold (GLD)", "value": "GLD"},
+                {"label": "Dollar Index (DXY)", "value": "DXY"},
+                {"label": "Custom Benchmark", "value": "Custom"}
+            ]
         },
         {
             "paramName": "time_horizon",
             "value": "1M",
             "label": "Time Horizon",
-            "type": "text"
+            "description": "Time period for trading strategy metrics calculation. Valid formats: 1D (daily metrics), 1W (weekly performance), 1M (monthly analysis), 3M (quarterly performance), 1Y (annual metrics). Determines the timeframe for strategy evaluation.",
+            "type": "text",
+            "options": [
+                {"label": "1 Day", "value": "1D"},
+                {"label": "1 Week", "value": "1W"},
+                {"label": "1 Month", "value": "1M"},
+                {"label": "3 Months", "value": "3M"},
+                {"label": "1 Year", "value": "1Y"}
+            ]
         }
     ]
 })
@@ -730,8 +800,11 @@ The DTCC Trading Strategy Dashboard provides advanced trading insights and inves
 
 ## Purpose
 • **Alpha Generation**: Identify trading opportunities through repo squeeze detection, arbitrage monitoring, and flow momentum analysis
+
 • **Market Intelligence**: Analyze sentiment indicators, liquidity conditions, and market structure dynamics for informed decision-making
+
 • **Risk-Adjusted Returns**: Monitor cross-asset arbitrage opportunities and optimize trading strategies based on risk-return profiles
+
 • **Flow Analysis**: Track institutional flow patterns and momentum to anticipate market movements and position accordingly
 
 ---

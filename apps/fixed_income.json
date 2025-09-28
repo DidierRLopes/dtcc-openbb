@@ -11,9 +11,10 @@
         {
           "i": "fixed_income/notes",
           "x": 0,
-          "y": 0,
+          "y": 2,
           "w": 40,
-          "h": 30
+          "h": 30,
+          "groups": []
         }
       ]
     },
@@ -24,23 +25,34 @@
         {
           "i": "fixed_income/metrics",
           "x": 0,
-          "y": 0,
+          "y": 2,
           "w": 40,
-          "h": 4
+          "h": 5,
+          "groups": []
         },
         {
           "i": "fixed_income/treasury_volumes",
           "x": 0,
-          "y": 4,
-          "w": 20,
-          "h": 10
+          "y": 18,
+          "w": 40,
+          "h": 15,
+          "state": {
+            "params": {
+              "time_period": "1Y",
+              "trading_venue": "Electronic"
+            }
+          },
+          "groups": [
+            "Time Period Sync"
+          ]
         },
         {
           "i": "fixed_income/repo_spreads",
-          "x": 20,
-          "y": 4,
-          "w": 20,
-          "h": 10
+          "x": 0,
+          "y": 7,
+          "w": 40,
+          "h": 11,
+          "groups": []
         }
       ]
     },
@@ -51,23 +63,50 @@
         {
           "i": "fixed_income/dealer_activity",
           "x": 0,
-          "y": 0,
+          "y": 2,
           "w": 20,
-          "h": 10
+          "h": 13,
+          "state": {
+            "params": {
+              "dealer_tier": "Tier1"
+            },
+            "chartModel": {
+              "modelType": "range",
+              "chartType": "groupedColumn",
+              "chartOptions": {},
+              "suppressChartRanges": true
+            },
+            "chartView": {
+              "enabled": true,
+              "chartType": "groupedColumn"
+            }
+          },
+          "groups": []
         },
         {
           "i": "fixed_income/liquidity_curve",
           "x": 20,
-          "y": 0,
+          "y": 2,
           "w": 20,
-          "h": 10
+          "h": 13,
+          "groups": []
         },
         {
           "i": "fixed_income/fails_to_deliver",
           "x": 0,
-          "y": 10,
+          "y": 15,
           "w": 40,
-          "h": 10
+          "h": 12,
+          "state": {
+            "params": {
+              "maturity_range": "1-3Y"
+            },
+            "chartView": {
+              "enabled": false,
+              "chartType": "bar"
+            }
+          },
+          "groups": []
         }
       ]
     }

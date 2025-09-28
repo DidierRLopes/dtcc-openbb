@@ -35,6 +35,7 @@ router = APIRouter(prefix="/market_surveillance", tags=["Market Surveillance"])
             "paramName": "time_period",
             "value": "1M",
             "label": "Time Period",
+            "description": "Select the time window for aggregating trade volume data. Valid values: 1D (daily), 1W (weekly), 1M (monthly), 3M (quarterly), 1Y (yearly). This determines the granularity of the heatmap display.",
             "type": "text",
             "options": [
                 {"label": "1 Day", "value": "1D"},
@@ -48,12 +49,14 @@ router = APIRouter(prefix="/market_surveillance", tags=["Market Surveillance"])
             "paramName": "min_volume",
             "value": 1000,
             "label": "Min Volume (USD M)",
+            "description": "Minimum trade volume threshold in millions of USD. Only trades above this value will be included in the heatmap. Range: 0-10000. Example: 500 filters trades below $500M.",
             "type": "number"
         },
         {
             "paramName": "region",
             "value": "US",
             "label": "Region",
+            "description": "Geographic region filter for trade data. Valid options: US (United States), Europe (European markets), APAC (Asia Pacific), Americas (North/South America), Global (worldwide). Determines which markets are included in the analysis.",
             "type": "text",
             "options": [
                 {"label": "United States", "value": "US"},
@@ -193,6 +196,7 @@ def get_trade_volume_heatmap(time_period: str = "1M", asset_classes: List[str] =
             "paramName": "severity_filter",
             "value": "All",
             "label": "Severity Level",
+            "description": "Filter anomalies by severity level. Critical = immediate action required, High = significant risk, Medium = moderate risk, Low = informational. Select 'All' to show all severity levels.",
             "type": "text",
             "options": [
                 {"label": "All Severities", "value": "All"},
@@ -206,12 +210,14 @@ def get_trade_volume_heatmap(time_period: str = "1M", asset_classes: List[str] =
             "paramName": "min_value",
             "value": 0,
             "label": "Min Value (USD M)",
+            "description": "Minimum transaction value threshold in millions of USD. Only anomalies involving transactions above this amount will be displayed. Range: 0-1000000. Example: 10 shows anomalies for transactions above $10M.",
             "type": "number"
         },
         {
             "paramName": "time_range",
             "value": "24H",
             "label": "Time Range",
+            "description": "Time window for anomaly detection lookback. Valid formats: 1H (1 hour), 6H (6 hours), 24H (24 hours), 3D (3 days), 1W (1 week). Determines how far back to scan for anomalies.",
             "type": "text",
             "options": [
                 {"label": "Last 1 Hour", "value": "1H"},
@@ -258,12 +264,14 @@ def get_anomaly_detector(severity_filter: str = "All", asset_class_filter: str =
             "paramName": "min_exposure",
             "value": 50,
             "label": "Min Exposure ($M)",
+            "description": "Minimum exposure amount in millions of USD to include in the network visualization. Only counterparty relationships above this threshold will be displayed. Range: 1-10000. Example: 100 shows exposures above $100M.",
             "type": "number"
         },
         {
             "paramName": "risk_threshold",
             "value": "Medium",
             "label": "Risk Threshold",
+            "description": "Risk level filter for counterparty exposures. Low = minimal risk, Medium = moderate risk requiring monitoring, High = significant risk requiring attention, Critical = immediate action required. Affects node colors and highlighting in the network.",
             "type": "text",
             "options": [
                 {"label": "Low Risk", "value": "Low"},
@@ -276,12 +284,14 @@ def get_anomaly_detector(severity_filter: str = "All", asset_class_filter: str =
             "paramName": "network_depth",
             "value": 2,
             "label": "Network Depth (Hops)",
+            "description": "Number of connection hops to include in the network graph. 1 = direct connections only, 2 = connections of connections, 3+ = extended network. Range: 1-5. Higher values show more complex relationships but may clutter the visualization.",
             "type": "number"
         },
         {
             "paramName": "geographic_region",
             "value": "Global",
             "label": "Geographic Region",
+            "description": "Geographic scope for counterparty analysis. Global = worldwide entities, US = North American entities, Europe = European entities, APAC = Asia Pacific entities. Filters which counterparties are included based on their domicile.",
             "type": "text",
             "options": [
                 {"label": "Global", "value": "Global"},
@@ -450,6 +460,7 @@ def get_counterparty_network(min_exposure: float = 50, counterparty_types: List[
             "paramName": "regulation_scope",
             "value": "All",
             "label": "Regulatory Scope",
+            "description": "Filter compliance alerts by specific regulatory framework. Dodd-Frank = US financial reform, MiFID II = EU investment services directive, EMIR = EU derivatives regulation, Basel III = international banking regulation, CFTC = US commodities regulation. Select 'All' to view alerts from all regulatory frameworks.",
             "type": "text",
             "options": [
                 {"label": "All Regulations", "value": "All"},
@@ -464,6 +475,7 @@ def get_counterparty_network(min_exposure: float = 50, counterparty_types: List[
             "paramName": "alert_severity",
             "value": "All",
             "label": "Alert Severity",
+            "description": "Filter by compliance alert severity level. Critical = immediate regulatory action required, High = significant compliance risk, Medium = moderate risk requiring attention, Low = minor compliance issue, Info = informational notice. Select 'All' to view all severity levels.",
             "type": "text",
             "options": [
                 {"label": "All Severities", "value": "All"},
@@ -478,6 +490,7 @@ def get_counterparty_network(min_exposure: float = 50, counterparty_types: List[
             "paramName": "entity_type",
             "value": "All",
             "label": "Entity Type",
+            "description": "Filter alerts by type of financial institution. Investment Bank = securities trading and underwriting, Commercial Bank = traditional banking services, Hedge Fund = alternative investment funds, Asset Manager = investment management companies, Insurance Company = insurance providers, Pension Fund = retirement plan managers. Select 'All' to view all entity types.",
             "type": "text",
             "options": [
                 {"label": "All Entity Types", "value": "All"},
@@ -522,6 +535,7 @@ def get_compliance_ticker(regulation_scope: str = "All", alert_severity: str = "
             "paramName": "time_horizon",
             "value": "1D",
             "label": "Time Horizon",
+            "description": "Time period for calculating market activity metrics. 1D = daily metrics, 1W = weekly aggregation, 1M = monthly aggregation, YTD = year-to-date cumulative metrics. Affects volume scaling and trend calculations.",
             "type": "text",
             "options": [
                 {"label": "1 Day", "value": "1D"},
@@ -534,6 +548,7 @@ def get_compliance_ticker(regulation_scope: str = "All", alert_severity: str = "
             "paramName": "benchmark_comparison",
             "value": True,
             "label": "Show Benchmark Comparison",
+            "description": "Enable comparison of current metrics against historical benchmarks and market averages. When enabled, delta values show percentage change versus benchmark. When disabled, shows absolute values only.",
             "type": "boolean"
         }
     ]

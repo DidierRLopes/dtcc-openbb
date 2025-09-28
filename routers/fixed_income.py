@@ -35,6 +35,7 @@ router = APIRouter(prefix="/fixed_income", tags=["Fixed Income"])
             "paramName": "time_period",
             "value": "1M",
             "label": "Time Period",
+            "description": "Time window for treasury volume aggregation. 1D = daily volumes, 1W = weekly aggregation, 1M = monthly aggregation, 3M = quarterly, 1Y = annual. Determines the time series granularity and lookback period for volume analysis.",
             "type": "text",
             "options": [
                 {"label": "1 Day", "value": "1D"},
@@ -48,12 +49,14 @@ router = APIRouter(prefix="/fixed_income", tags=["Fixed Income"])
             "paramName": "min_trade_size",
             "value": 1,
             "label": "Min Trade Size ($M)",
+            "description": "Minimum trade size threshold in millions of USD. Only treasury transactions above this amount will be included in volume calculations. Range: 0.1-1000. Example: 5 filters trades below $5M.",
             "type": "number"
         },
         {
             "paramName": "trading_venue",
             "value": "All",
             "label": "Trading Venue",
+            "description": "Filter by treasury trading venue type. D2C = dealer-to-customer transactions, D2D = interdealer market, Electronic = electronic trading platforms, Voice = voice-brokered trades, Primary = primary market auctions. Select 'All' to include all venue types.",
             "type": "text",
             "options": [
                 {"label": "All Venues", "value": "All"},
@@ -136,6 +139,7 @@ def get_treasury_volumes(time_period: str = "1M", treasury_types: List[str] = Qu
             "paramName": "time_horizon_repo",
             "value": "1M",
             "label": "Time Horizon",
+            "description": "Time period for repo rate spread analysis. 1D = intraday spreads, 1W = weekly patterns, 1M = monthly trends, 3M = quarterly analysis, 6M = longer-term spread relationships. Affects the granularity of spread calculations and trend analysis.",
             "type": "text",
             "options": [
                 {"label": "1 Day", "value": "1D"},
@@ -149,12 +153,14 @@ def get_treasury_volumes(time_period: str = "1M", treasury_types: List[str] = Qu
             "paramName": "spread_analysis",
             "value": True,
             "label": "Show Spread Analysis",
+            "description": "Enable detailed spread analysis between DTCC GCF Repo rates and benchmark rates. When enabled, displays spread calculations, volatility metrics, and basis point movements. When disabled, shows raw rates only.",
             "type": "boolean"
         },
         {
             "paramName": "benchmark_rate",
             "value": "SOFR",
             "label": "Benchmark Rate",
+            "description": "Primary benchmark rate for spread calculations. SOFR = Secured Overnight Financing Rate, FedFunds = Federal Funds Rate, TBill = Treasury Bill rates, ONRRP = Overnight Reverse Repo Rate. Determines the baseline for spread analysis.",
             "type": "text",
             "options": [
                 {"label": "SOFR", "value": "SOFR"},
@@ -292,12 +298,14 @@ def get_repo_spreads(benchmark_rates: List[str] = Query(default=["SOFR", "ON RRP
             "paramName": "fail_threshold",
             "value": 1.0,
             "label": "Min Fail Rate (%)",
+            "description": "Minimum failure rate threshold as a percentage. Only securities with failure rates above this level will be displayed. Range: 0-100. Example: 2.5 shows securities with >2.5% failure rate.",
             "type": "number"
         },
         {
             "paramName": "maturity_range",
             "value": "All",
             "label": "Maturity Range",
+            "description": "Filter securities by time to maturity. 0-1Y = short-term (bills), 1-3Y = short-medium term, 3-7Y = medium term, 7-10Y = long term, 10Y+ = very long term. Select 'All' to include all maturity ranges.",
             "type": "text",
             "options": [
                 {"label": "All Maturities", "value": "All"},
@@ -312,6 +320,7 @@ def get_repo_spreads(benchmark_rates: List[str] = Query(default=["SOFR", "ON RRP
             "paramName": "security_type",
             "value": "All",
             "label": "Security Type",
+            "description": "Filter by fixed income security type. Treasury Bills = short-term government debt, Treasury Notes = medium-term government debt, Treasury Bonds = long-term government debt, Agency = government-sponsored enterprise securities, Corporate = corporate bonds. Select 'All' to include all security types.",
             "type": "text",
             "options": [
                 {"label": "All Securities", "value": "All"},
@@ -396,6 +405,7 @@ def get_fails_to_deliver(fail_threshold: float = 1.0, security_types: List[str] 
             "paramName": "dealer_tier",
             "value": "All",
             "label": "Dealer Tier",
+            "description": "Filter dealers by market tier classification. Tier 1 = primary dealers with direct Fed relationships, Tier 2 = regional dealers with significant market presence, Tier 3 = specialist dealers focusing on specific sectors. Select 'All' to include all dealer tiers.",
             "type": "text",
             "options": [
                 {"label": "All Dealers", "value": "All"},
@@ -408,12 +418,14 @@ def get_fails_to_deliver(fail_threshold: float = 1.0, security_types: List[str] 
             "paramName": "min_volume_threshold",
             "value": 10,
             "label": "Min Volume ($B)",
+            "description": "Minimum total trading volume threshold in billions of USD. Only dealers with combined lending/borrowing volume above this level will be displayed in the leaderboard. Range: 1-1000. Example: 50 shows dealers with >$50B volume.",
             "type": "number"
         },
         {
             "paramName": "activity_type",
             "value": "Both",
             "label": "Activity Type",
+            "description": "Filter by type of repo market activity. Both = lending and borrowing activity combined, Lending = cash lending activity only, Borrowing = cash borrowing activity only. Affects which volumes are displayed and ranked.",
             "type": "text",
             "options": [
                 {"label": "Both Lending & Borrowing", "value": "Both"},

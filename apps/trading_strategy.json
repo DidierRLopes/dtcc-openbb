@@ -11,9 +11,10 @@
         {
           "i": "trading_strategy/notes",
           "x": 0,
-          "y": 0,
+          "y": 2,
           "w": 40,
-          "h": 30
+          "h": 30,
+          "groups": []
         }
       ]
     },
@@ -24,23 +25,44 @@
         {
           "i": "trading_strategy/metrics",
           "x": 0,
-          "y": 0,
+          "y": 2,
           "w": 40,
-          "h": 4
+          "h": 5,
+          "groups": []
         },
         {
           "i": "trading_strategy/repo_squeeze",
           "x": 0,
-          "y": 4,
-          "w": 20,
-          "h": 12
+          "y": 7,
+          "w": 40,
+          "h": 12,
+          "groups": [
+            "Security Filter Sync"
+          ]
         },
         {
           "i": "trading_strategy/arbitrage_monitor",
-          "x": 20,
-          "y": 4,
-          "w": 20,
-          "h": 10
+          "x": 0,
+          "y": 19,
+          "w": 40,
+          "h": 11,
+          "state": {
+            "chartView": {
+              "enabled": false,
+              "chartType": "scatter"
+            },
+            "columnState": {
+              "default": {
+                "columnPinning": {
+                  "leftColIds": [
+                    "opportunity"
+                  ],
+                  "rightColIds": []
+                }
+              }
+            }
+          },
+          "groups": []
         }
       ]
     },
@@ -51,23 +73,32 @@
         {
           "i": "trading_strategy/sentiment_gauge",
           "x": 0,
-          "y": 0,
+          "y": 2,
           "w": 20,
-          "h": 10
+          "h": 14,
+          "state": {
+            "chartView": {
+              "enabled": true,
+              "chartType": "bar"
+            }
+          },
+          "groups": []
         },
         {
           "i": "trading_strategy/liquidity_fragmentation",
           "x": 20,
-          "y": 0,
+          "y": 2,
           "w": 20,
-          "h": 10
+          "h": 14,
+          "groups": []
         },
         {
           "i": "trading_strategy/flow_momentum",
           "x": 0,
-          "y": 10,
+          "y": 16,
           "w": 40,
-          "h": 12
+          "h": 12,
+          "groups": []
         }
       ]
     }

@@ -94,18 +94,27 @@ def generate_crowded_trades():
             "paramName": "settlement_cycles",
             "value": "Both",
             "label": "Settlement Cycles",
-            "type": "text"
+            "description": "Filter by settlement cycle type. Valid values: 'Both' (T+1 and T+2), 'T+1' (next-day settlement), 'T+2' (two-day settlement), 'T+3' (three-day settlement for specific securities). Determines which settlement timeframes are included in the timeline analysis.",
+            "type": "text",
+            "options": [
+                {"label": "Both T+1 and T+2", "value": "Both"},
+                {"label": "T+1 Only", "value": "T+1"},
+                {"label": "T+2 Only", "value": "T+2"},
+                {"label": "T+3 (Special)", "value": "T+3"}
+            ]
         },
         {
             "paramName": "min_obligation_size",
             "value": 1,
             "label": "Min Obligation Size ($M)",
+            "description": "Minimum settlement obligation size in millions of USD to include in timeline analysis. Only obligations above this threshold will be displayed. Range: 0.1-1000. Example: 5 shows settlement obligations above $5M.",
             "type": "number"
         },
         {
             "paramName": "include_weekends",
             "value": True,
             "label": "Include Weekend Projections",
+            "description": "Include weekend days in settlement timeline projections. When enabled, shows settlement obligations that would occur on weekends (shifted to next business day). When disabled, excludes weekend projections from the timeline.",
             "type": "boolean"
         }
     ]
@@ -227,19 +236,29 @@ def get_settlement_timeline(
             "paramName": "flow_thresholds",
             "value": 10,
             "label": "Min Flow Size ($M)",
+            "description": "Minimum ETF creation/redemption flow size in millions of USD to include in analysis. Only flows above this threshold will be displayed. Range: 1-1000. Example: 25 shows ETF flows above $25M indicating significant institutional activity.",
             "type": "number"
         },
         {
             "paramName": "premium_discount_min",
             "value": -5,
             "label": "Min Premium/Discount (%)",
+            "description": "Minimum premium/discount percentage to include in flow analysis. Negative values = discounts (ETF trading below NAV), positive = premiums (ETF trading above NAV). Range: -20 to 20. Example: -2 shows ETFs trading at 2%+ discount to NAV.",
             "type": "number"
         },
         {
             "paramName": "time_period",
             "value": "1M",
             "label": "Time Period",
-            "type": "text"
+            "description": "Time window for ETF flow analysis. Valid formats: 1D (daily flows), 1W (weekly aggregation), 1M (monthly flows), 3M (quarterly analysis), 1Y (annual flows). Determines the timeframe for creation/redemption flow tracking.",
+            "type": "text",
+            "options": [
+                {"label": "1 Day", "value": "1D"},
+                {"label": "1 Week", "value": "1W"},
+                {"label": "1 Month", "value": "1M"},
+                {"label": "3 Months", "value": "3M"},
+                {"label": "1 Year", "value": "1Y"}
+            ]
         }
     ]
 })
@@ -343,18 +362,21 @@ def get_etf_flows(
             "paramName": "borrow_rate_min",
             "value": 0,
             "label": "Min Borrow Rate (%)",
+            "description": "Minimum stock borrow rate percentage to include in analysis. Securities with borrow rates above this level indicate high demand for short selling. Range: 0-100. Example: 5 shows stocks with >5% borrow costs (moderate short interest).",
             "type": "number"
         },
         {
             "paramName": "borrow_rate_max",
             "value": 50,
             "label": "Max Borrow Rate (%)",
+            "description": "Maximum stock borrow rate percentage to include in analysis. Sets upper bound for borrow cost filtering. Range: 1-100. Example: 30 excludes extremely hard-to-borrow stocks with >30% borrow rates.",
             "type": "number"
         },
         {
             "paramName": "squeeze_indicator",
             "value": False,
             "label": "Show Squeeze Candidates Only",
+            "description": "Filter to show only stocks identified as short squeeze candidates based on high short interest, low float, and high borrow costs. When enabled, highlights securities with potential for forced short covering. When disabled, shows all short interest data.",
             "type": "boolean"
         }
     ]
@@ -456,19 +478,35 @@ def get_short_interest(
             "paramName": "position_thresholds",
             "value": 100,
             "label": "Min Position Threshold ($M)",
+            "description": "Minimum position size in millions of USD to include in concentration risk analysis. Only positions above this threshold will be displayed. Range: 10-10000. Example: 250 shows concentrated positions above $250M indicating significant risk exposure.",
             "type": "number"
         },
         {
             "paramName": "risk_scoring",
             "value": "Composite",
             "label": "Risk Scoring Method",
-            "type": "text"
+            "description": "Method for calculating concentration risk scores. Valid values: 'Composite' (combined risk factors), 'Position Size' (based on position magnitude), 'Volatility Weighted' (adjusted for price volatility), 'Liquidity Adjusted' (considering market liquidity). Determines how risk scores are calculated.",
+            "type": "text",
+            "options": [
+                {"label": "Composite Risk", "value": "Composite"},
+                {"label": "Position Size", "value": "Position Size"},
+                {"label": "Volatility Weighted", "value": "Volatility Weighted"},
+                {"label": "Liquidity Adjusted", "value": "Liquidity Adjusted"}
+            ]
         },
         {
             "paramName": "market_cap_filter",
             "value": "All",
             "label": "Market Cap Filter",
-            "type": "text"
+            "description": "Filter positions by market capitalization category. Valid values: 'All' (all market caps), 'Large Cap' (>$10B market cap), 'Mid Cap' ($2B-$10B), 'Small Cap' ($300M-$2B), 'Micro Cap' (<$300M). Determines which equity positions are included based on company size.",
+            "type": "text",
+            "options": [
+                {"label": "All Market Caps", "value": "All"},
+                {"label": "Large Cap (>$10B)", "value": "Large Cap"},
+                {"label": "Mid Cap ($2B-$10B)", "value": "Mid Cap"},
+                {"label": "Small Cap ($300M-$2B)", "value": "Small Cap"},
+                {"label": "Micro Cap (<$300M)", "value": "Micro Cap"}
+            ]
         }
     ]
 })
@@ -555,18 +593,33 @@ def get_concentration_risk(
             "paramName": "alert_thresholds",
             "value": "Medium",
             "label": "Alert Threshold Level",
-            "type": "text"
+            "description": "Sensitivity level for generating crowded trade alerts. Valid values: 'Low' (conservative, fewer alerts), 'Medium' (balanced sensitivity), 'High' (aggressive, more alerts), 'Critical' (only extreme crowding). Determines how easily alerts are triggered.",
+            "type": "text",
+            "options": [
+                {"label": "Low Sensitivity", "value": "Low"},
+                {"label": "Medium Sensitivity", "value": "Medium"},
+                {"label": "High Sensitivity", "value": "High"},
+                {"label": "Critical Only", "value": "Critical"}
+            ]
         },
         {
             "paramName": "timeframes",
             "value": "24H",
             "label": "Alert Timeframe",
-            "type": "text"
+            "description": "Time window for crowded trade alert generation. Valid formats: 1H (hourly alerts), 24H (daily alerts), 1W (weekly analysis), 1M (monthly crowding trends). Determines the frequency and lookback period for alert generation.",
+            "type": "text",
+            "options": [
+                {"label": "1 Hour", "value": "1H"},
+                {"label": "24 Hours", "value": "24H"},
+                {"label": "1 Week", "value": "1W"},
+                {"label": "1 Month", "value": "1M"}
+            ]
         },
         {
             "paramName": "exclude_etfs",
             "value": False,
             "label": "Exclude ETFs from Alerts",
+            "description": "Exclude ETF positions from crowded trade alert generation. When enabled, focuses alerts on individual stock positions only. When disabled, includes both stocks and ETFs in crowding analysis for comprehensive coverage.",
             "type": "boolean"
         }
     ]
@@ -596,19 +649,42 @@ def get_crowded_trades(
             "paramName": "performance_benchmarks",
             "value": "Absolute",
             "label": "Performance Benchmarks",
-            "type": "text"
+            "description": "Benchmark method for performance metrics calculation. Valid values: 'Absolute' (raw returns), 'Market Relative' (vs market indices), 'Sector Relative' (vs sector performance), 'Risk Adjusted' (Sharpe ratio basis). Determines the baseline for performance comparisons.",
+            "type": "text",
+            "options": [
+                {"label": "Absolute Returns", "value": "Absolute"},
+                {"label": "Market Relative", "value": "Market Relative"},
+                {"label": "Sector Relative", "value": "Sector Relative"},
+                {"label": "Risk Adjusted", "value": "Risk Adjusted"}
+            ]
         },
         {
             "paramName": "risk_adjustments",
             "value": "None",
             "label": "Risk Adjustments",
-            "type": "text"
+            "description": "Type of risk adjustment to apply to metrics. Valid values: 'None' (no adjustment), 'Volatility' (volatility-adjusted), 'VaR' (Value-at-Risk adjusted), 'Beta' (market beta adjusted), 'Sharpe' (Sharpe ratio basis). Determines how risk is factored into metric calculations.",
+            "type": "text",
+            "options": [
+                {"label": "No Adjustment", "value": "None"},
+                {"label": "Volatility Adjusted", "value": "Volatility"},
+                {"label": "VaR Adjusted", "value": "VaR"},
+                {"label": "Beta Adjusted", "value": "Beta"},
+                {"label": "Sharpe Ratio", "value": "Sharpe"}
+            ]
         },
         {
             "paramName": "time_horizon",
             "value": "1D",
             "label": "Time Horizon",
-            "type": "text"
+            "description": "Time period for equities and ETF metrics calculation. Valid formats: 1D (daily metrics), 1W (weekly), 1M (monthly), 3M (quarterly), 1Y (annual). Affects the timeframe for performance, flow, and risk metrics.",
+            "type": "text",
+            "options": [
+                {"label": "1 Day", "value": "1D"},
+                {"label": "1 Week", "value": "1W"},
+                {"label": "1 Month", "value": "1M"},
+                {"label": "3 Months", "value": "3M"},
+                {"label": "1 Year", "value": "1Y"}
+            ]
         }
     ]
 })
