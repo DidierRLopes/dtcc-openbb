@@ -560,8 +560,11 @@ The DTCC Fixed Income Markets Dashboard provides comprehensive treasury and repo
 
 ## Purpose
 • **Treasury Market Analysis**: Monitor trading volumes, price trends, and liquidity conditions across bills, notes, bonds, TIPS, and FRNs
+
 • **Repo Market Surveillance**: Track repo rates, spreads vs benchmarks, and monitor GCF repo activity and pricing dynamics
+
 • **Settlement Monitoring**: Identify and track fails-to-deliver events, aging analysis, and settlement efficiency metrics
+
 • **Dealer Activity Analysis**: Monitor primary dealer participation, market share analysis, and competitive dynamics in fixed income markets
 
 ---
