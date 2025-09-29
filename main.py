@@ -38,7 +38,12 @@ app.add_middleware(CORSMiddleware, **CORS_SETTINGS)
 
 @app.get("/")
 def read_root():
-    return {"Info": "Full example for OpenBB Custom Backend"}
+    return {"Info": "DTCC OpenBB Dashboard System", "status": "running", "version": "1.0.0"}
+
+@app.get("/health")
+def health_check():
+    """Health check endpoint for Fly.io monitoring."""
+    return {"status": "healthy", "service": "dtcc-openbb-dashboard"}
 
 # Centralized widgets endpoint that returns all registered widgets
 @app.get("/widgets.json")
