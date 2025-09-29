@@ -1,6 +1,25 @@
-# DTCC OpenBB Dashboard System
+# DTCC OpenBB Dashboards
 
 A comprehensive market monitoring and analytics dashboard system built for OpenBB Workspace, providing real-time insights across major financial asset classes and risk dimensions.
+
+<img width="3454" height="2072" alt="CleanShot 2025-09-29 at 12 15 04@2x" src="https://github.com/user-attachments/assets/aea833f7-7b6a-4ef0-b7d1-0b93c0749f96" />
+
+<img width="3448" height="2066" alt="CleanShot 2025-09-29 at 12 15 40@2x" src="https://github.com/user-attachments/assets/98522035-a2f9-4210-a7ab-be8165358127" />
+
+## Get started
+
+1. Go to https://pro.openbb.co/.
+2. Click on the Apps tab
+3. Click on Connect Backend
+4. Add the backend
+Name: DTCC
+Endpoint URL: https://dtcc-openbb-dashboard.fly.dev
+5. Click Test
+6. Click Add
+
+<img width="1660" height="1186" alt="CleanShot 2025-09-29 at 12 20 38@2x" src="https://github.com/user-attachments/assets/b556331f-b27e-4da1-831b-cbf5e031b73c" />
+
+That's it. Then click in one of the DTCC apps created.
 
 ## 🎯 Overview
 
